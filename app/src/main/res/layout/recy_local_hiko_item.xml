@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/card_view_item_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/eight_dip"
+    android:layout_marginEnd="@dimen/sixteen_dip"
+    android:layout_marginStart="@dimen/sixteen_sp"
+    android:layout_marginTop="@dimen/eight_dip"
+    android:background="@color/white"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"
+    card_view:cardElevation="@dimen/card_recycler_elevation">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rela_round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/twelve_dip"
+            android:layout_marginEnd="@dimen/twelve_dip"
+            android:background="@drawable/round"
+            android:backgroundTint="@color/colorPrimary"
+            android:transitionName="shareView">
+
+            <TextView
+                android:id="@+id/local_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="23"
+                android:textColor="@color/white"
+                android:textSize="@dimen/tweenty_six_sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_recycler_item_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rela_round"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/rela_round"
+            android:text="@string/tv_recycler_item_1"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/eighteen_sp" />
+
+        <TextView
+            android:id="@+id/tv_recycler_item_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_recycler_item_1"
+            android:layout_marginBottom="@dimen/sixteen_dip"
+            android:layout_marginEnd="@dimen/eight_dip"
+            android:layout_marginTop="@dimen/eight_dip"
+            android:layout_toEndOf="@id/rela_round"
+            android:text="@string/tv_recycler_item_3"
+            android:textSize="@dimen/sixteen_sp" />
+
+        <CheckBox
+            android:id="@+id/select_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="7dp" />
+
+        <ImageView
+            android:id="@+id/delete_item"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="7dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_clear_black_24dp" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

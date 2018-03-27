@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/delete_all"
+        android:orderInCategory="100"
+        android:title="@string/action_delete_all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit_mode"
+        android:icon="@drawable/ic_edit_black_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_edit"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:orderInCategory="100"
+        android:title="删除选中项"
+        app:showAsAction="ifRoom" />
+
+</menu>

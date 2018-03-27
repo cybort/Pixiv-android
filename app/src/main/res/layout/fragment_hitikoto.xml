@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_hitokoto"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="@dimen/three_dip"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_menu_black_24dp"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextColor="#fff">
+
+        <TextView
+            android:id="@+id/toolbar_title_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tool_bar_title_two"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tweenty_six_sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_hitokoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/sixteen_dip"
+        android:layout_marginLeft="@dimen/sixteen_dip"
+        android:layout_marginRight="@dimen/sixteen_dip"
+        android:layout_marginTop="@dimen/sixteen_dip"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        card_view:cardCornerRadius="@dimen/card_recycler_elevation"
+        card_view:cardElevation="@dimen/card_recycler_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/img_main_card_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorPrimary">
+
+                <TextView
+                    android:id="@+id/hitokoto_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/hitokoto_textview_height"
+                    android:layout_margin="@dimen/sixteen_dip"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/tweenty_sp" />
+
+                <TextView
+                    android:id="@+id/hitokoto_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/hitokoto_text"
+                    android:layout_marginBottom="@dimen/eight_dip"
+                    android:layout_marginEnd="@dimen/nineteen_dip"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sixteen_sp" />
+
+                <TextView
+                    android:id="@+id/hitokoto_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/hitokoto_author"
+                    android:layout_marginBottom="@dimen/sixteen_dip"
+                    android:layout_marginEnd="@dimen/nineteen_dip"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sixteen_sp" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_main_card_1"
+                android:layout_marginBottom="@dimen/twelve_dip"
+                android:layout_marginStart="@dimen/eight_dip"
+                android:layout_marginTop="@dimen/twelve_dip"
+                android:backgroundTint="@color/colorPrimary"
+                android:entries="@array/hitokoto_type" />
+
+            <TextView
+                android:id="@+id/hitokoto_catname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/img_main_card_1"
+                android:layout_marginBottom="@dimen/twelve_dip"
+                android:layout_marginEnd="@dimen/nineteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/twelve_dip"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxEms="7"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/min_text_size" />
+
+            <TextView
+                android:id="@+id/hitokoto_resouce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spinner"
+                android:layout_marginEnd="@dimen/card_title_margin"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/tweenty_sp" />
+
+            <Button
+                android:id="@+id/collect_it"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hitokoto_resouce"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/three_dip"
+                android:layout_toStartOf="@+id/refresh"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/collect_it"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <Button
+                android:id="@+id/refresh"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/hitokoto_resouce"
+                android:layout_marginStart="@dimen/three_dip"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/like_it"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/sixteen_sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

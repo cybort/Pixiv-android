@@ -1,0 +1,54 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">165dp</dimen>
+    <dimen name="hitokoto_textview_height">160dp</dimen>
+    <dimen name="nav_header_width">320dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="title_text_size">19dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="toolbar_and_status_height">80dp</dimen>
+    <dimen name="scroll_height">160dp</dimen>
+
+
+    <dimen name="main_card_margin_vertical">8dp</dimen>
+    <dimen name="tabstrip_height">40dp</dimen>
+    <dimen name="main_card_margin_horizontal_big_activity">8dp</dimen>
+
+    <dimen name="card_title_margin">16dp</dimen>
+    <dimen name="card_subtitle_margin">16dp</dimen>
+    <dimen name="card_button_margin">8dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_margin_small">8dp</dimen>
+    <dimen name="text_margin_very_small">4dp</dimen>
+
+    <dimen name="sixteen_dip">16dp</dimen>
+    <dimen name="nineteen_dip">19dp</dimen>
+    <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="tweenty_six_sp">26sp</dimen>
+    <dimen name="eight_dip">8dp</dimen>
+    <dimen name="three_dip">3dp</dimen>
+    <dimen name="twelve_dip">12dp</dimen>
+    <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="tweenty_sp">20sp</dimen>
+    <dimen name="nineteen_sp">19sp</dimen>
+    <dimen name="card_margin_vertical">16dp</dimen>
+    <dimen name="card_margin_horizontal_big_activity">8dp</dimen>
+    <dimen name="card_margin_vertical_big_activity">4dp</dimen>
+    <dimen name="card_recycler_elevation">4dp</dimen>
+    <dimen name="card_between">32dp</dimen>
+
+    <dimen name="zero_horizontal_margin">0dp</dimen>
+    <dimen name="zero_horizontal_margin_big_activity">0dp</dimen>
+
+    <dimen name="start_page_image_size">144dp</dimen>
+    <dimen name="share_view_round_margin">16dp</dimen>
+
+    <dimen name="big_text_size">30sp</dimen>
+    <dimen name="mid_text_size">24sp</dimen>
+    <dimen name="min_text_size">18sp</dimen>
+    <dimen name="app_bar_height">350dp</dimen>
+    <dimen name="hitokoto_height">260dp</dimen>
+</resources>

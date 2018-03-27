@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimaryDark">#0097A7</color>
+    <color name="colorAccent">#CDDC39</color>
+
+    <color name="colorAccentDark">#bac833</color>
+
+    <color name="bottom_bg_white">#FFFFFF</color>
+    <color name="bottom_item_selected">#0097A7</color>
+    <color name="bottom_item_unselected">#BDBDBD</color>
+    <color name="colorNavItemUnselected">#757575</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="gray_light">#CCCCCC</color>
+    <color name="gray_very_light">#E0E0E0</color>
+    <color name="gray_deep">#666666</color>
+    <color name="black_overlay">#66000000</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="red">#8BC34A</color>
+    <color name="black">#000000</color>
+    <color name="orange">#F9A436</color>
+
+    <color name="light_red">#FF6868</color>
+    <color name="light_pink">#FF687B</color>
+
+
+    <color name="dark_gray">#333333</color>
+    <color name="gray">#535353</color>
+    <color name="light_gray">#b3b3b3</color>
+    <color name="white_gray">#e1e1e1</color>
+    <color name="white_gray_background">#efeff4</color>
+    <color name="gray_background_transparent">#96535353</color>
+    <color name="ripple_light">#1f000000</color>
+    <color name="gray_text_unavailable">#bdbdbd</color>
+
+    <color name="dark_text">#434155</color>
+    <color name="light_text">#858585</color>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="#f4f4f4"
+    android:layout_height="match_parent">
+
+    <com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout
+        android:id="@+id/pull_wo_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F4F4F4"
+        android:orientation="vertical"
+        app:ptr_background="@mipmap/material_design_3"
+        app:ptr_rocketAnimDuration="1000">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pixiv_recy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout>
+
+    <ImageView
+        android:id="@+id/pixiv_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/placehoder_temp" />
+
+</FrameLayout>

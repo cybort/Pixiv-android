@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_pixiv"
+        icon="@drawable/ic_equalizer_black_24dp"
+        activeColor="@color/bottom_item_selected"
+        inActiveColor="@color/bottom_item_unselected"
+        title="Pixiv"
+        barColorWhenSelected="@color/bottom_bg_white" />
+    <tab
+        id="@+id/tab_hitokoto"
+        icon="@drawable/ic_event_note_black_24dp"
+        title="Hitokoto"
+        inActiveColor="@color/bottom_item_unselected"
+        activeColor="@color/bottom_item_selected"
+        barColorWhenSelected="@color/bottom_bg_white" />
+    <tab
+        id="@+id/tab_mine"
+        icon="@drawable/ic_favorite_white_24dp"
+        title="Mine"
+        inActiveColor="@color/bottom_item_unselected"
+        activeColor="@color/bottom_item_selected"
+        barColorWhenSelected="@color/bottom_bg_white" />
+</tabs>
