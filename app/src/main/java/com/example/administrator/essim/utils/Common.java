@@ -34,6 +34,10 @@ public class Common {
         return "没有日期数据哦";
     }
 
+    public static void showLog(String message) {
+        Log.d("this is a message: ", message);
+    }
+
     public static boolean hasData() {
         // 每天11:15分 pixiv 才会开放排行榜数据
         Calendar now = Calendar.getInstance();

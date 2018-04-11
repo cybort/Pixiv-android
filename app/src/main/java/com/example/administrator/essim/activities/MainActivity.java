@@ -20,7 +20,6 @@ import com.example.administrator.essim.fragments.FragmentHitikoto;
 import com.example.administrator.essim.fragments.FragmentMine;
 import com.example.administrator.essim.fragments.FragmentPixiv;
 import com.example.administrator.essim.utils.CloudMainActivity;
-import com.example.administrator.essim.utils.Common;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;

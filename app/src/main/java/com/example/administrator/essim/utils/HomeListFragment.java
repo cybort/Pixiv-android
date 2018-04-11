@@ -10,14 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.fragments.FragmentPixivLeft;
 import com.example.administrator.essim.models.AuthorWorks;
-import com.example.administrator.essim.models.PixivMember;
 import com.google.gson.Gson;
 
 import java.io.IOException;

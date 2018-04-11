@@ -256,13 +256,10 @@ public class HomeFragment extends BaseFragment {
     private class DownLoad extends AsyncTask<String, Integer, String>
     {
         Bitmap mDownLoadBtBitmap;
-        //onPreExecute方法在execute()后执行
-        @Override
         protected void onPreExecute()
         {
         }
 
-        //doInBackground方法内部执行后台任务,不能在里面更新UI，否则有异常。
         @Override
         protected String doInBackground(String... params)
         {
@@ -273,9 +270,7 @@ public class HomeFragment extends BaseFragment {
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member.php?id=" +
                         FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(((CloudMainActivity)getActivity()).index).work.user.getId());
                 connection.connect();
-                // 获取输入流
                 InputStream inputStream = connection.getInputStream();
-                //将InputStream转换成Bitmap
                 mDownLoadBtBitmap= BitmapFactory.decodeStream(inputStream);
                 inputStream.close();
             }catch(IOException e)

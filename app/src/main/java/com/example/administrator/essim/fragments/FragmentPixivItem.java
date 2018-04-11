@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.DetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.utils.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
