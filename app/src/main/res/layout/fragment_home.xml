@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/rlNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:elevation="1dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.AppCompat"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="mercis_bv的个人主页" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/people_bg"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@color/white_gray"
+                android:scaleType="centerCrop" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/people_head"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="95dp"
+                android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:layout_below="@+id/people_head"
+                android:id="@+id/follow_and_followers"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content">
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:id="@+id/author_followers"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_marginTop="7dp"
+                    android:id="@+id/center_one"
+                    android:layout_marginStart="@dimen/twelve_dip"
+                    android:layout_marginEnd="@dimen/twelve_dip"
+                    android:layout_toEndOf="@+id/author_followers"
+                    android:background="@color/white"
+                    android:layout_height="15dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/center_one"
+                    android:id="@+id/author_follow"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/tabStrip"
+            android:layout_width="match_parent"
+            app:pstsIndicatorHeight="2dp"
+            app:pstsUnderlineColor="@color/colorPrimary"
+            android:layout_height="@dimen/tabstrip_height"
+            android:background="@color/white" />
+
+    </LinearLayout>
+</FrameLayout>
+
+

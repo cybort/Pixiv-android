@@ -17,17 +17,18 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.DetailsActivity;
+import com.example.administrator.essim.activities.DetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.utils.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -51,7 +52,6 @@ public class FragmentPixivItem extends BaseFragment {
     private int index;
     private ImageView mImageView, mImageView2;
     private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5;
-    private TagGroup mTagGroup;
     private MyAsyncTask asyncTask;
     private ProgressDialog progressDialog;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
@@ -87,7 +87,8 @@ public class FragmentPixivItem extends BaseFragment {
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DetailsActivity.class);
+                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                intent.putExtra("which one is selected", index);
                 mContext.startActivity(intent);
             }
         });
@@ -96,11 +97,8 @@ public class FragmentPixivItem extends BaseFragment {
         mTextView4 = view.findViewById(R.id.viewed);
         mTextView5 = view.findViewById(R.id.liked);
         mCardView = view.findViewById(R.id.card_first);
-        mCardView.setOnTouchListener(this);
         mCardView2 = view.findViewById(R.id.card_second);
-        mCardView2.setOnTouchListener(this);
         mCardView3 = view.findViewById(R.id.card_left);
-        mCardView3.setOnTouchListener(this);
         mCardView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,9 +131,25 @@ public class FragmentPixivItem extends BaseFragment {
             }
         });
         mCardView4 = view.findViewById(R.id.card_right);
-        mCardView4.setOnTouchListener(this);
-        mTagGroup = view.findViewById(R.id.tag_group);
+        mCardView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                intent.putExtra("which one is selected", index);
+                mContext.startActivity(intent);
+            }
+        });
+        TagGroup mTagGroup = view.findViewById(R.id.tag_group);
         mTagGroup.setTags(FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.tags);
+        mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
+            @Override
+            public void onTagClick(String tag) {
+                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("Label", tag);
+                cm.setPrimaryClip(mClipData);
+                TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+            }
+        });
         mTextView.setText(getString(R.string.string_author,
                 FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.user.getName()));
         mTextView2.setText(getString(R.string.string_full_size, FragmentPixivLeft.mPixivRankItem.response.get(0)
@@ -156,15 +170,8 @@ public class FragmentPixivItem extends BaseFragment {
                             .work.stats.getScored_count().substring(0, FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index)
                             .work.stats.getScored_count().length() - 3)));
         }
-        mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
-            @Override
-            public void onTagClick(String tag) {
-                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("Label", tag);
-                cm.setPrimaryClip(mClipData);
-                TastyToast.makeText(mContext, tag + " 已复制到剪切板~", Toast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-            }
-        });
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setTitle("提示信息");
         progressDialog.setMessage("正在下载...");

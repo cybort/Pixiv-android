@@ -1,50 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:id="@+id/tag_list">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F4F4F4"
-        android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/img_first"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_alignParentEnd="true"
-            android:padding="16dp"
-            android:src="@mipmap/load_temp" />
-
-        <ImageView
-            android:id="@+id/img_second"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/img_first"
-            android:padding="16dp"
-            android:src="@mipmap/load_temp" />
-
-        <ImageView
-            android:id="@+id/img_third"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/img_second"
-            android:padding="16dp"
-            android:src="@mipmap/load_temp" />
-
-        <ImageView
-            android:id="@+id/img_four"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/img_third"
-            android:padding="16dp"
-            android:src="@mipmap/load_temp" />
-    </RelativeLayout>
-
-</android.support.v4.widget.NestedScrollView>
+</android.support.v7.widget.RecyclerView>

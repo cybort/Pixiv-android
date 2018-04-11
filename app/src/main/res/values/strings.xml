@@ -6,10 +6,17 @@
 
     <string name="action_cloud">Cloud</string>
     <string name="action_delete_all">删除全部</string>
+    <string name="action_view_detail">查看详情</string>
+    <string name="original">原图:%spx*%spx</string>
+    <string name="date_is">日期:%s</string>
     <string name="action_edit">编辑</string>
     <string name="download">下载原图</string>
-    <string name="more_files">更多作品</string>
+    <string name="more_files">TA的主页</string>
+    <string name="author_works">作品</string>
+    <string name="author_follow">关注: %s</string>
+    <string name="author_followers">粉丝: %s</string>
     <string name="string_author">画师：%s</string>
+    <string name="string_author_detail">%s的个人主页</string>
     <string name="string_full_size">原图尺寸：%spx*%spx</string>
     <string name="string_create_time">投稿时间：%s</string>
     <string name="string_viewd">%sK</string>

@@ -33,12 +33,13 @@
         android:id="@+id/card_hitokoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/touch_raise"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_marginBottom="@dimen/sixteen_dip"
         android:layout_marginLeft="@dimen/sixteen_dip"
         android:layout_marginRight="@dimen/sixteen_dip"
         android:layout_marginTop="@dimen/sixteen_dip"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
         card_view:cardCornerRadius="@dimen/card_recycler_elevation"
         card_view:cardElevation="@dimen/card_recycler_elevation">
 

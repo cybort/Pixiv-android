@@ -21,14 +21,4 @@
 
         </android.support.v7.widget.RecyclerView>
     </com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout>
-
-    <ImageView
-        android:id="@+id/pixiv_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/placehoder_temp" />
-
 </FrameLayout>

@@ -1,6 +1,10 @@
 package com.example.administrator.essim.utils;
 
 
+import android.util.Log;
+
+import com.example.administrator.essim.activities.MainActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +39,23 @@ public class Common {
         Calendar now = Calendar.getInstance();
         Calendar future = Calendar.getInstance();
         future.set(Calendar.HOUR_OF_DAY, 11);
-        future.set(Calendar.MINUTE, 5);
+        future.set(Calendar.MINUTE, 4);
         return future.before(now);
+    }
+
+    public static String getLastDay() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DATE, -2);
+        Date today = now.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(today);
+    }
+
+    public static HomeProfileFragment sHomeProfileFragment;
+    public static HomeListFragment sHomeListFragment;
+
+
+    public static <T> void showLog(T t) {
+        Log.d("a line of my log", String.valueOf(t));
     }
 }

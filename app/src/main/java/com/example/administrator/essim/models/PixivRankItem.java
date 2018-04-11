@@ -132,6 +132,21 @@ public class PixivRankItem
                     }
 
                     public String id;
+
+                    public ProfileUrl profile_image_urls;
+
+                    public class ProfileUrl
+                    {
+                        public String getPx_170x170() {
+                            return px_170x170;
+                        }
+
+                        public void setPx_170x170(String px_170x170) {
+                            this.px_170x170 = px_170x170;
+                        }
+
+                        public String px_170x170;
+                    }
                 }
 
                 public String getCreated_time() {

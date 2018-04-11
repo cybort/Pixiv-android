@@ -46,7 +46,6 @@ public class FragmentHitikoto extends BaseFragment{
     private Gson gson = new Gson();
     private HitoModel mHitoModel;
     private AppCompatSpinner mAppCompatSpinner;
-    private Animation mAnimation;
     public static boolean need_to_refresh = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class FragmentHitikoto extends BaseFragment{
 
     private void initView(View view) {
         mCardView = view.findViewById(R.id.card_hitokoto);
-        mCardView.setOnTouchListener(this);
         mTextView1 = view.findViewById(R.id.hitokoto_text);
         mTextView2 = view.findViewById(R.id.hitokoto_author);
         mTextView3 = view.findViewById(R.id.hitokoto_date);
@@ -134,8 +132,6 @@ public class FragmentHitikoto extends BaseFragment{
                 MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
             }
         });
-        mAnimation = AnimationUtils.loadAnimation(mContext, R.anim.anim_card_item_show);
-        mCardView.startAnimation(mAnimation);
     }
 
     private void getData(String address) {
@@ -169,7 +165,6 @@ public class FragmentHitikoto extends BaseFragment{
         if (hide) {
 
         } else {
-            mCardView.startAnimation(mAnimation);
         }
     }
 

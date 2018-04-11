@@ -19,6 +19,8 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentHitikoto;
 import com.example.administrator.essim.fragments.FragmentMine;
 import com.example.administrator.essim.fragments.FragmentPixiv;
+import com.example.administrator.essim.utils.CloudMainActivity;
+import com.example.administrator.essim.utils.Common;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ScrollActivity.class);
+                Intent intent = new Intent(mContext, CloudMainActivity.class);
                 mContext.startActivity(intent);
             }
         });

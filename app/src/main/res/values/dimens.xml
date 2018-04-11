@@ -10,7 +10,7 @@
     <dimen name="title_text_size">19dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="toolbar_and_status_height">80dp</dimen>
-    <dimen name="scroll_height">160dp</dimen>
+    <dimen name="scroll_height">150dp</dimen>
 
 
     <dimen name="main_card_margin_vertical">8dp</dimen>
@@ -49,6 +49,10 @@
     <dimen name="big_text_size">30sp</dimen>
     <dimen name="mid_text_size">24sp</dimen>
     <dimen name="min_text_size">18sp</dimen>
-    <dimen name="app_bar_height">350dp</dimen>
+    <dimen name="app_bar_height">250dp</dimen>
     <dimen name="hitokoto_height">260dp</dimen>
+
+    <dimen name="home_header_size">280dp</dimen>
+    <dimen name="tabstrip_height2">80dp</dimen>
+    <dimen name="author_item_width">160dp</dimen>
 </resources>

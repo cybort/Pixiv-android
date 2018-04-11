@@ -9,6 +9,7 @@
     android:layout_marginRight="@dimen/sixteen_dip"
     android:layout_marginBottom="@dimen/sixteen_dip"
     android:clickable="true"
+    android:stateListAnimator="@animator/touch_raise"
     app:cardBackgroundColor="@color/colorPrimary"
     android:foreground="?attr/selectableItemBackground"
     android:layout_width="match_parent"
