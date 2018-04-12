@@ -12,6 +12,8 @@ Pixiv( P站 ) / Hitokoto( 一言 ) client for android
 
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523458176.png)
 
+![截图](https://github.com/CeuiLiSA/images/blob/master/ScreenRecord_2018-04-12-15-53-23.gif)
+
 2018.03.01 更新：编写基础javabeans 测试网络连接
 
 2018.03.02 更新：FragmentHitokoto 查看一言，
