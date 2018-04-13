@@ -49,19 +49,18 @@
                 android:scaleType="centerCrop" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/sixteen_dip"
                 android:layout_below="@+id/people_head"
                 android:id="@+id/follow_and_followers"
                 android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content">
 
-
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
+                    android:layout_toStartOf="@+id/center_one"
                     android:textColor="@color/white"
                     android:id="@+id/author_followers"/>
 
@@ -69,9 +68,9 @@
                     android:layout_width="2dp"
                     android:layout_marginTop="7dp"
                     android:id="@+id/center_one"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="@dimen/twelve_dip"
                     android:layout_marginEnd="@dimen/twelve_dip"
-                    android:layout_toEndOf="@+id/author_followers"
                     android:background="@color/white"
                     android:layout_height="15dp"/>
 

@@ -7,6 +7,16 @@ public class AuthorWorks {
 
     public class Response
     {
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String id;
         public String getTitle() {
             return title;
         }
@@ -19,7 +29,8 @@ public class AuthorWorks {
 
         public ImgUrl image_urls;
 
-        List<String> tools;
+        public List<String> tools;
+        public List<String> tags;
 
         public String getWidth() {
             return width;
@@ -104,7 +115,24 @@ public class AuthorWorks {
                 this.scored_count = scored_count;
             }
         }
+
+        public User user;
+
+        public class User
+        {
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String name;
+        }
+
     }
+
 
 
 }

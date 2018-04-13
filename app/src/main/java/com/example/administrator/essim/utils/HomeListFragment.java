@@ -38,7 +38,7 @@ public class HomeListFragment extends ScrollObservableFragment {
 
     private Context mContext;
     private View contentView;
-    private AuthorWorks mAuthorWorks;
+    public static AuthorWorks mAuthorWorks;
     private AuthorWorksAdapter mAuthorWorksAdapter;
     @Bind(R.id.rcvGoodsList)
     RecyclerView rcvGoodsList;

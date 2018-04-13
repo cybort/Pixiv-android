@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pixiv_item_container"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.PixivItemActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:id="@+id/tlbar_vp_two"
+        app:titleTextColor="#fff"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        android:elevation="12dp"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.Toolbar>
+
+</FrameLayout>

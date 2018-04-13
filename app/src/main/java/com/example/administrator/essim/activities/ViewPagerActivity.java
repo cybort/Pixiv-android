@@ -14,7 +14,6 @@ import android.view.View;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
 import com.example.administrator.essim.fragments.FragmentPixivLeft;
-import com.example.administrator.essim.utils.Common;
 
 
 public class ViewPagerActivity extends AppCompatActivity {
