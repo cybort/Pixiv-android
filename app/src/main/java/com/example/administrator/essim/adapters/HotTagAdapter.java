@@ -31,7 +31,7 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private List<Tag> mbooksInfo;
-    private int mHeaderCount=1;//头部View个数
+    private int mHeaderCount = 1;//头部View个数
 
     public HotTagAdapter(List<Tag> booksInfo, Context context) {
         mbooksInfo = booksInfo;
@@ -47,31 +47,32 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         private TextView textView1;
         private TextView textView2;
         private TextView textView3;
+
         public ContentViewHolder(View itemView) {
             super(itemView);
-            textView1=(TextView)itemView.findViewById(R.id.tag_one);
-            textView2=(TextView)itemView.findViewById(R.id.tag_two);
-            textView3=(TextView)itemView.findViewById(R.id.tag_three);
-            cardView1=(CardView)itemView.findViewById(R.id.card_1);
-            cardView2=(CardView)itemView.findViewById(R.id.card_2);
-            cardView3=(CardView)itemView.findViewById(R.id.card_3);
-        }
-    }
-    //头部 ViewHolder
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public static EditText editText;
-        private ImageButton imageButton;
-        public HeaderViewHolder(View itemView)
-        {
-            super(itemView);
-            editText = (EditText)itemView.findViewById(R.id.input_tag);
-            imageButton = (ImageButton)itemView.findViewById(R.id.do_search);
+            textView1 = (TextView) itemView.findViewById(R.id.tag_one);
+            textView2 = (TextView) itemView.findViewById(R.id.tag_two);
+            textView3 = (TextView) itemView.findViewById(R.id.tag_three);
+            cardView1 = (CardView) itemView.findViewById(R.id.card_1);
+            cardView2 = (CardView) itemView.findViewById(R.id.card_2);
+            cardView3 = (CardView) itemView.findViewById(R.id.card_3);
         }
     }
 
-    public int getContentItemCount(){
-        return mbooksInfo.size()/3;
+    //头部 ViewHolder
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public static EditText editText;
+        private ImageButton imageButton;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            editText = (EditText) itemView.findViewById(R.id.input_tag);
+            imageButton = (ImageButton) itemView.findViewById(R.id.do_search);
+        }
+    }
+
+    public int getContentItemCount() {
+        return mbooksInfo.size() / 3;
     }
 
     @Override
@@ -89,92 +90,65 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (viewType ==ITEM_TYPE_HEADER) {
+        if (viewType == ITEM_TYPE_HEADER) {
             return new HeaderViewHolder(mLayoutInflater.inflate(R.layout.head_item_two, parent, false));
-        }
-        else
-        {
-            return  new ContentViewHolder(mLayoutInflater.inflate(R.layout.tag_item, parent, false));
+        } else {
+            return new ContentViewHolder(mLayoutInflater.inflate(R.layout.tag_item, parent, false));
         }
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position)
-    {
-        if (holder instanceof HeaderViewHolder)
-        {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    search_text= HeaderViewHolder.editText.getText().toString().trim();
-                    if(!search_text.isEmpty()) {
+                    search_text = HeaderViewHolder.editText.getText().toString().trim();
+                    if (!search_text.isEmpty()) {
                         mOnItemClickLitener.onItemClick(((HeaderViewHolder) holder).imageButton, position);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(mContext, "请输入搜索的内容！", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-        }
-        else if (holder instanceof ContentViewHolder) {
-            ((ContentViewHolder) holder).textView1.setText(mbooksInfo.get(position*3-3).getName());
-            ((ContentViewHolder) holder).textView2.setText(mbooksInfo.get(position*3-2).getName());
-            ((ContentViewHolder) holder).textView3.setText(mbooksInfo.get(position*3-1).getName());
+        } else if (holder instanceof ContentViewHolder) {
+            ((ContentViewHolder) holder).textView1.setText(mbooksInfo.get(position * 3 - 3).getName());
+            ((ContentViewHolder) holder).textView2.setText(mbooksInfo.get(position * 3 - 2).getName());
+            ((ContentViewHolder) holder).textView3.setText(mbooksInfo.get(position * 3 - 1).getName());
             if (mOnItemClickLitener != null) {
                 final int pos = holder.getLayoutPosition();
                 ((ContentViewHolder) holder).cardView1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView1, pos*3-3);
+                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView1, pos * 3 - 3);
                     }
                 });
                 ((ContentViewHolder) holder).cardView2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView2, pos*3-2);
+                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView2, pos * 3 - 2);
                     }
                 });
                 ((ContentViewHolder) holder).cardView3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView3, pos*3-1);
-                    }
-                });
-                ((ContentViewHolder) holder).cardView1.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        mOnItemClickLitener.onItemLongClick(((ContentViewHolder) holder).cardView1, pos*3-3);
-                        return true;
-                    }
-                });
-                ((ContentViewHolder) holder).cardView2.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        mOnItemClickLitener.onItemLongClick(((ContentViewHolder) holder).cardView2, pos*3-2);
-                        return true;
-                    }
-                });((ContentViewHolder) holder).cardView3.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        mOnItemClickLitener.onItemLongClick(((ContentViewHolder) holder).cardView3, pos*3-1);
-                        return true;
+                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView3, pos * 3 - 1);
                     }
                 });
             }
         }
     }
 
-    public interface OnItemClickLitener
-    {
+    public interface OnItemClickLitener {
         void onItemClick(View view, int position);
+
         void onItemLongClick(View view, int position);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
 
-    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener)
-    {
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 

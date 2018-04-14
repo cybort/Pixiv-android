@@ -61,7 +61,7 @@ public class FragmentPixivLeft extends BaseFragment {
         mFireworkyPullToRefreshLayout.setOnRefreshListener(new FireworkyPullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (now_page <= 3) {
+                if (now_page <= 10) {
                     getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
                 } else {
                     TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();

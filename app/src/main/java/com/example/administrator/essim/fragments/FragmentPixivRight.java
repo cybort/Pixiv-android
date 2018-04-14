@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.TagDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
 import com.example.administrator.essim.adapters.PixivAdapter;
@@ -80,17 +81,15 @@ public class FragmentPixivRight extends BaseFragment {
                 mHotTagAdapter.setOnItemClickLitener(new HotTagAdapter.OnItemClickLitener() {
                     @Override
                     public void onItemClick(View view, int position) {
-
+                        Intent intent = new Intent(mContext, TagDetailActivity.class);
+                        intent.putExtra("which one is selected", position);
+                        mContext.startActivity(intent);
                     }
 
                     @Override
                     public void onItemLongClick(View view, int position)
                     {
-                        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData mClipData = ClipData.newPlainText("Label", booksInfo.get(position).getName());
-                        cm.setPrimaryClip(mClipData);
-                        Toast.makeText(mContext, booksInfo.get(position).getName()+ " 已复制到剪切板~",
-                                Toast.LENGTH_SHORT).show();
+
                     }
                 });
                 getActivity().runOnUiThread(new Runnable() {

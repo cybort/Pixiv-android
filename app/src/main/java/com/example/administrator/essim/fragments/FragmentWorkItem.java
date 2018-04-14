@@ -56,8 +56,8 @@ public class FragmentWorkItem extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pixiv_item, container, false);
-        index = ((PixivItemActivity)getActivity()).index;
+        View view = inflater.inflate(R.layout.fragment_work_item, container, false);
+        index = ((PixivItemActivity) getActivity()).index;
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -135,7 +135,7 @@ public class FragmentWorkItem extends BaseFragment {
             }
         });
         mTextView.setText(getString(R.string.string_author, HomeListFragment.mAuthorWorks.response.get(index)
-        .user.getName()));
+                .user.getName()));
         mTextView2.setText(getString(R.string.string_full_size, HomeListFragment.mAuthorWorks.response.get(index).getWidth(),
                 HomeListFragment.mAuthorWorks.response.get(index).getHeight()));
         mTextView3.setText(getString(R.string.string_create_time, HomeListFragment.mAuthorWorks.response.get(index).getCreated_time()));

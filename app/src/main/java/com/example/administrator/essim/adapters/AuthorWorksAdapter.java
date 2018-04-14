@@ -80,7 +80,7 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof ItemHolder) {
         } else {
             ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position - 1).getTitle());
-            if (mBooksInfo.response.get(position - 1)
+            /*if (mBooksInfo.response.get(position - 1)
                     .stats.getViews_count().length() > 3) {
                 ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd, mBooksInfo.response.get(position - 1)
                         .stats.getViews_count().substring(0, mBooksInfo.response.get(position - 1)
@@ -88,7 +88,7 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position - 1)
                         .stats.getViews_count());
-            }
+            }*/
 
             Glide.with(mContext).load(mBooksInfo.response.get(position - 1).image_urls.getPx_480mw())
                     .into(((ContentViewHolder) holder).mImageView);
