@@ -24,10 +24,9 @@
         </activity>
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.ViewPagerActivity" />
-        <activity android:name=".activities.DetailActivity" />
         <activity android:name=".utils.CloudMainActivity" />
         <activity android:name=".activities.PixivItemActivity" />
-        <activity android:name=".activities.TagDetailActivity"></activity>
+        <activity android:name=".activities.TagDetailActivity"/>
     </application>
 
 </manifest>
