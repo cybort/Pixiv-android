@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,9 +27,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
-import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.utils.CloudMainActivity;
-import com.example.administrator.essim.utils.HomeListFragment;
+import com.example.administrator.essim.models.AuthorWorks;
+import com.example.administrator.essim.models.DataSet;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -52,7 +50,7 @@ public class FragmentWorkItem extends BaseFragment {
     private MyAsyncTask asyncTask;
     private ProgressDialog progressDialog;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
-
+    private AuthorWorks mAuthorWorks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +62,14 @@ public class FragmentWorkItem extends BaseFragment {
             ActivityCompat.requestPermissions(mActivity, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+        if(((PixivItemActivity) getActivity()).dataYp == 0)
+        {
+            mAuthorWorks = DataSet.sAuthorWorks;
+        }
+        else
+        {
+            mAuthorWorks = DataSet.sSearchResult;
+        }
         reFreshLayout(view);
         return view;
     }
@@ -72,11 +78,11 @@ public class FragmentWorkItem extends BaseFragment {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
         Glide.with(getContext())
-                .load(HomeListFragment.mAuthorWorks.response.get(index).image_urls.getPx_480mw())
+                .load(mAuthorWorks.response.get(index).image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
                 .into(mImageView);
         Glide.with(getContext())
-                .load(HomeListFragment.mAuthorWorks.response.get(index).image_urls.getPx_480mw())
+                .load(mAuthorWorks.response.get(index).image_urls.getPx_480mw())
                 .into(mImageView2);
         mTextView = view.findViewById(R.id.detail_author);
         mTextView2 = view.findViewById(R.id.detail_img_size);
@@ -101,7 +107,7 @@ public class FragmentWorkItem extends BaseFragment {
                     });
                 }
                 File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                        HomeListFragment.mAuthorWorks.response.get(index).getTitle() + ".jpeg");
+                        mAuthorWorks.response.get(index).getTitle() + ".jpeg");
                 if (file1.exists()) {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
@@ -112,7 +118,7 @@ public class FragmentWorkItem extends BaseFragment {
                     });
                 } else {
                     asyncTask = new MyAsyncTask();
-                    asyncTask.execute(HomeListFragment.mAuthorWorks.response.get(index).image_urls.getLarge());
+                    asyncTask.execute(mAuthorWorks.response.get(index).image_urls.getLarge());
                 }
             }
         });
@@ -124,7 +130,7 @@ public class FragmentWorkItem extends BaseFragment {
             }
         });
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
-        mTagGroup.setTags(HomeListFragment.mAuthorWorks.response.get(index).tags);
+        mTagGroup.setTags(mAuthorWorks.response.get(index).tags);
         mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
             @Override
             public void onTagClick(String tag) {
@@ -134,20 +140,27 @@ public class FragmentWorkItem extends BaseFragment {
                 TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
             }
         });
-        mTextView.setText(getString(R.string.string_author, HomeListFragment.mAuthorWorks.response.get(index)
+        mTextView.setText(getString(R.string.string_author, mAuthorWorks.response.get(index)
                 .user.getName()));
-        mTextView2.setText(getString(R.string.string_full_size, HomeListFragment.mAuthorWorks.response.get(index).getWidth(),
-                HomeListFragment.mAuthorWorks.response.get(index).getHeight()));
-        mTextView3.setText(getString(R.string.string_create_time, HomeListFragment.mAuthorWorks.response.get(index).getCreated_time()));
-        mTextView4.setText(getString(R.string.string_viewd,
-                HomeListFragment.mAuthorWorks.response.get(index).stats.getViews_count().substring(0,
-                        HomeListFragment.mAuthorWorks.response.get(index).stats.getViews_count().length() - 3)));
-        if (HomeListFragment.mAuthorWorks.response.get(index).stats.getScored_count().length() <= 3) {
-            mTextView5.setText(HomeListFragment.mAuthorWorks.response.get(index).stats.getScored_count());
+        mTextView2.setText(getString(R.string.string_full_size, mAuthorWorks.response.get(index).getWidth(),
+                mAuthorWorks.response.get(index).getHeight()));
+        mTextView3.setText(getString(R.string.string_create_time, mAuthorWorks.response.get(index).getCreated_time()));
+        if(mAuthorWorks.response.get(index).stats.getViews_count().length()<=3)
+        {
+            mTextView5.setText(mAuthorWorks.response.get(index).stats.getViews_count());
+        }
+        else
+        {
+            mTextView4.setText(getString(R.string.string_viewd,
+                    mAuthorWorks.response.get(index).stats.getViews_count().substring(0,
+                            mAuthorWorks.response.get(index).stats.getViews_count().length() - 3)));
+        }
+        if (mAuthorWorks.response.get(index).stats.getScored_count().length() <= 3) {
+            mTextView5.setText(mAuthorWorks.response.get(index).stats.getScored_count());
         } else {
             mTextView5.setText(getString(R.string.string_viewd,
-                    HomeListFragment.mAuthorWorks.response.get(index).stats.getScored_count()
-                            .substring(0, HomeListFragment.mAuthorWorks.response.get(index).stats.getScored_count().length() - 3)));
+                    mAuthorWorks.response.get(index).stats.getScored_count()
+                            .substring(0, mAuthorWorks.response.get(index).stats.getScored_count().length() - 3)));
         }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -180,11 +193,11 @@ public class FragmentWorkItem extends BaseFragment {
 
                 FileOutputStream outputStream = new FileOutputStream(
                         Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                HomeListFragment.mAuthorWorks.response.get(index).getTitle() + ".jpeg");
+                                mAuthorWorks.response.get(index).getTitle() + ".jpeg");
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
-                        HomeListFragment.mAuthorWorks.response.get(index).getId());
+                        mAuthorWorks.response.get(index).getId());
                 connection.connect();
                 // 获取输入流
                 inputStream = connection.getInputStream();
@@ -205,7 +218,7 @@ public class FragmentWorkItem extends BaseFragment {
                 try {
                     MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
                             Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            HomeListFragment.mAuthorWorks.response.get(index).getTitle() + ".jpeg",
+                            mAuthorWorks.response.get(index).getTitle() + ".jpeg",
                             null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -213,7 +226,7 @@ public class FragmentWorkItem extends BaseFragment {
 
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(
                         new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                                HomeListFragment.mAuthorWorks.response.get(index).getTitle() + ".jpeg"))));
+                                mAuthorWorks.response.get(index).getTitle() + ".jpeg"))));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -244,6 +257,5 @@ public class FragmentWorkItem extends BaseFragment {
                 }
             });
         }
-
     }
 }

@@ -16,6 +16,7 @@ import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.fragments.FragmentPixivLeft;
 import com.example.administrator.essim.models.AuthorWorks;
+import com.example.administrator.essim.models.DataSet;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -38,7 +39,6 @@ public class HomeListFragment extends ScrollObservableFragment {
 
     private Context mContext;
     private View contentView;
-    public static AuthorWorks mAuthorWorks;
     private AuthorWorksAdapter mAuthorWorksAdapter;
     @Bind(R.id.rcvGoodsList)
     RecyclerView rcvGoodsList;
@@ -102,13 +102,14 @@ public class HomeListFragment extends ScrollObservableFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                mAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
-                mAuthorWorksAdapter = new AuthorWorksAdapter(mAuthorWorks, getContext());
+                DataSet.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
+                mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sAuthorWorks, getContext(), "AuthorResult");
                 mAuthorWorksAdapter.setOnItemClickListener(new AuthorWorksAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(mContext, PixivItemActivity.class);
                         intent.putExtra("which one is selected", position);
+                        intent.putExtra("which kind data type", "AuthorWorks");
                         mContext.startActivity(intent);
                     }
                 });

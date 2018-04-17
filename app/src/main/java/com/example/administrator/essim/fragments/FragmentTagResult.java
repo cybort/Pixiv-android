@@ -19,6 +19,7 @@ import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.activities.TagDetailActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.models.AuthorWorks;
+import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
 
@@ -30,10 +31,12 @@ import okhttp3.Response;
 
 public class FragmentTagResult extends BaseFragment {
 
-    private AuthorWorks mAuthorWorks;
     private AuthorWorksAdapter mAuthorWorksAdapter;
     private RecyclerView mRecyclerView;
     private int index;
+    public static final String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
+    public static final String bottom = "&per_page=20";
+    //5000users入り
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tag_result, container, false);
@@ -49,6 +52,7 @@ public class FragmentTagResult extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
+        getData(head + DataSet.sTags.get(index).getName() + bottom);
         return view;
     }
 
@@ -62,13 +66,14 @@ public class FragmentTagResult extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                mAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
-                mAuthorWorksAdapter = new AuthorWorksAdapter(mAuthorWorks, getContext());
+                DataSet.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
+                mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sSearchResult, getContext(), "searchResult");
                 mAuthorWorksAdapter.setOnItemClickListener(new AuthorWorksAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(mContext, PixivItemActivity.class);
                         intent.putExtra("which one is selected", position);
+                        intent.putExtra("which kind data type", "TagResult");
                         mContext.startActivity(intent);
                     }
                 });

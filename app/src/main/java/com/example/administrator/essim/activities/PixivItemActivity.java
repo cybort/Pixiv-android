@@ -11,12 +11,15 @@ import android.view.View;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentWorkItem;
-import com.example.administrator.essim.utils.HomeListFragment;
+import com.example.administrator.essim.models.DataSet;
 
 public class PixivItemActivity extends AppCompatActivity {
 
     public int index;
+    public String dataType;
+    public int dataYp;
     public Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +30,21 @@ public class PixivItemActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         index = intent.getIntExtra("which one is selected", 0);
+        dataType = intent.getStringExtra("which kind data type");
 
         mToolbar = findViewById(R.id.tlbar_vp_two);
-        mToolbar.setTitle(HomeListFragment.mAuthorWorks.response.get(index).getTitle());
-        setSupportActionBar(mToolbar);
+        if(dataType.equals("TagResult"))
+        {
+            dataYp = 1;
+            mToolbar.setTitle(DataSet.sSearchResult.response.get(index).getTitle());
+            setSupportActionBar(mToolbar);
+        }
+        else if(dataType.equals("AuthorWorks"))
+        {
+            dataYp = 0;
+            mToolbar.setTitle(DataSet.sAuthorWorks.response.get(index).getTitle());
+            setSupportActionBar(mToolbar);
+        }
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

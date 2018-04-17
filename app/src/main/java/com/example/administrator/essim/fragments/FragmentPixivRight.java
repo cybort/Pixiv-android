@@ -18,6 +18,7 @@ import com.example.administrator.essim.activities.TagDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
 import com.example.administrator.essim.adapters.PixivAdapter;
+import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.models.PixivRankItem;
 import com.example.administrator.essim.models.Tag;
 import com.example.administrator.essim.utils.Common;
@@ -40,8 +41,6 @@ import okhttp3.Response;
 
 public class FragmentPixivRight extends BaseFragment {
 
-    private Button mButton;
-    private List<Tag> mTagList = new ArrayList<>();
     private HotTagAdapter mHotTagAdapter;
     private RecyclerView mRecyclerView;
 
@@ -76,8 +75,8 @@ public class FragmentPixivRight extends BaseFragment {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
                 final List<Tag> booksInfo = gson.fromJson(responseData, new TypeToken<List<Tag>>() {}.getType());
-                mTagList = booksInfo.subList(0, 60);
-                mHotTagAdapter = new HotTagAdapter(mTagList, getContext());
+                DataSet.sTags = booksInfo.subList(0, 60);
+                mHotTagAdapter = new HotTagAdapter(DataSet.sTags, getContext());
                 mHotTagAdapter.setOnItemClickLitener(new HotTagAdapter.OnItemClickLitener() {
                     @Override
                     public void onItemClick(View view, int position) {
