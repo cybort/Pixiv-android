@@ -75,7 +75,7 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         else {
             if (viewType == ITEM_TYPE_HEADER) {
-                return new ItemHolder(mLayoutInflater.inflate(R.layout.recy_head, parent, false));
+                return new ItemHolder(mLayoutInflater.inflate(R.layout.head_blank, parent, false));
             } else {
                 return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
             }
@@ -88,6 +88,7 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         {
             // no need to set headLayout
             ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
+            ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
             Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                     .into(((ContentViewHolder) holder).mImageView);
             ((ContentViewHolder) holder).mButton.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +110,14 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 //create a empty headLayout
             } else {
                 ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position - 1).getTitle());
+                if (mBooksInfo.response.get(position -1).stats.getViews_count().length() <= 3)
+                {
+                    ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position -1).stats.getViews_count());
+                } else {
+                    ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
+                            mBooksInfo.response.get(position -1).stats.getViews_count().substring(0,
+                                    mBooksInfo.response.get(position -1).stats.getViews_count().length() - 3)));
+                }
                 Glide.with(mContext).load(mBooksInfo.response.get(position - 1).image_urls.getPx_480mw())
                         .into(((ContentViewHolder) holder).mImageView);
                 ((ContentViewHolder) holder).mButton.setOnClickListener(new View.OnClickListener() {

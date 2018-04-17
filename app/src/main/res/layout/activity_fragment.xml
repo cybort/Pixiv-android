@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/pixiv_item_container"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.PixivItemActivity">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:background="@android:color/transparent"
-        android:id="@+id/tlbar_vp_two"
+        android:id="@+id/container_toolbar"
         app:titleTextColor="#fff"
         android:theme="@style/AppTheme.AppBarOverlay"
+        app:title=" "
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
         android:elevation="12dp"

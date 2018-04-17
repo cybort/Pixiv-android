@@ -1,8 +1,5 @@
 package com.example.administrator.essim.fragments;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,16 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.TagDetailActivity;
-import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
-import com.example.administrator.essim.adapters.PixivAdapter;
 import com.example.administrator.essim.models.DataSet;
-import com.example.administrator.essim.models.PixivRankItem;
 import com.example.administrator.essim.models.Tag;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
@@ -27,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -80,15 +72,17 @@ public class FragmentPixivRight extends BaseFragment {
                 mHotTagAdapter.setOnItemClickLitener(new HotTagAdapter.OnItemClickLitener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(mContext, TagDetailActivity.class);
+                        Intent intent = new Intent(mContext, TagResultActivity.class);
                         intent.putExtra("which one is selected", position);
                         mContext.startActivity(intent);
                     }
 
                     @Override
-                    public void onItemLongClick(View view, int position)
-                    {
-
+                    public void onSearch(View view, String searchKey, int position) {
+                        Intent intent = new Intent(mContext, TagResultActivity.class);
+                        intent.putExtra("which one is selected", position);
+                        intent.putExtra("what is searching", searchKey);
+                        mContext.startActivity(intent);
                     }
                 });
                 getActivity().runOnUiThread(new Runnable() {

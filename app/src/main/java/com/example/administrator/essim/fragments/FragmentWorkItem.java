@@ -147,7 +147,7 @@ public class FragmentWorkItem extends BaseFragment {
         mTextView3.setText(getString(R.string.string_create_time, mAuthorWorks.response.get(index).getCreated_time()));
         if(mAuthorWorks.response.get(index).stats.getViews_count().length()<=3)
         {
-            mTextView5.setText(mAuthorWorks.response.get(index).stats.getViews_count());
+            mTextView4.setText(mAuthorWorks.response.get(index).stats.getViews_count());
         }
         else
         {

@@ -79,7 +79,7 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == ITEM_TYPE_BOTTOM) {
-            return new BottomViewHolder(mLayoutInflater.inflate(R.layout.recy_bottom, parent, false));
+            return new BottomViewHolder(mLayoutInflater.inflate(R.layout.bottom_refresh, parent, false));
         } else {
             return new PhotoHolder(mLayoutInflater.inflate(R.layout.pixiv_item, parent, false));
         }

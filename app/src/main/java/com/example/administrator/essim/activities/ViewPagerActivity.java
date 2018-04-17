@@ -32,7 +32,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         index = intent.getIntExtra("which_one_is_touched", 0);
-        mToolbar = findViewById(R.id.tlbar_vp_two);
+        mToolbar = findViewById(R.id.view_pager_toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

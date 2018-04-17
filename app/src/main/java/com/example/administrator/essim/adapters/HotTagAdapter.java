@@ -61,7 +61,7 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     //头部 ViewHolder
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public static EditText editText;
+        public EditText editText;
         private ImageButton imageButton;
 
         public HeaderViewHolder(View itemView) {
@@ -91,7 +91,7 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == ITEM_TYPE_HEADER) {
-            return new HeaderViewHolder(mLayoutInflater.inflate(R.layout.head_item_two, parent, false));
+            return new HeaderViewHolder(mLayoutInflater.inflate(R.layout.head_search_view, parent, false));
         } else {
             return new ContentViewHolder(mLayoutInflater.inflate(R.layout.tag_item, parent, false));
         }
@@ -103,9 +103,10 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((HeaderViewHolder) holder).imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    search_text = HeaderViewHolder.editText.getText().toString().trim();
+                    search_text = ((HeaderViewHolder) holder).editText.getText().toString().trim();
                     if (!search_text.isEmpty()) {
-                        mOnItemClickLitener.onItemClick(((HeaderViewHolder) holder).imageButton, position);
+                        mOnItemClickLitener.onSearch(((HeaderViewHolder) holder).imageButton,
+                                ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
                     } else {
                         Toast.makeText(mContext, "请输入搜索的内容！", Toast.LENGTH_SHORT).show();
                     }
@@ -143,7 +144,7 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public interface OnItemClickLitener {
         void onItemClick(View view, int position);
 
-        void onItemLongClick(View view, int position);
+        void onSearch(View view, String searchKey, int position);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
