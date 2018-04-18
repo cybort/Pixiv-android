@@ -7,13 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
 import com.example.administrator.essim.models.DataSet;
-import com.example.administrator.essim.models.Tag;
+import com.example.administrator.essim.models.HotTag;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -66,9 +65,9 @@ public class FragmentPixivRight extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                final List<Tag> booksInfo = gson.fromJson(responseData, new TypeToken<List<Tag>>() {}.getType());
-                DataSet.sTags = booksInfo.subList(0, 60);
-                mHotTagAdapter = new HotTagAdapter(DataSet.sTags, getContext());
+                final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {}.getType());
+                DataSet.sHotTags = booksInfo.subList(0, 60);
+                mHotTagAdapter = new HotTagAdapter(DataSet.sHotTags, getContext());
                 mHotTagAdapter.setOnItemClickLitener(new HotTagAdapter.OnItemClickLitener() {
                     @Override
                     public void onItemClick(View view, int position) {

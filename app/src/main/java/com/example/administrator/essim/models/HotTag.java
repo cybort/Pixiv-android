@@ -4,7 +4,7 @@ package com.example.administrator.essim.models;
  * Created by Administrator on 2018/1/20 0020.
  */
 
-public class Tag
+public class HotTag
 {
     public int r;
     public int g;

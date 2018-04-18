@@ -63,8 +63,8 @@ public class FragmentTagResult extends BaseFragment {
         }
         else
         {
-            mToolbar.setTitle(DataSet.sTags.get(index).getName());
-            getData(head + DataSet.sTags.get(index).getName() + bottom);
+            mToolbar.setTitle(DataSet.sHotTags.get(index).getName());
+            getData(head + DataSet.sHotTags.get(index).getName() + bottom);
         }
         return view;
     }

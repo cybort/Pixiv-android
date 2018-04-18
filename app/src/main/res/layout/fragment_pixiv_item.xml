@@ -33,7 +33,6 @@
                 app:cardCornerRadius="@dimen/card_recycler_elevation">
 
                 <ImageView
-
                     android:id="@+id/detail_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

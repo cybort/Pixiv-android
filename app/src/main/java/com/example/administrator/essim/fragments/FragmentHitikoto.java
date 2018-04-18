@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
@@ -42,7 +43,7 @@ public class FragmentHitikoto extends BaseFragment{
     private Button mButton, mButton2;
     private Toolbar mToolbar;
     private CardView mCardView;
-    private String responseData, finalResponseData, catname, type;
+    private String responseData, finalResponseData, catname;
     private Gson gson = new Gson();
     private HitoModel mHitoModel;
     private AppCompatSpinner mAppCompatSpinner;

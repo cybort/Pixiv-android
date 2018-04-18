@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 
-import com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.PixivAdapter;
@@ -19,16 +17,13 @@ import com.example.administrator.essim.utils.Common;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import static com.example.administrator.essim.utils.Common.hasData;
-
-
 /**
  * Created by Administrator on 2018/1/15 0015.
  */
@@ -42,7 +37,8 @@ public class FragmentPixivLeft extends BaseFragment {
     public static PixivRankItem mPixivRankItem;
     private FloatingActionMenu mFloatingActionMenu;
     private Gson gson = new Gson();
-    private FireworkyPullToRefreshLayout mFireworkyPullToRefreshLayout;
+    private PullToRefreshView mPullToRefreshView;
+    private ProgressBar mProgressBar;
     private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date="+Common.getLastDay();
     private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date="+Common.getLastDay();
     private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=monthly&per_page=20&date="+Common.getLastDay();
@@ -57,15 +53,16 @@ public class FragmentPixivLeft extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView = view.findViewById(R.id.pixiv_recy);
         mFloatingActionMenu = getActivity().findViewById(R.id.menu_red);
-        mFireworkyPullToRefreshLayout = view.findViewById(R.id.pull_wo_refresh);
-        mFireworkyPullToRefreshLayout.setOnRefreshListener(new FireworkyPullToRefreshLayout.OnRefreshListener() {
+        mProgressBar = view.findViewById(R.id.loading);
+        mPullToRefreshView = view.findViewById(R.id.pull_wo_refresh);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (now_page <= 10) {
                     getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
                 } else {
                     TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                    mFireworkyPullToRefreshLayout.setRefreshing(false);
+                    mPullToRefreshView.setRefreshing(false);
                 }
             }
         });
@@ -115,6 +112,7 @@ public class FragmentPixivLeft extends BaseFragment {
     }
 
     private void getData(final String address, final boolean stopRefresh) {
+        mProgressBar.setVisibility(View.VISIBLE);
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -147,8 +145,9 @@ public class FragmentPixivLeft extends BaseFragment {
                         mRecyclerView.setAdapter(mPixivAdapter);
                         mPixivAdapter.notifyDataSetChanged();
                         if (stopRefresh) {
-                            mFireworkyPullToRefreshLayout.setRefreshing(false);
+                            mPullToRefreshView.setRefreshing(false);
                         }
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
                 now_link_address = address;

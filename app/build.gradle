@@ -41,8 +41,7 @@ dependencies {
     implementation 'com.github.florent37:arclayout:1.0.3'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.cleveroad:fireworkypulltorefresh:1.0.3'
-    implementation 'com.android.support:percent:26.1.0'
+    implementation 'com.yalantis:phoenix:1.2.3'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

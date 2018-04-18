@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_hitokoto"
@@ -27,19 +26,19 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_hitokoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stateListAnimator="@animator/touch_raise"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_below="@+id/toolbar_hitokoto"
         android:layout_marginBottom="@dimen/sixteen_dip"
         android:layout_marginLeft="@dimen/sixteen_dip"
         android:layout_marginRight="@dimen/sixteen_dip"
         android:layout_marginTop="@dimen/sixteen_dip"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@animator/touch_raise"
         card_view:cardCornerRadius="@dimen/card_recycler_elevation"
         card_view:cardElevation="@dimen/card_recycler_elevation">
 
@@ -156,5 +155,4 @@
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-
-</LinearLayout>
+</RelativeLayout>

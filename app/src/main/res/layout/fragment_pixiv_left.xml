@@ -5,14 +5,10 @@
     android:background="#f4f4f4"
     android:layout_height="match_parent">
 
-    <com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout
+    <com.yalantis.phoenix.PullToRefreshView
         android:id="@+id/pull_wo_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F4F4F4"
-        android:orientation="vertical"
-        app:ptr_background="@mipmap/material_design_3"
-        app:ptr_rocketAnimDuration="1000">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pixiv_recy"
@@ -20,5 +16,12 @@
             android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
-    </com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout>
+    </com.yalantis.phoenix.PullToRefreshView>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:id="@+id/loading"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp"
+        android:layout_height="wrap_content" />
 </FrameLayout>

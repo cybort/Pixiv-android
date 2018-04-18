@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.models.Tag;
+import com.example.administrator.essim.models.HotTag;
 
 import java.util.List;
 
@@ -30,10 +30,10 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private LayoutInflater mLayoutInflater;
     private Context mContext;
-    private List<Tag> mbooksInfo;
+    private List<HotTag> mbooksInfo;
     private int mHeaderCount = 1;//头部View个数
 
-    public HotTagAdapter(List<Tag> booksInfo, Context context) {
+    public HotTagAdapter(List<HotTag> booksInfo, Context context) {
         mbooksInfo = booksInfo;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
