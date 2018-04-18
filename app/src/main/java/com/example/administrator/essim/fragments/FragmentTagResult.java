@@ -33,8 +33,8 @@ public class FragmentTagResult extends BaseFragment {
 
     private AuthorWorksAdapter mAuthorWorksAdapter;
     private RecyclerView mRecyclerView;
-    public static final String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
-    public static final String bottom = "1000users入り&per_page=20";
+    private final String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
+    private final String bottom = "&per_page=20";
     private Toolbar mToolbar;
 
     //5000users入り
@@ -55,14 +55,11 @@ public class FragmentTagResult extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        if(index == -1)
-        {
+        if (index == -1) {
             String word = ((TagResultActivity) getActivity()).words;
             mToolbar.setTitle(word);
             getData(head + word + bottom);
-        }
-        else
-        {
+        } else {
             mToolbar.setTitle(DataSet.sHotTags.get(index).getName());
             getData(head + DataSet.sHotTags.get(index).getName() + bottom);
         }

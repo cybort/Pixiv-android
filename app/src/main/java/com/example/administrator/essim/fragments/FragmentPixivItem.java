@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.utils.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -147,6 +148,10 @@ public class FragmentPixivItem extends BaseFragment {
                 ClipData mClipData = ClipData.newPlainText("Label", tag);
                 cm.setPrimaryClip(mClipData);
                 TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                /*Intent intent = new Intent(mContext, TagResultActivity.class);
+                intent.putExtra("which one is selected", -1);
+                intent.putExtra("what is searching", tag);
+                mContext.startActivity(intent);*/
             }
         });
         mTextView.setText(getString(R.string.string_author,

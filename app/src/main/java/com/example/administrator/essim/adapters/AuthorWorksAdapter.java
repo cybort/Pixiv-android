@@ -88,7 +88,14 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         {
             // no need to set headLayout
             ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
-            ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
+            if (mBooksInfo.response.get(position).stats.getViews_count().length() <= 3)
+            {
+                ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
+            } else {
+                ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
+                        mBooksInfo.response.get(position).stats.getViews_count().substring(0,
+                                mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
+            }
             Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                     .into(((ContentViewHolder) holder).mImageView);
             ((ContentViewHolder) holder).mButton.setOnClickListener(new View.OnClickListener() {

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
+import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
 import com.sdsmdg.tastytoast.TastyToast;

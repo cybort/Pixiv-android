@@ -38,15 +38,6 @@ public class Common {
         Log.d("this is a message: ", message);
     }
 
-    public static boolean hasData() {
-        // 每天11:15分 pixiv 才会开放排行榜数据
-        Calendar now = Calendar.getInstance();
-        Calendar future = Calendar.getInstance();
-        future.set(Calendar.HOUR_OF_DAY, 11);
-        future.set(Calendar.MINUTE, 4);
-        return future.before(now);
-    }
-
     public static String getLastDay() {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DATE, -2);
@@ -57,7 +48,6 @@ public class Common {
 
     public static HomeProfileFragment sHomeProfileFragment;
     public static HomeListFragment sHomeListFragment;
-
 
     public static <T> void showLog(T t) {
         Log.d("a line of my log", String.valueOf(t));
