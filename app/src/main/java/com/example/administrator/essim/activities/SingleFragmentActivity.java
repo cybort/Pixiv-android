@@ -9,14 +9,14 @@ import android.view.View;
 
 import com.example.administrator.essim.R;
 
-public abstract class SingleFragmentActivity extends AppCompatActivity{
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     public Toolbar mToolbar;
+
     protected abstract Fragment createFragment();
 
     @Override
-    public void onCreate(Bundle b)
-    {
+    public void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_fragment);
         mToolbar = findViewById(R.id.container_toolbar);
@@ -29,8 +29,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity{
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-        if(fragment == null)
-        {
+        if (fragment == null) {
             fragment = createFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, fragment)

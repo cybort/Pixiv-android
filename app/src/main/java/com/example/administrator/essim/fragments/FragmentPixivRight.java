@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
+import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.models.HotTag;
 import com.example.administrator.essim.utils.Common;
@@ -38,19 +39,17 @@ public class FragmentPixivRight extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pixiv_right, container, false);
-
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView = view.findViewById(R.id.tag_list);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        getData("https://api.imjad.cn/pixiv/v1/?type=tags");
+        getData();
         return view;
     }
 
-
-    private void getData(String address) {
-        Common.sendOkhttpRequest(address, new Callback() {
+    private void getData() {
+        Common.sendOkhttpRequest("https://api.imjad.cn/pixiv/v1/?type=tags", new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -65,10 +64,11 @@ public class FragmentPixivRight extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {}.getType());
+                final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {
+                }.getType());
                 DataSet.sHotTags = booksInfo.subList(0, 60);
                 mHotTagAdapter = new HotTagAdapter(DataSet.sHotTags, getContext());
-                mHotTagAdapter.setOnItemClickLitener(new HotTagAdapter.OnItemClickLitener() {
+                mHotTagAdapter.setOnTagListItemClickListener(new OnTagListItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(mContext, TagResultActivity.class);

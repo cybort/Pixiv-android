@@ -22,16 +22,13 @@ import butterknife.ButterKnife;
  */
 public class HomeProfileFragment extends ScrollObservableFragment {
 
-    private View contentView;
-
     @Bind(R.id.osvHomeRecommend)
     ObservableScrollView osvHomeRecommend;
-
     @Bind(R.id.author_introduction)
     TextView mTextView;
+    private View contentView;
 
     public HomeProfileFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -54,11 +51,9 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                 doOnScrollChanged(scrolledX, scrolledY, dx, dy);
             }
         });
-
     }
 
-    public void refreshLayout(PixivMember pixivMember)
-    {
+    public void refreshLayout(PixivMember pixivMember) {
         mTextView.setText(pixivMember.response.get(0).profile.getIntroduction());
     }
 

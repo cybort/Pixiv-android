@@ -2,12 +2,10 @@ package com.example.administrator.essim.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentWorkItem;
 import com.example.administrator.essim.models.DataSet;
 

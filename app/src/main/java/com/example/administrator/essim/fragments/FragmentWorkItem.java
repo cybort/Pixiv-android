@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
-import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -63,12 +62,9 @@ public class FragmentWorkItem extends BaseFragment {
             ActivityCompat.requestPermissions(mActivity, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
-        if(((PixivItemActivity) getActivity()).dataYp == 0)
-        {
+        if (((PixivItemActivity) getActivity()).dataYp == 0) {
             mAuthorWorks = DataSet.sAuthorWorks;
-        }
-        else
-        {
+        } else {
             mAuthorWorks = DataSet.sSearchResult;
         }
         reFreshLayout(view);
@@ -146,12 +142,9 @@ public class FragmentWorkItem extends BaseFragment {
         mTextView2.setText(getString(R.string.string_full_size, mAuthorWorks.response.get(index).getWidth(),
                 mAuthorWorks.response.get(index).getHeight()));
         mTextView3.setText(getString(R.string.string_create_time, mAuthorWorks.response.get(index).getCreated_time()));
-        if(mAuthorWorks.response.get(index).stats.getViews_count().length()<=3)
-        {
+        if (mAuthorWorks.response.get(index).stats.getViews_count().length() <= 3) {
             mTextView4.setText(mAuthorWorks.response.get(index).stats.getViews_count());
-        }
-        else
-        {
+        } else {
             mTextView4.setText(getString(R.string.string_viewd,
                     mAuthorWorks.response.get(index).stats.getViews_count().substring(0,
                             mAuthorWorks.response.get(index).stats.getViews_count().length() - 3)));

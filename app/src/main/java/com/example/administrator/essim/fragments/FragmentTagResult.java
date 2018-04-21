@@ -18,6 +18,7 @@ import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.activities.SingleFragmentActivity;
 import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
+import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.utils.Common;
@@ -33,8 +34,6 @@ public class FragmentTagResult extends BaseFragment {
 
     private AuthorWorksAdapter mAuthorWorksAdapter;
     private RecyclerView mRecyclerView;
-    private final String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
-    private final String bottom = "&per_page=20";
     private Toolbar mToolbar;
 
     //5000users入り
@@ -55,6 +54,8 @@ public class FragmentTagResult extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
+        String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
+        String bottom = "&per_page=20";
         if (index == -1) {
             String word = ((TagResultActivity) getActivity()).words;
             mToolbar.setTitle(word);
@@ -78,7 +79,7 @@ public class FragmentTagResult extends BaseFragment {
                 Gson gson = new Gson();
                 DataSet.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sSearchResult, getContext(), "searchResult");
-                mAuthorWorksAdapter.setOnItemClickListener(new AuthorWorksAdapter.OnItemClickListener() {
+                mAuthorWorksAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(mContext, PixivItemActivity.class);

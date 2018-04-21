@@ -3,10 +3,28 @@ package com.example.administrator.essim.models;
 import java.util.List;
 
 public class PixivMember {
+    public List<Response> response;
+
     public class Response {
         public String name;
+        public String id;
+        public Status stats;
+        public Profile profile;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public class Status {
+            public String works;
+            public String favorites;
+            public String following;
+            public String friends;
+
             public String getWorks() {
                 return works;
             }
@@ -38,26 +56,14 @@ public class PixivMember {
             public void setFriends(String friends) {
                 this.friends = friends;
             }
-
-            public String works;
-            public String favorites;
-            public String following;
-            public String friends;
         }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String id;
-        public Status stats;
-        public Profile profile;
 
         public class Profile {
+            public String job;
+            public String introduction;
+            public String location;
+            public String homepage;
+
             public String getJob() {
                 return job;
             }
@@ -89,13 +95,6 @@ public class PixivMember {
             public void setHomepage(String homepage) {
                 this.homepage = homepage;
             }
-
-            public String job;
-            public String introduction;
-            public String location;
-            public String homepage;
         }
     }
-
-    public List<Response> response;
 }

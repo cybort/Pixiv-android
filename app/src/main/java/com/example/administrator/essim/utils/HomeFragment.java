@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.fragments.FragmentPixivLeft;
+import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.models.PixivMember;
 import com.google.gson.Gson;
 
@@ -51,46 +51,34 @@ import okhttp3.Response;
  */
 public class HomeFragment extends BaseFragment {
 
-    private View contentView;
-    public PixivMember mPixivMember;
     private static float offset = 1f;
     private static float a;
     private static float b = 400.0f;
-    private String url = "https://api.imjad.cn/pixiv/v1/?type=member&id=";
-
-
+    public PixivMember mPixivMember;
     @Bind(R.id.people_bg)
     ImageView bg;
-
     @Bind(R.id.follow_and_followers)
     RelativeLayout mRelativeLayout;
-
     @Bind(R.id.people_head)
     CircleImageView head;
-
     @Bind(R.id.author_followers)
     TextView mTextView;
-
     @Bind(R.id.author_follow)
     TextView mTextView2;
-
     @Bind(R.id.rlNavBar)
     Toolbar rlNavBar;
-
     @Bind(R.id.viewPager)
     ViewPager viewPager;
-
     @Bind(R.id.tabStrip)
     PagerSlidingTabStrip tabStrip;
-
     @Bind(R.id.llHeader)
     LinearLayout llHeader;
-
     int slidingDistance;
     int currScrollY;
     int index;
     int currentPosition;
-
+    private View contentView;
+    private String url = "https://api.imjad.cn/pixiv/v1/?type=member&id=";
     private List<ScrollObservableFragment> displayFragments;
     private List<String> displayPageTitles = Arrays.asList("他的作品", "个人信息");
 
@@ -100,7 +88,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        index = ((CloudMainActivity)getActivity()).index;
+        index = ((CloudMainActivity) getActivity()).index;
         setRetainInstance(true);
     }
 
@@ -125,7 +113,7 @@ public class HomeFragment extends BaseFragment {
                 getActivity().finish();
             }
         });
-        rlNavBar.setTitle(FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.user.getName()+"的主页");
+        rlNavBar.setTitle(DataSet.sPixivRankItem.response.get(0).works.get(index).work.user.getName() + "的主页");
         displayFragments = new ArrayList<>();
         displayFragments.add(HomeListFragment.newInstance());
         displayFragments.add(new HomeProfileFragment());
@@ -180,15 +168,15 @@ public class HomeFragment extends BaseFragment {
         });
         tabStrip.setViewPager(viewPager);
         viewPager.setCurrentItem(currentPosition);
-        Glide.with(getContext()).load(FragmentPixivLeft.mPixivRankItem.response.get(0).works.
+        Glide.with(getContext()).load(DataSet.sPixivRankItem.response.get(0).works.
                 get(index).work.image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
                 .into(bg);
         DownLoad downLoad = new DownLoad();
-        downLoad.execute(FragmentPixivLeft.mPixivRankItem.response.get(0).
+        downLoad.execute(DataSet.sPixivRankItem.response.get(0).
                 works.get(index).work.user.profile_image_urls.getPx_170x170());
-        getData(url+FragmentPixivLeft.mPixivRankItem.response.get(0).works
-        .get(index).work.user.getId());
+        getData(url + DataSet.sPixivRankItem.response.get(0).works
+                .get(index).work.user.getId());
     }
 
     private void getData(String address) {
@@ -212,12 +200,12 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
-    private void refreshLayout()
-    {
+    private void refreshLayout() {
         mTextView.setText(getString(R.string.author_followers, mPixivMember.response.get(0).stats.getFollowing()));
         mTextView2.setText(getString(R.string.author_follow, mPixivMember.response.get(0).stats.getFriends()));
         Common.sHomeProfileFragment.refreshLayout(mPixivMember);
     }
+
     /**
      * 初始化滑动参数,k值
      */
@@ -253,28 +241,24 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private class DownLoad extends AsyncTask<String, Integer, String>
-    {
+    private class DownLoad extends AsyncTask<String, Integer, String> {
         Bitmap mDownLoadBtBitmap;
-        protected void onPreExecute()
-        {
+
+        protected void onPreExecute() {
         }
 
         @Override
-        protected String doInBackground(String... params)
-        {
-            try
-            {
+        protected String doInBackground(String... params) {
+            try {
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member.php?id=" +
-                        FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(((CloudMainActivity)getActivity()).index).work.user.getId());
+                        DataSet.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work.user.getId());
                 connection.connect();
                 InputStream inputStream = connection.getInputStream();
-                mDownLoadBtBitmap= BitmapFactory.decodeStream(inputStream);
+                mDownLoadBtBitmap = BitmapFactory.decodeStream(inputStream);
                 inputStream.close();
-            }catch(IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -282,10 +266,8 @@ public class HomeFragment extends BaseFragment {
         }
 
         @Override
-        protected void onPostExecute(String result)
-        {
+        protected void onPostExecute(String result) {
             head.setImageBitmap(mDownLoadBtBitmap);
         }
     }
-
 }

@@ -6,4 +6,5 @@ import java.util.List;
 public class DataSet {
     public static List<HotTag> sHotTags = new ArrayList<>();
     public static AuthorWorks sAuthorWorks, sSearchResult;
+    public static PixivRankItem sPixivRankItem;
 }

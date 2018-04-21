@@ -11,30 +11,33 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentHitikoto;
 import com.example.administrator.essim.fragments.FragmentMine;
 import com.example.administrator.essim.fragments.FragmentPixiv;
-import com.example.administrator.essim.utils.CloudMainActivity;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.sdsmdg.tastytoast.TastyToast;
+import com.stephentuso.welcome.WelcomeHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static DrawerLayout sDrawerLayout;
     private FragmentPixiv mFragmentPixiv;
     private FragmentHitikoto mFragmentHitikoto;
     private FragmentMine mFragmentMine;
     private Fragment[] mFragments;
     private int lastShowFragment;
-    private ImageView mImageView;
     private Context mContext;
-    public static DrawerLayout sDrawerLayout;
+    private long mExitTime;
+    private WelcomeHelper welcomeScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        welcomeScreen = new WelcomeHelper(this, MyWelcomeActivity.class);
+        welcomeScreen.show(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
         initFragments();
@@ -82,16 +87,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-
-        View headerView = navigationView.getHeaderView(0);
-        mImageView = headerView.findViewById(R.id.imageView_nav_head);
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CloudMainActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     public void switchFrament(int lastIndex, int index) {
@@ -117,12 +112,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        welcomeScreen.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                exit();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void exit() {
+        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+            TastyToast.makeText(MainActivity.this, "再按一次退出~", Toast.LENGTH_SHORT, TastyToast.INFO).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            finish();
         }
     }
 

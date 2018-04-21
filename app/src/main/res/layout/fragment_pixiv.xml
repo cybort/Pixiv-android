@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
             android:id="@+id/toolbar_pixiv"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             android:theme="@style/AppTheme.AppBarOverlay"
-            app:titleTextColor="#fff"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:navigationIcon="@drawable/ic_menu_black_24dp"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:layout_height="?attr/actionBarSize">
+            app:navigationIcon="@drawable/ic_menu_black_24dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextColor="#fff">
 
             <TextView
-                android:layout_width="wrap_content"
                 android:id="@+id/toolbar_title_one"
-                android:textColor="@color/white"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/tweenty_six_sp"
-                android:text="@string/tool_bar_title_one"/>
+                android:text="@string/tool_bar_title_one"
+                android:textColor="@color/white"
+                android:textSize="@dimen/tweenty_six_sp" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -35,19 +34,19 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="#FFFFFF"
-            app:tabIndicatorHeight="3dp"
             android:background="@color/colorPrimary"
+            android:tag="tab_indicator_accent_color,bg_primary_color"
+            app:tabIndicatorHeight="3dp"
             app:tabSelectedTextColor="#FFFFFF"
-            android:tag="tab_indicator_accent_color,bg_primary_color" />
+            app:tabTextColor="#FFFFFF" />
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
         android:id="@+id/viewpager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v4.view.ViewPager>
 
@@ -57,53 +56,53 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        app:menu_fab_size="normal"
-        app:menu_labels_ellipsize="end"
+        android:paddingRight="10dp"
         app:menu_animationDelayPerItem="75"
+        app:menu_backgroundColor="#ccffffff"
         app:menu_colorNormal="@color/colorAccent"
         app:menu_colorPressed="@color/colorAccentDark"
         app:menu_colorRipple="@color/colorAccentDark"
+        app:menu_fab_label="close"
+        app:menu_fab_size="normal"
         app:menu_labels_colorNormal="@color/colorPrimary"
         app:menu_labels_colorPressed="@color/colorPrimaryDark"
         app:menu_labels_colorRipple="@color/colorPrimaryDark"
-        app:menu_labels_singleLine="true"
-        app:menu_backgroundColor="#ccffffff"
-        app:menu_fab_label="close">
+        app:menu_labels_ellipsize="end"
+        app:menu_labels_singleLine="true">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_card_giftcard_black_24dp"
+            app:fabSize="normal"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentDark"
             app:fab_colorRipple="@color/colorAccentDark"
-            app:fabSize="normal"
             app:fab_label="今日榜单" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_event_note_black_24dp"
+            app:fabSize="normal"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentDark"
             app:fab_colorRipple="@color/colorAccentDark"
-            android:src="@drawable/ic_event_note_black_24dp"
-            app:fabSize="normal"
             app:fab_label="本周排行" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_assessment_black_24dp"
+            app:fabSize="normal"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentDark"
             app:fab_colorRipple="@color/colorAccentDark"
-            android:src="@drawable/ic_assessment_black_24dp"
-            app:fabSize="normal"
             app:fab_label="本月排行" />
 
     </com.github.clans.fab.FloatingActionMenu>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_pixiv"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
+    android:layout_marginBottom="6dp"
     android:layout_marginLeft="@dimen/sixteen_dip"
     android:layout_marginRight="@dimen/sixteen_dip"
-    android:layout_marginBottom="6dp"
+    android:layout_marginTop="10dp"
     android:clickable="true"
-    android:stateListAnimator="@animator/touch_raise"
     android:foreground="?attr/selectableItemBackground"
-    android:layout_width="match_parent"
+    android:stateListAnimator="@animator/touch_raise"
     app:cardCornerRadius="@dimen/card_recycler_elevation">
 
     <RelativeLayout
@@ -27,88 +26,88 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_below="@+id/pixiv_image"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pixiv_image">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_centerVertical="true"
-                android:src="@mipmap/pixiv_head"
                 android:id="@+id/pixiv_head"
                 android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/eight_dip"
                 android:scaleType="centerCrop"
-                android:layout_height="50dp" />
+                android:src="@mipmap/pixiv_head" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/tweenty_sp"
-            android:id="@+id/pixiv_title"
-            android:ellipsize="marquee"
-            android:layout_toEndOf="@+id/pixiv_head"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxEms="6"
-            android:singleLine="true"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/title_activity_fullscreen"
-            android:layout_marginTop="@dimen/eight_dip"
-            android:layout_marginStart="6dp"/>
+            <TextView
+                android:id="@+id/pixiv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="@dimen/eight_dip"
+                android:layout_toEndOf="@+id/pixiv_head"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxEms="6"
+                android:singleLine="true"
+                android:text="@string/title_activity_fullscreen"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/tweenty_sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pixiv_author"
-            android:text="author"
-            android:ellipsize="marquee"
-            android:layout_toEndOf="@+id/pixiv_head"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxEms="7"
-            android:singleLine="true"
-            android:textSize="@dimen/sixteen_dip"
-            android:layout_marginStart="6dp"
-            android:layout_marginBottom="@dimen/twelve_dip"
-            android:layout_below="@+id/pixiv_title"/>
+            <TextView
+                android:id="@+id/pixiv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pixiv_title"
+                android:layout_marginBottom="@dimen/twelve_dip"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@+id/pixiv_head"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxEms="8"
+                android:singleLine="true"
+                android:text="author"
+                android:textSize="@dimen/sixteen_dip" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_toStartOf="@+id/img_viewd"
-            android:layout_height="wrap_content"
-            android:text="16k"
-            android:id="@+id/viewed"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="4dp"
-            android:textSize="@dimen/eighteen_sp"/>
+            <TextView
+                android:id="@+id/viewed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="9dp"
+                android:layout_toStartOf="@+id/img_viewd"
+                android:text="16k"
+                android:textSize="@dimen/eighteen_sp" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="3dp"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/img_viewd"
-            android:layout_alignTop="@+id/viewed"
-            android:layout_marginEnd="@dimen/twelve_dip"
-            android:src="@drawable/ic_remove_red_eye_black_24dp"/>
+            <ImageView
+                android:id="@+id/img_viewd"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/viewed"
+                android:layout_marginEnd="@dimen/twelve_dip"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/ic_remove_red_eye_black_24dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_toStartOf="@+id/img_liked"
-            android:layout_height="wrap_content"
-            android:text="6K"
-            android:id="@+id/liked"
-            android:layout_marginEnd="4dp"
-            android:textSize="@dimen/eighteen_sp"
-            android:layout_below="@+id/viewed"/>
+            <TextView
+                android:id="@+id/liked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewed"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@+id/img_liked"
+                android:text="6K"
+                android:textSize="@dimen/eighteen_sp" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="3dp"
-            android:padding="1dp"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/img_liked"
-            android:layout_marginEnd="@dimen/twelve_dip"
-            android:layout_alignTop="@+id/liked"
-            android:src="@drawable/ic_favorite_white_24dp"/>
+            <ImageView
+                android:id="@+id/img_liked"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/liked"
+                android:layout_marginEnd="@dimen/twelve_dip"
+                android:layout_marginTop="3dp"
+                android:padding="1dp"
+                android:src="@drawable/ic_favorite_white_24dp" />
 
         </RelativeLayout>
 

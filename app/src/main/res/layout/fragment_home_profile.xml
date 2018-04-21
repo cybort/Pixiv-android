@@ -1,5 +1,4 @@
 <com.example.administrator.essim.utils.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/osvHomeRecommend"
     android:layout_width="match_parent"
@@ -40,20 +39,20 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
+            android:layout_height="180dp"
             android:layout_margin="@dimen/eight_dip"
-            android:stateListAnimator="@animator/touch_raise"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            app:cardCornerRadius="4dp"
-            android:layout_height="180dp">
+            android:stateListAnimator="@animator/touch_raise"
+            app:cardCornerRadius="4dp">
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="192dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="我什么都不想给你看" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="192dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="我什么都不想给你看" />
 
         </android.support.v7.widget.CardView>
 
@@ -80,18 +79,19 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:stateListAnimator="@animator/touch_raise"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eight_dip"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:layout_margin="@dimen/eight_dip"
-            app:cardCornerRadius="4dp"
-            android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/author_introduction"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:padding="16dp" />
+            android:stateListAnimator="@animator/touch_raise"
+            app:cardCornerRadius="4dp">
+
+            <TextView
+                android:id="@+id/author_introduction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="16dp" />
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

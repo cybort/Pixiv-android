@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.HotTag;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.List;
 
@@ -22,16 +24,14 @@ import java.util.List;
 
 public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    //item类型
-    public static final int ITEM_TYPE_HEADER = 0;
-    public static final int ITEM_TYPE_CONTENT = 1;
     public static String search_text;
-    //模拟数据
-
+    private final int ITEM_TYPE_HEADER = 0;
+    private final int ITEM_TYPE_CONTENT = 1;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private List<HotTag> mbooksInfo;
     private int mHeaderCount = 1;//头部View个数
+    private OnTagListItemClickListener mOnTagListItemClickListener;
 
     public HotTagAdapter(List<HotTag> booksInfo, Context context) {
         mbooksInfo = booksInfo;
@@ -39,45 +39,12 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    //内容 ViewHolder
-    public static class ContentViewHolder extends RecyclerView.ViewHolder {
-        private CardView cardView1;
-        private CardView cardView2;
-        private CardView cardView3;
-        private TextView textView1;
-        private TextView textView2;
-        private TextView textView3;
-
-        public ContentViewHolder(View itemView) {
-            super(itemView);
-            textView1 = (TextView) itemView.findViewById(R.id.tag_one);
-            textView2 = (TextView) itemView.findViewById(R.id.tag_two);
-            textView3 = (TextView) itemView.findViewById(R.id.tag_three);
-            cardView1 = (CardView) itemView.findViewById(R.id.card_1);
-            cardView2 = (CardView) itemView.findViewById(R.id.card_2);
-            cardView3 = (CardView) itemView.findViewById(R.id.card_3);
-        }
-    }
-
-    //头部 ViewHolder
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public EditText editText;
-        private ImageButton imageButton;
-
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            editText = (EditText) itemView.findViewById(R.id.input_tag);
-            imageButton = (ImageButton) itemView.findViewById(R.id.do_search);
-        }
-    }
-
-    public int getContentItemCount() {
+    private int getContentItemCount() {
         return mbooksInfo.size() / 3;
     }
 
     @Override
     public int getItemViewType(int position) {
-        int dataItemCount = getContentItemCount();
         if (mHeaderCount != 0 && position < mHeaderCount) {
             //头部View
             return ITEM_TYPE_HEADER;
@@ -89,7 +56,6 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         if (viewType == ITEM_TYPE_HEADER) {
             return new HeaderViewHolder(mLayoutInflater.inflate(R.layout.head_search_view, parent, false));
         } else {
@@ -105,10 +71,10 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 public void onClick(View v) {
                     search_text = ((HeaderViewHolder) holder).editText.getText().toString().trim();
                     if (!search_text.isEmpty()) {
-                        mOnItemClickLitener.onSearch(((HeaderViewHolder) holder).imageButton,
+                        mOnTagListItemClickListener.onSearch(((HeaderViewHolder) holder).imageButton,
                                 ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
                     } else {
-                        Toast.makeText(mContext, "请输入搜索的内容！", Toast.LENGTH_SHORT).show();
+                        TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.CONFUSING, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -117,46 +83,65 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((ContentViewHolder) holder).textView1.setText(mbooksInfo.get(position * 3 - 3).getName());
             ((ContentViewHolder) holder).textView2.setText(mbooksInfo.get(position * 3 - 2).getName());
             ((ContentViewHolder) holder).textView3.setText(mbooksInfo.get(position * 3 - 1).getName());
-            if (mOnItemClickLitener != null) {
+            if (mOnTagListItemClickListener != null) {
                 final int pos = holder.getLayoutPosition();
                 ((ContentViewHolder) holder).cardView1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView1, pos * 3 - 3);
+                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView1, pos * 3 - 3);
                     }
                 });
                 ((ContentViewHolder) holder).cardView2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView2, pos * 3 - 2);
+                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView2, pos * 3 - 2);
                     }
                 });
                 ((ContentViewHolder) holder).cardView3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(((ContentViewHolder) holder).cardView3, pos * 3 - 1);
+                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView3, pos * 3 - 1);
                     }
                 });
             }
         }
     }
 
-    public interface OnItemClickLitener {
-        void onItemClick(View view, int position);
-
-        void onSearch(View view, String searchKey, int position);
+    public void setOnTagListItemClickListener(OnTagListItemClickListener mOnItemClickLitener) {
+        this.mOnTagListItemClickListener = mOnItemClickLitener;
     }
-
-    private OnItemClickLitener mOnItemClickLitener;
-
-    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
-        this.mOnItemClickLitener = mOnItemClickLitener;
-    }
-
 
     @Override
     public int getItemCount() {
         return mHeaderCount + getContentItemCount();
+    }
+
+    //内容 ViewHolder
+    public static class ContentViewHolder extends RecyclerView.ViewHolder {
+        private CardView cardView1, cardView2, cardView3;
+        private TextView textView1, textView2, textView3;
+
+        public ContentViewHolder(View itemView) {
+            super(itemView);
+            textView1 = itemView.findViewById(R.id.tag_one);
+            textView2 = itemView.findViewById(R.id.tag_two);
+            textView3 = itemView.findViewById(R.id.tag_three);
+            cardView1 = itemView.findViewById(R.id.card_1);
+            cardView2 = itemView.findViewById(R.id.card_2);
+            cardView3 = itemView.findViewById(R.id.card_3);
+        }
+    }
+
+    //头部 ViewHolder
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public EditText editText;
+        private ImageButton imageButton;
+
+        private HeaderViewHolder(View itemView) {
+            super(itemView);
+            editText = itemView.findViewById(R.id.input_tag);
+            imageButton = itemView.findViewById(R.id.do_search);
+        }
     }
 
 }

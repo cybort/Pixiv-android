@@ -8,8 +8,8 @@
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/logo"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -27,6 +27,8 @@
         <activity android:name=".utils.CloudMainActivity" />
         <activity android:name=".activities.PixivItemActivity"/>
         <activity android:name=".activities.TagResultActivity"/>
+        <activity android:name=".activities.MyWelcomeActivity"
+            android:theme="@style/WelcomeScreenTheme"/>
     </application>
 
 </manifest>

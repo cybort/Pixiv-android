@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -49,38 +48,38 @@
                 android:scaleType="centerCrop" />
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/sixteen_dip"
-                android:layout_below="@+id/people_head"
                 android:id="@+id/follow_and_followers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/people_head"
                 android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="@dimen/sixteen_dip">
 
                 <TextView
+                    android:id="@+id/author_followers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
                     android:layout_toStartOf="@+id/center_one"
                     android:textColor="@color/white"
-                    android:id="@+id/author_followers"/>
+                    android:textSize="16sp" />
 
                 <View
-                    android:layout_width="2dp"
-                    android:layout_marginTop="7dp"
                     android:id="@+id/center_one"
+                    android:layout_width="2dp"
+                    android:layout_height="15dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/twelve_dip"
                     android:layout_marginEnd="@dimen/twelve_dip"
-                    android:background="@color/white"
-                    android:layout_height="15dp"/>
+                    android:layout_marginStart="@dimen/twelve_dip"
+                    android:layout_marginTop="7dp"
+                    android:background="@color/white" />
 
                 <TextView
+                    android:id="@+id/author_follow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/center_one"
-                    android:id="@+id/author_follow"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </RelativeLayout>
 
@@ -90,10 +89,10 @@
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabStrip"
             android:layout_width="match_parent"
-            app:pstsIndicatorHeight="2dp"
-            app:pstsUnderlineColor="@color/colorPrimary"
             android:layout_height="@dimen/tabstrip_height"
-            android:background="@color/white" />
+            android:background="@color/white"
+            app:pstsIndicatorHeight="2dp"
+            app:pstsUnderlineColor="@color/colorPrimary" />
 
     </LinearLayout>
 </FrameLayout>

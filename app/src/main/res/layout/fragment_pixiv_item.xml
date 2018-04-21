@@ -134,16 +134,16 @@
 
                     <me.gujun.android.taggroup.TagGroup
                         android:id="@+id/tag_group"
+                        style="@style/TagGroup.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/detail_create_time"
+                        android:layout_marginBottom="@dimen/twelve_dip"
                         android:layout_marginLeft="@dimen/sixteen_dip"
                         android:layout_marginRight="@dimen/sixteen_dip"
-                        android:layout_below="@+id/detail_create_time"
                         android:layout_marginTop="6dp"
-                        android:layout_height="wrap_content"
-                        style="@style/TagGroup.Large"
                         app:atg_borderColor="@color/colorPrimary"
-                        app:atg_textColor="@color/colorPrimary"
-                        android:layout_width="match_parent"
-                        android:layout_marginBottom="@dimen/twelve_dip" />
+                        app:atg_textColor="@color/colorPrimary" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

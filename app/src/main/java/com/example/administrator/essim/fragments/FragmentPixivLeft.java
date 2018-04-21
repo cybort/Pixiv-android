@@ -12,6 +12,9 @@ import android.widget.ProgressBar;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.PixivAdapter;
+import com.example.administrator.essim.interfaces.OnChangeDataSet;
+import com.example.administrator.essim.interfaces.OnItemClickListener;
+import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.models.PixivRankItem;
 import com.example.administrator.essim.utils.Common;
 import com.github.clans.fab.FloatingActionMenu;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
 /**
  * Created by Administrator on 2018/1/15 0015.
  */
@@ -34,14 +38,13 @@ public class FragmentPixivLeft extends BaseFragment {
     private PixivAdapter mPixivAdapter;
     private String responseData = "";
     private RecyclerView mRecyclerView;
-    public static PixivRankItem mPixivRankItem;
     private FloatingActionMenu mFloatingActionMenu;
     private Gson gson = new Gson();
     private PullToRefreshView mPullToRefreshView;
     private ProgressBar mProgressBar;
-    private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date="+Common.getLastDay();
-    private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date="+Common.getLastDay();
-    private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=monthly&per_page=20&date="+Common.getLastDay();
+    private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date=" + Common.getLastDay();
+    private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date=" + Common.getLastDay();
+    private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=monthly&per_page=20&date=" + Common.getLastDay();
     private String now_link_address;
     private int now_page = 2;
 
@@ -84,7 +87,7 @@ public class FragmentPixivLeft extends BaseFragment {
         });
         getData(url_rank_daily, false);
         currentDataType = 0;
-        ((FragmentPixiv) getParentFragment()).setChangeDataSet(new FragmentPixiv.ChangeDataSet() {
+        ((FragmentPixiv) getParentFragment()).setChangeDataSet(new OnChangeDataSet() {
             @Override
             public void changeData(int dataType) {
                 if (dataType == 0) {
@@ -121,9 +124,9 @@ public class FragmentPixivLeft extends BaseFragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 responseData = response.body().string();
-                mPixivRankItem = gson.fromJson(responseData, PixivRankItem.class);
-                mPixivAdapter = new PixivAdapter(mPixivRankItem, mContext);
-                mPixivAdapter.setOnItemClickLitener(new PixivAdapter.OnItemClickListener() {
+                DataSet.sPixivRankItem = gson.fromJson(responseData, PixivRankItem.class);
+                mPixivAdapter = new PixivAdapter(DataSet.sPixivRankItem, mContext);
+                mPixivAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         if (position == 20) {

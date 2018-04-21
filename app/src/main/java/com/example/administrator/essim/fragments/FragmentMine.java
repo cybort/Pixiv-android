@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.adapters.ListHitokotoAdapter;
+import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
 import com.example.administrator.essim.models.HitoModel;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -70,7 +71,7 @@ public class FragmentMine extends BaseFragment {
         //读取数据库
         mHitoModels = DataSupport.findAll(HitoModel.class);
         mAdapter = new ListHitokotoAdapter(mHitoModels, mContext);
-        mAdapter.setOnItemClickListener(new ListHitokotoAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnListHitokotoClickListener() {
             @Override
             public void onItemClick(View view, int position, int code) {
                 if (code == 1) {
@@ -79,21 +80,12 @@ public class FragmentMine extends BaseFragment {
 
                 }
             }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                setEditableMode();
-            }
         });
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void setEditableMode() {
-        if (ListHitokotoAdapter.is_editable) {
-            ListHitokotoAdapter.is_editable = false;
-        } else if (!ListHitokotoAdapter.is_editable) {
-            ListHitokotoAdapter.is_editable = true;
-        }
+        ListHitokotoAdapter.is_editable = !ListHitokotoAdapter.is_editable;
         mAdapter.notifyDataSetChanged();
     }
 
@@ -134,8 +126,7 @@ public class FragmentMine extends BaseFragment {
 
     @Override
     public void onHiddenChanged(boolean hide) {
-        if (hide) {
-        } else {
+        if (!hide) {
             if (FragmentHitikoto.need_to_refresh) {
                 reFreshLocalData();
                 mRecyclerView.smoothScrollToPosition(mHitoModels.size());

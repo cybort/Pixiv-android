@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
+import com.example.administrator.essim.interfaces.OnChangeDataSet;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -31,13 +32,35 @@ import java.util.List;
 
 public class FragmentPixiv extends BaseFragment {
 
-    private TextView mTextView;
+    public FloatingActionMenu menuRed;
     List<Fragment> fragments = new ArrayList<Fragment>();
     ArrayList<String> list = new ArrayList<String>();
-    public static FloatingActionMenu menuRed;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
-    private FloatingActionButton fab3;
+    private TextView mTextView;
+    private FloatingActionButton fab1, fab2, fab3;
+    private OnChangeDataSet mChangeDataSet;
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    if (mChangeDataSet != null) {
+                        mChangeDataSet.changeData(0); //获取日榜单
+                    }
+                    break;
+                case R.id.fab2:
+                    if (mChangeDataSet != null) {
+                        mChangeDataSet.changeData(1); //获取周榜单
+                    }
+                    break;
+                case R.id.fab3:
+                    if (mChangeDataSet != null) {
+                        mChangeDataSet.changeData(2); //获取月榜单
+                    }
+                    break;
+            }
+            menuRed.close(true);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,12 +97,10 @@ public class FragmentPixiv extends BaseFragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
         mTextView = v.findViewById(R.id.toolbar_title_one);
@@ -101,66 +122,6 @@ public class FragmentPixiv extends BaseFragment {
         return v;
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab1:
-                    if(mChangeDataSet!= null)
-                    {
-                        mChangeDataSet.changeData(0); //获取日榜单
-                        menuRed.close(true);
-                    }
-                    break;
-                case R.id.fab2:
-                    if(mChangeDataSet!= null)
-                    {
-                        mChangeDataSet.changeData(1); //获取周榜单
-                        menuRed.close(true);
-                    }
-                    break;
-                case R.id.fab3:
-                    if(mChangeDataSet!= null)
-                    {
-                        mChangeDataSet.changeData(2); //获取月榜单
-                        menuRed.close(true);
-                    }
-                    break;
-            }
-        }
-    };
-
-    public class FragAdapter extends FragmentPagerAdapter {
-
-        private List<Fragment> mFragments;
-        private List<String> mFragmentTitles = new ArrayList<>();
-
-        public FragAdapter(FragmentManager fm, List<Fragment> fragments, List<String> FragmentTitles) {
-            super(fm);
-            // TODO Auto-generated constructor stub
-            this.mFragments = fragments;
-            this.mFragmentTitles = FragmentTitles;
-        }
-
-        @Override
-        public Fragment getItem(int arg0) {
-            // TODO Auto-generated method stub
-            return mFragments.get(arg0);
-        }
-
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -173,14 +134,35 @@ public class FragmentPixiv extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    public void setChangeDataSet(ChangeDataSet changeDataSet) {
+    public void setChangeDataSet(OnChangeDataSet changeDataSet) {
         mChangeDataSet = changeDataSet;
     }
 
-    private ChangeDataSet mChangeDataSet;
+    private class FragAdapter extends FragmentPagerAdapter {
 
-    public interface ChangeDataSet
-    {
-        void changeData(int dataType);
+        private List<Fragment> mFragments;
+        private List<String> mFragmentTitles;
+
+        private FragAdapter(FragmentManager fm, List<Fragment> fragments, List<String> FragmentTitles) {
+            super(fm);
+            // TODO Auto-generated constructor stub
+            this.mFragments = fragments;
+            this.mFragmentTitles = FragmentTitles;
+        }
+
+        @Override
+        public Fragment getItem(int arg0) {
+            return mFragments.get(arg0);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
     }
 }

@@ -7,6 +7,13 @@ import org.litepal.crud.DataSupport;
  */
 
 public class HitoModel extends DataSupport {
+    public String hitokoto;
+    public String creator;
+    public String from_where;
+    public String created_at;
+    public String type;
+    public Boolean isSelected = false;
+
     public String getHitokoto() {
         return hitokoto;
     }
@@ -47,12 +54,6 @@ public class HitoModel extends DataSupport {
         this.type = type;
     }
 
-    public String hitokoto;
-    public String creator;
-    public String from_where;
-    public String created_at;
-    public String type;
-
     public Boolean getSelected() {
         return isSelected;
     }
@@ -60,6 +61,4 @@ public class HitoModel extends DataSupport {
     public void setSelected(Boolean selected) {
         isSelected = selected;
     }
-
-    public Boolean isSelected = false;
 }

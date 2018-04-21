@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fafafa"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <com.github.florent37.arclayout.ArcLayout
             android:id="@+id/diagonalLayout"
@@ -24,32 +22,29 @@
             android:layout_alignParentTop="true"
             android:elevation="10dip"
             app:arc_cropDirection="cropOutside"
-            app:arc_position="bottom"
             app:arc_height="50dp"
-            >
+            app:arc_position="bottom">
 
             <com.flaviofaria.kenburnsview.KenBurnsView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/about"
-                />
+                android:src="@mipmap/about" />
 
         </com.github.florent37.arclayout.ArcLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_about"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
-            android:clickable="true"
-            android:id="@+id/fab_about"
             android:layout_marginTop="325dp"
+            android:clickable="true"
             android:src="@drawable/arclayout_ic_add"
             app:backgroundTint="@color/colorAccent"
             app:elevation="15dp"
-            app:fabSize="normal"
-            />
+            app:fabSize="normal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,8 +52,7 @@
             android:layout_below="@+id/diagonalLayout"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="20dp"
-            >
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,8 +60,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="关于"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,8 +68,7 @@
                 android:layout_marginBottom="18dp"
                 android:text="@string/arclayout_description"
                 android:textColor="@color/colorNavItemUnselected"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,8 +76,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="CV: 东山奈央"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -93,8 +84,7 @@
                 android:layout_marginBottom="18dp"
                 android:text="@string/arclayout_development"
                 android:textColor="@color/colorNavItemUnselected"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
 
         </LinearLayout>

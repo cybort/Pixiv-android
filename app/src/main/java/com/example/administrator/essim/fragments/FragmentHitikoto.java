@@ -11,11 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
@@ -36,8 +33,9 @@ import okhttp3.Response;
  * Created by Administrator on 2018/1/15 0015.
  */
 
-public class FragmentHitikoto extends BaseFragment{
+public class FragmentHitikoto extends BaseFragment {
 
+    public static boolean need_to_refresh = false;
     private final String url_head = "https://v1.hitokoto.cn/?c=";
     private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6;
     private Button mButton, mButton2;
@@ -47,7 +45,6 @@ public class FragmentHitikoto extends BaseFragment{
     private Gson gson = new Gson();
     private HitoModel mHitoModel;
     private AppCompatSpinner mAppCompatSpinner;
-    public static boolean need_to_refresh = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_hitikoto, container, false);
@@ -150,7 +147,7 @@ public class FragmentHitikoto extends BaseFragment{
                     @Override
                     public void run() {
                         mTextView1.setText(mHitoModel.getHitokoto());
-                        mTextView2.setText("作者：" + mHitoModel.getCreator());
+                        mTextView2.setText(getString(R.string.author_is, mHitoModel.getCreator()));
                         mTextView3.setText(Common.getTime(mHitoModel.getCreated_at()));
                         mTextView4.setText(mHitoModel.getFrom_where());
                         mTextView4.requestFocus();
@@ -159,14 +156,6 @@ public class FragmentHitikoto extends BaseFragment{
                 });
             }
         });
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hide) {
-        if (hide) {
-
-        } else {
-        }
     }
 
     @Override

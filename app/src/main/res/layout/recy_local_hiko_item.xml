@@ -10,8 +10,8 @@
     android:layout_marginTop="@dimen/eight_dip"
     android:background="@color/white"
     android:clickable="true"
-    android:stateListAnimator="@animator/touch_raise"
     android:foreground="?attr/selectableItemBackground"
+    android:stateListAnimator="@animator/touch_raise"
     card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"
     card_view:cardElevation="@dimen/card_recycler_elevation">
 

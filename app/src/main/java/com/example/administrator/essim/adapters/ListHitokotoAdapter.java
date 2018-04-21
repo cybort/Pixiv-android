@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
 import com.example.administrator.essim.models.HitoModel;
 import com.example.administrator.essim.models.HitokotoType;
 
@@ -25,36 +26,18 @@ import java.util.List;
 
 public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static boolean is_editable = false;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private List<HitoModel> mBooksInfo;
-    private int data_size;
-    private AlphaAnimation alphaAnimationShowIcon;
-    public static boolean is_editable = false;
+    private OnListHitokotoClickListener mOnItemClickListener;
 
     public ListHitokotoAdapter(List<HitoModel> booksInfo, Context context) {
         mBooksInfo = booksInfo;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
-        alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
+        AlphaAnimation alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
         alphaAnimationShowIcon.setDuration(500);
-    }
-
-    public static class ContentViewHolder extends RecyclerView.ViewHolder {
-        CardView mCardView;
-        TextView mTextView, mTextView2, mTextView3;
-        ImageView mImageView;
-        CheckBox mCheckBox;
-
-        private ContentViewHolder(View itemView) {
-            super(itemView);
-            mCardView = itemView.findViewById(R.id.card_view_item_recycler_view);
-            mTextView = itemView.findViewById(R.id.tv_recycler_item_3);
-            mTextView2 = itemView.findViewById(R.id.local_number);
-            mTextView3 = itemView.findViewById(R.id.tv_recycler_item_1);
-            mImageView = itemView.findViewById(R.id.delete_item);
-            mCheckBox = itemView.findViewById(R.id.select_item);
-        }
     }
 
     @Override
@@ -114,21 +97,30 @@ public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position, int code);
-
-        void onItemLongClick(View view, int position);
-    }
-
-    private OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+    public void setOnItemClickListener(OnListHitokotoClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
     @Override
     public int getItemCount() {
-        return data_size = mBooksInfo.size();
+        return mBooksInfo.size();
+    }
+
+    private static class ContentViewHolder extends RecyclerView.ViewHolder {
+        CardView mCardView;
+        TextView mTextView, mTextView2, mTextView3;
+        ImageView mImageView;
+        CheckBox mCheckBox;
+
+        private ContentViewHolder(View itemView) {
+            super(itemView);
+            mCardView = itemView.findViewById(R.id.card_view_item_recycler_view);
+            mTextView = itemView.findViewById(R.id.tv_recycler_item_3);
+            mTextView2 = itemView.findViewById(R.id.local_number);
+            mTextView3 = itemView.findViewById(R.id.tv_recycler_item_1);
+            mImageView = itemView.findViewById(R.id.delete_item);
+            mCheckBox = itemView.findViewById(R.id.select_item);
+        }
     }
 
 }

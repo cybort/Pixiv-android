@@ -4,16 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 /**
- *
  * @author linxiao
  * @version 1.0.0
  */
 public abstract class ScrollObservableFragment extends BaseFragment {
 
-
-    public interface OnScrollChangedListener {
-        void onScrollChanged(ScrollObservableFragment fragment, int scrolledX, int scrolledY, int dx, int dy);
-    }
 
     private OnScrollChangedListener scrollChangedListener;
 
@@ -22,7 +17,7 @@ public abstract class ScrollObservableFragment extends BaseFragment {
     }
 
     protected void doOnScrollChanged(int scrolledX, int scrolledY, int dx, int dy) {
-        if(scrollChangedListener != null) {
+        if (scrollChangedListener != null) {
             scrollChangedListener.onScrollChanged(this, scrolledX, scrolledY, dx, dy);
         }
     }
@@ -34,5 +29,9 @@ public abstract class ScrollObservableFragment extends BaseFragment {
     }
 
     public abstract void setScrolledY(int scrolledY);
+
+    public interface OnScrollChangedListener {
+        void onScrollChanged(ScrollObservableFragment fragment, int scrolledX, int scrolledY, int dx, int dy);
+    }
 
 }

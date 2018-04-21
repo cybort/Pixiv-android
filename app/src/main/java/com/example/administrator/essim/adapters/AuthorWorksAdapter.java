@@ -11,17 +11,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
 
 
 public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final int ITEM_TYPE_HEADER = 0;
+    private final int ITEM_TYPE_CONTENT = 1;
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private AuthorWorks mBooksInfo;
     private String mString;
-    private static final int ITEM_TYPE_HEADER = 0;
-    private static final int ITEM_TYPE_CONTENT = 1;
+    private OnItemClickListener mOnItemClickListener;
 
     public AuthorWorksAdapter(AuthorWorks booksInfo, Context context, String adapterType) {
         mBooksInfo = booksInfo;
@@ -30,7 +32,72 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mString = adapterType;
     }
 
-    public class ContentViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        if (position < 1) {
+            return ITEM_TYPE_HEADER;
+        } else {
+            return ITEM_TYPE_CONTENT;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mString.equals("searchResult")) {
+            // no need to set headLayout
+            return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
+        } else {
+            if (viewType == ITEM_TYPE_HEADER) {
+                return new ItemHolder(mLayoutInflater.inflate(R.layout.head_blank, parent, false));
+            } else {
+                return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
+            }
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (mString.equals("searchResult")) {
+            // no need to set headLayout
+            bindData(holder, position);
+        } else {
+            if (holder instanceof ItemHolder) {
+                //create a empty headLayout
+            } else {
+                bindData(holder, position - 1);
+            }
+        }
+    }
+
+    private void bindData(final RecyclerView.ViewHolder holder, final int position) {
+        ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
+        if (mBooksInfo.response.get(position).stats.getViews_count().length() <= 3) {
+            ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
+        } else {
+            ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
+                    mBooksInfo.response.get(position).stats.getViews_count().substring(0,
+                            mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
+        }
+        Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
+                .into(((ContentViewHolder) holder).mImageView);
+        ((ContentViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnItemClickListener.onItemClick(view, position);
+            }
+        });
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mBooksInfo.response.size();
+    }
+
+    public static class ContentViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
         TextView mTextView4;
         ImageView mImageView;
@@ -45,117 +112,9 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder {
-        public ItemHolder(View itemView) {
+    private class ItemHolder extends RecyclerView.ViewHolder {
+        private ItemHolder(View itemView) {
             super(itemView);
         }
-    }
-
-    public int getContentItemCount() {
-        return mBooksInfo.response.size() + 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        int dataItemCount = getContentItemCount();
-        if (position < 1) {
-            return ITEM_TYPE_HEADER;
-        } else {
-            return ITEM_TYPE_CONTENT;
-        }
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        if(mString.equals("searchResult"))
-        {
-            // no need to set headLayout
-            return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
-        }
-        else {
-            if (viewType == ITEM_TYPE_HEADER) {
-                return new ItemHolder(mLayoutInflater.inflate(R.layout.head_blank, parent, false));
-            } else {
-                return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
-            }
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if(mString.equals("searchResult"))
-        {
-            // no need to set headLayout
-            ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
-            if (mBooksInfo.response.get(position).stats.getViews_count().length() <= 3)
-            {
-                ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
-            } else {
-                ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
-                        mBooksInfo.response.get(position).stats.getViews_count().substring(0,
-                                mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
-            }
-            Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
-                    .into(((ContentViewHolder) holder).mImageView);
-            ((ContentViewHolder) holder).mButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mOnItemClickListener.onItemClick(view, position);
-                }
-            });
-
-            ((ContentViewHolder) holder).mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mOnItemClickListener.onItemClick(view, position);
-                }
-            });
-        }
-        else {
-            if (holder instanceof ItemHolder) {
-                //create a empty headLayout
-            } else {
-                ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position - 1).getTitle());
-                if (mBooksInfo.response.get(position -1).stats.getViews_count().length() <= 3)
-                {
-                    ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position -1).stats.getViews_count());
-                } else {
-                    ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
-                            mBooksInfo.response.get(position -1).stats.getViews_count().substring(0,
-                                    mBooksInfo.response.get(position -1).stats.getViews_count().length() - 3)));
-                }
-                Glide.with(mContext).load(mBooksInfo.response.get(position - 1).image_urls.getPx_480mw())
-                        .into(((ContentViewHolder) holder).mImageView);
-                ((ContentViewHolder) holder).mButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mOnItemClickListener.onItemClick(view, position - 1);
-                    }
-                });
-
-                ((ContentViewHolder) holder).mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mOnItemClickListener.onItemClick(view, position - 1);
-                    }
-                });
-            }
-        }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    private OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
-    }
-
-    @Override
-    public int getItemCount() {
-        return mBooksInfo.response.size();
     }
 }

@@ -5,8 +5,18 @@ import java.util.List;
 public class AuthorWorks {
     public List<Response> response;
 
-    public class Response
-    {
+    public class Response {
+
+        public String id;
+        public String title;
+        public ImgUrl image_urls;
+        public List<String> tools;
+        public List<String> tags;
+        public String width;
+        public String height;
+        public String created_time;
+        public Stats stats;
+        public User user;
 
         public String getId() {
             return id;
@@ -16,7 +26,6 @@ public class AuthorWorks {
             this.id = id;
         }
 
-        public String id;
         public String getTitle() {
             return title;
         }
@@ -24,13 +33,6 @@ public class AuthorWorks {
         public void setTitle(String title) {
             this.title = title;
         }
-
-        public String title;
-
-        public ImgUrl image_urls;
-
-        public List<String> tools;
-        public List<String> tags;
 
         public String getWidth() {
             return width;
@@ -48,11 +50,19 @@ public class AuthorWorks {
             this.height = height;
         }
 
-        public String width;
-        public String height;
+        public String getCreated_time() {
+            return created_time;
+        }
 
-        public class ImgUrl
-        {
+        public void setCreated_time(String created_time) {
+            this.created_time = created_time;
+        }
+
+        public class ImgUrl {
+            public String px_128x128;
+            public String px_480mw;
+            public String large;
+
             public String getPx_128x128() {
                 return px_128x128;
             }
@@ -76,26 +86,9 @@ public class AuthorWorks {
             public void setLarge(String large) {
                 this.large = large;
             }
-
-            public String px_128x128;
-            public String px_480mw;
-            public String large;
         }
 
-        public String getCreated_time() {
-            return created_time;
-        }
-
-        public void setCreated_time(String created_time) {
-            this.created_time = created_time;
-        }
-
-        public String created_time;
-
-        public Stats stats;
-
-        public class Stats
-        {
+        public class Stats {
             public String views_count;
             public String scored_count;
 
@@ -116,10 +109,9 @@ public class AuthorWorks {
             }
         }
 
-        public User user;
+        public class User {
+            public String name;
 
-        public class User
-        {
             public String getName() {
                 return name;
             }
@@ -127,12 +119,9 @@ public class AuthorWorks {
             public void setName(String name) {
                 this.name = name;
             }
-
-            public String name;
         }
 
     }
-
 
 
 }

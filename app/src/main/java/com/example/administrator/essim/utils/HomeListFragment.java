@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
-import com.example.administrator.essim.fragments.FragmentPixivLeft;
+import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
 import com.google.gson.Gson;
@@ -35,13 +35,12 @@ import okhttp3.Response;
  */
 public class HomeListFragment extends ScrollObservableFragment {
 
+    @Bind(R.id.rcvGoodsList)
+    RecyclerView rcvGoodsList;
     private int scrolledX = 0, scrolledY = 0;
-
     private Context mContext;
     private View contentView;
     private AuthorWorksAdapter mAuthorWorksAdapter;
-    @Bind(R.id.rcvGoodsList)
-    RecyclerView rcvGoodsList;
 
     public HomeListFragment() {
         // Required empty public constructor
@@ -88,7 +87,7 @@ public class HomeListFragment extends ScrollObservableFragment {
             }
         });
         String url = "https://api.imjad.cn/pixiv/v1/?type=member_illust&id=";
-        getData(url + FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
+        getData(url + DataSet.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
                 .user.getId());
     }
 
@@ -104,7 +103,7 @@ public class HomeListFragment extends ScrollObservableFragment {
                 Gson gson = new Gson();
                 DataSet.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sAuthorWorks, getContext(), "AuthorResult");
-                mAuthorWorksAdapter.setOnItemClickListener(new AuthorWorksAdapter.OnItemClickListener() {
+                mAuthorWorksAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(mContext, PixivItemActivity.class);

@@ -26,8 +26,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.utils.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -56,6 +56,13 @@ public class FragmentPixivItem extends BaseFragment {
     private ProgressDialog progressDialog;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
 
+    public static FragmentPixivItem newInstance(int position) {
+        Bundle args = new Bundle();
+        args.putSerializable("index", position);
+        FragmentPixivItem fragment = new FragmentPixivItem();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,11 +83,11 @@ public class FragmentPixivItem extends BaseFragment {
     private void reFreshLayout(View view) {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
-        Glide.with(getContext()).load(FragmentPixivLeft.mPixivRankItem.response.get(0)
+        Glide.with(getContext()).load(DataSet.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
                 .into(mImageView);
-        Glide.with(getContext()).load(FragmentPixivLeft.mPixivRankItem.response.get(0)
+        Glide.with(getContext()).load(DataSet.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .into(mImageView2);
         mTextView = view.findViewById(R.id.detail_author);
@@ -114,7 +121,7 @@ public class FragmentPixivItem extends BaseFragment {
                     });
                 }
                 File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                        FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
+                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
                 if (file1.exists()) {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
@@ -125,7 +132,7 @@ public class FragmentPixivItem extends BaseFragment {
                     });
                 } else {
                     asyncTask = new MyAsyncTask();
-                    asyncTask.execute(FragmentPixivLeft.mPixivRankItem.response.get(0).works
+                    asyncTask.execute(DataSet.sPixivRankItem.response.get(0).works
                             .get(index).work.image_urls.getLarge());
                 }
             }
@@ -140,38 +147,33 @@ public class FragmentPixivItem extends BaseFragment {
             }
         });
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
-        mTagGroup.setTags(FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.tags);
+        mTagGroup.setTags(DataSet.sPixivRankItem.response.get(0).works.get(index).work.tags);
         mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
             @Override
             public void onTagClick(String tag) {
                 ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData mClipData = ClipData.newPlainText("Label", tag);
                 cm.setPrimaryClip(mClipData);
-                TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                /*Intent intent = new Intent(mContext, TagResultActivity.class);
-                intent.putExtra("which one is selected", -1);
-                intent.putExtra("what is searching", tag);
-                mContext.startActivity(intent);*/
             }
         });
         mTextView.setText(getString(R.string.string_author,
-                FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.user.getName()));
-        mTextView2.setText(getString(R.string.string_full_size, FragmentPixivLeft.mPixivRankItem.response.get(0)
-                .works.get(index).work.getWidth(), FragmentPixivLeft.mPixivRankItem.response.get(0)
+                DataSet.sPixivRankItem.response.get(0).works.get(index).work.user.getName()));
+        mTextView2.setText(getString(R.string.string_full_size, DataSet.sPixivRankItem.response.get(0)
+                .works.get(index).work.getWidth(), DataSet.sPixivRankItem.response.get(0)
                 .works.get(index).work.getHeight()));
-        mTextView3.setText(getString(R.string.string_create_time, FragmentPixivLeft.mPixivRankItem.response.get(0)
+        mTextView3.setText(getString(R.string.string_create_time, DataSet.sPixivRankItem.response.get(0)
                 .works.get(index).work.getCreated_time()));
         mTextView4.setText(getString(R.string.string_viewd,
-                FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.stats.getViews_count().substring(0,
-                        FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index)
+                DataSet.sPixivRankItem.response.get(0).works.get(index).work.stats.getViews_count().substring(0,
+                        DataSet.sPixivRankItem.response.get(0).works.get(index)
                                 .work.stats.getViews_count().length() - 3)));
-        if (FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.stats.getScored_count().length() <= 3) {
-            mTextView5.setText(FragmentPixivLeft.mPixivRankItem.response.get(0).works
+        if (DataSet.sPixivRankItem.response.get(0).works.get(index).work.stats.getScored_count().length() <= 3) {
+            mTextView5.setText(DataSet.sPixivRankItem.response.get(0).works
                     .get(index).work.stats.getScored_count());
         } else {
             mTextView5.setText(getString(R.string.string_viewd,
-                    FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index)
-                            .work.stats.getScored_count().substring(0, FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index)
+                    DataSet.sPixivRankItem.response.get(0).works.get(index)
+                            .work.stats.getScored_count().substring(0, DataSet.sPixivRankItem.response.get(0).works.get(index)
                             .work.stats.getScored_count().length() - 3)));
         }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
@@ -189,12 +191,14 @@ public class FragmentPixivItem extends BaseFragment {
         progressDialog.setCancelable(true);
     }
 
-    public static FragmentPixivItem newInstance(int position) {
-        Bundle args = new Bundle();
-        args.putSerializable("index", position);
-        FragmentPixivItem fragment = new FragmentPixivItem();
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (getActivity() != null) {
+                ((ViewPagerActivity) getActivity()).changeTitle();
+            }
+        }
     }
 
     private class MyAsyncTask extends AsyncTask<String, Integer, Bitmap> {
@@ -213,12 +217,12 @@ public class FragmentPixivItem extends BaseFragment {
 
                 FileOutputStream outputStream = new FileOutputStream(
                         Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).
+                                DataSet.sPixivRankItem.response.get(0).works.get(index).
                                         work.getTitle() + ".jpeg");
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
-                        FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.getId());
+                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getId());
                 connection.connect();
                 // 获取输入流
                 inputStream = connection.getInputStream();
@@ -239,14 +243,14 @@ public class FragmentPixivItem extends BaseFragment {
                 try {
                     MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
                             Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg",
+                            DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg",
                             null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                        FragmentPixivLeft.mPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg"))));
+                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg"))));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -278,16 +282,5 @@ public class FragmentPixivItem extends BaseFragment {
             });
         }
 
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            if (getActivity() != null) {
-                ((ViewPagerActivity) getActivity()).changeTitle();
-            }
-        } else {
-        }
     }
 }

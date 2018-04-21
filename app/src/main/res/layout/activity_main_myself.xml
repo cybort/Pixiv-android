@@ -6,9 +6,8 @@
 
     <fragment
         android:id="@+id/homeFragment"
+        android:name="com.example.administrator.essim.utils.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.administrator.essim.utils.HomeFragment"
-        tools:layout="@layout/fragment_home"
-        />
+        tools:layout="@layout/fragment_home" />
 </RelativeLayout>

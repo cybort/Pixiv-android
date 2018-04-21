@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.yalantis:phoenix:1.2.3'
+    implementation 'com.stephentuso:welcome:1.4.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

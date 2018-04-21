@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<item android:id="@+id/action_share"
-    android:title="More"
-    app:showAsAction="never" />
-    <item android:id="@+id/action_care"
+    <item
+        android:id="@+id/action_share"
+        android:title="More"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_care"
         android:title="Don't care"
         app:showAsAction="never" />
-    <item android:id="@+id/action_report"
+    <item
+        android:id="@+id/action_report"
         android:title="Report"
         app:showAsAction="never" />
 

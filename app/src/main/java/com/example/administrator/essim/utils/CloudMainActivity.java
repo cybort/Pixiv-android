@@ -12,6 +12,7 @@ import com.example.administrator.essim.R;
 public class CloudMainActivity extends AppCompatActivity {
 
     public int index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

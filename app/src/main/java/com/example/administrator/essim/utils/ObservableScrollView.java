@@ -13,16 +13,8 @@ import android.widget.ScrollView;
  */
 public class ObservableScrollView extends ScrollView {
 
-    public interface OnScrollChangedListener {
-
-        void onScrollChanged(ScrollView scrollView, int scrolledX, int scrolledY, int dx, int dy);
-
-    }
-
     private int scrolledX;
-
     private int scrolledY;
-
     private OnScrollChangedListener listener;
 
     public ObservableScrollView(Context context) {
@@ -48,9 +40,12 @@ public class ObservableScrollView extends ScrollView {
         int dt = t - oldt;
         scrolledX += dl;
         scrolledY += dt;
-        if(listener != null) {
+        if (listener != null) {
             listener.onScrollChanged(this, getScrollX(), getScrollY(), dl, dt);
         }
+    }
 
+    public interface OnScrollChangedListener {
+        void onScrollChanged(ScrollView scrollView, int scrolledX, int scrolledY, int dx, int dy);
     }
 }
