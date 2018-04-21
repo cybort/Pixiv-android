@@ -1,4 +1,4 @@
-<com.example.administrator.essim.utils.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.administrator.essim.anotherProj.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/osvHomeRecommend"
     android:layout_width="match_parent"
@@ -96,5 +96,5 @@
 
     </LinearLayout>
 
-</com.example.administrator.essim.utils.ObservableScrollView>
+</com.example.administrator.essim.anotherProj.ObservableScrollView>
 

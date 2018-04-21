@@ -1,13 +1,14 @@
-package com.example.administrator.essim.utils;
+package com.example.administrator.essim.anotherProj;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 /**
  * @author linxiao
  * @version 1.0.0
  */
-public abstract class ScrollObservableFragment extends BaseFragment {
+public abstract class ScrollObservableFragment extends Fragment {
 
 
     private OnScrollChangedListener scrollChangedListener;
@@ -33,5 +34,4 @@ public abstract class ScrollObservableFragment extends BaseFragment {
     public interface OnScrollChangedListener {
         void onScrollChanged(ScrollObservableFragment fragment, int scrolledX, int scrolledY, int dx, int dy);
     }
-
 }

@@ -52,12 +52,7 @@ public class FragmentPixivRight extends BaseFragment {
         Common.sendOkhttpRequest("https://api.imjad.cn/pixiv/v1/?type=tags", new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                    }
-                });
+                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -66,7 +61,7 @@ public class FragmentPixivRight extends BaseFragment {
                 Gson gson = new Gson();
                 final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {
                 }.getType());
-                DataSet.sHotTags = booksInfo.subList(0, 60);
+                DataSet.sHotTags = booksInfo.subList(0, 72);
                 mHotTagAdapter = new HotTagAdapter(DataSet.sHotTags, getContext());
                 mHotTagAdapter.setOnTagListItemClickListener(new OnTagListItemClickListener() {
                     @Override
@@ -84,12 +79,7 @@ public class FragmentPixivRight extends BaseFragment {
                         mContext.startActivity(intent);
                     }
                 });
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView.setAdapter(mHotTagAdapter);
-                    }
-                });
+                getActivity().runOnUiThread(() -> mRecyclerView.setAdapter(mHotTagAdapter));
             }
         });
     }

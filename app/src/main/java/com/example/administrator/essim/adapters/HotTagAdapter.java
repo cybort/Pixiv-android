@@ -66,16 +66,13 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HeaderViewHolder) {
-            ((HeaderViewHolder) holder).imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    search_text = ((HeaderViewHolder) holder).editText.getText().toString().trim();
-                    if (!search_text.isEmpty()) {
-                        mOnTagListItemClickListener.onSearch(((HeaderViewHolder) holder).imageButton,
-                                ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
-                    } else {
-                        TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.CONFUSING, Toast.LENGTH_SHORT).show();
-                    }
+            ((HeaderViewHolder) holder).imageButton.setOnClickListener(v -> {
+                search_text = ((HeaderViewHolder) holder).editText.getText().toString().trim();
+                if (!search_text.isEmpty()) {
+                    mOnTagListItemClickListener.onSearch(((HeaderViewHolder) holder).imageButton,
+                            ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
+                } else {
+                    TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.CONFUSING, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -85,24 +82,9 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((ContentViewHolder) holder).textView3.setText(mbooksInfo.get(position * 3 - 1).getName());
             if (mOnTagListItemClickListener != null) {
                 final int pos = holder.getLayoutPosition();
-                ((ContentViewHolder) holder).cardView1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView1, pos * 3 - 3);
-                    }
-                });
-                ((ContentViewHolder) holder).cardView2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView2, pos * 3 - 2);
-                    }
-                });
-                ((ContentViewHolder) holder).cardView3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView3, pos * 3 - 1);
-                    }
-                });
+                ((ContentViewHolder) holder).cardView1.setOnClickListener(v -> mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView1, pos * 3 - 3));
+                ((ContentViewHolder) holder).cardView2.setOnClickListener(v -> mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView2, pos * 3 - 2));
+                ((ContentViewHolder) holder).cardView3.setOnClickListener(v -> mOnTagListItemClickListener.onItemClick(((ContentViewHolder) holder).cardView3, pos * 3 - 1));
             }
         }
     }

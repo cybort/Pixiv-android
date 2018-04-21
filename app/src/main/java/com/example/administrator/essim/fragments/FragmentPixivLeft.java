@@ -58,15 +58,12 @@ public class FragmentPixivLeft extends BaseFragment {
         mFloatingActionMenu = getActivity().findViewById(R.id.menu_red);
         mProgressBar = view.findViewById(R.id.loading);
         mPullToRefreshView = view.findViewById(R.id.pull_wo_refresh);
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (now_page <= 10) {
-                    getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
-                } else {
-                    TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                    mPullToRefreshView.setRefreshing(false);
-                }
+        mPullToRefreshView.setOnRefreshListener(() -> {
+            if (now_page <= 10) {
+                getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
+            } else {
+                TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+                mPullToRefreshView.setRefreshing(false);
             }
         });
 
@@ -87,27 +84,24 @@ public class FragmentPixivLeft extends BaseFragment {
         });
         getData(url_rank_daily, false);
         currentDataType = 0;
-        ((FragmentPixiv) getParentFragment()).setChangeDataSet(new OnChangeDataSet() {
-            @Override
-            public void changeData(int dataType) {
-                if (dataType == 0) {
-                    if (currentDataType != 0) {
-                        now_page = 2;
-                        getData(url_rank_daily, false);
-                        currentDataType = 0;
-                    }
-                } else if (dataType == 1) {
-                    if (currentDataType != 1) {
-                        now_page = 2;
-                        getData(url_rank_weekly, false);
-                        currentDataType = 1;
-                    }
-                } else if (dataType == 2) {
-                    if (currentDataType != 2) {
-                        now_page = 2;
-                        getData(url_rank_monthly, false);
-                        currentDataType = 2;
-                    }
+        ((FragmentPixiv) getParentFragment()).setChangeDataSet(dataType -> {
+            if (dataType == 0) {
+                if (currentDataType != 0) {
+                    now_page = 2;
+                    getData(url_rank_daily, false);
+                    currentDataType = 0;
+                }
+            } else if (dataType == 1) {
+                if (currentDataType != 1) {
+                    now_page = 2;
+                    getData(url_rank_weekly, false);
+                    currentDataType = 1;
+                }
+            } else if (dataType == 2) {
+                if (currentDataType != 2) {
+                    now_page = 2;
+                    getData(url_rank_monthly, false);
+                    currentDataType = 2;
                 }
             }
         });
@@ -119,6 +113,7 @@ public class FragmentPixivLeft extends BaseFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -126,32 +121,26 @@ public class FragmentPixivLeft extends BaseFragment {
                 responseData = response.body().string();
                 DataSet.sPixivRankItem = gson.fromJson(responseData, PixivRankItem.class);
                 mPixivAdapter = new PixivAdapter(DataSet.sPixivRankItem, mContext);
-                mPixivAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        if (position == 20) {
-                            if (now_page <= 10) {
-                                getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
-                            } else {
-                                TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                            }
+                mPixivAdapter.setOnItemClickListener((view, position) -> {
+                    if (position == 20) {
+                        if (now_page <= 10) {
+                            getData(now_link_address + "&page=" + String.valueOf(now_page++), true);
                         } else {
-                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                            intent.putExtra("which_one_is_touched", position);
-                            mContext.startActivity(intent);
+                            TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                         }
+                    } else {
+                        Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                        intent.putExtra("which_one_is_touched", position);
+                        mContext.startActivity(intent);
                     }
                 });
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView.setAdapter(mPixivAdapter);
-                        mPixivAdapter.notifyDataSetChanged();
-                        if (stopRefresh) {
-                            mPullToRefreshView.setRefreshing(false);
-                        }
-                        mProgressBar.setVisibility(View.GONE);
+                getActivity().runOnUiThread(() -> {
+                    mRecyclerView.setAdapter(mPixivAdapter);
+                    mPixivAdapter.notifyDataSetChanged();
+                    if (stopRefresh) {
+                        mPullToRefreshView.setRefreshing(false);
                     }
+                    mProgressBar.setVisibility(View.GONE);
                 });
                 now_link_address = address;
             }

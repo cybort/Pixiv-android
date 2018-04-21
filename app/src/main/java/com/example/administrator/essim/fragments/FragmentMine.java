@@ -1,6 +1,5 @@
 package com.example.administrator.essim.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.adapters.ListHitokotoAdapter;
-import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
 import com.example.administrator.essim.models.HitoModel;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -50,19 +48,9 @@ public class FragmentMine extends BaseFragment {
         mToolbar = view.findViewById(R.id.toolbar_mine);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         mTextView = view.findViewById(R.id.toolbar_title_three);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        mTextView.setOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         mRecyclerView = view.findViewById(R.id.mine_recy);
         mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -71,14 +59,9 @@ public class FragmentMine extends BaseFragment {
         //读取数据库
         mHitoModels = DataSupport.findAll(HitoModel.class);
         mAdapter = new ListHitokotoAdapter(mHitoModels, mContext);
-        mAdapter.setOnItemClickListener(new OnListHitokotoClickListener() {
-            @Override
-            public void onItemClick(View view, int position, int code) {
-                if (code == 1) {
-                    createDialog(position, "这一条", 0);
-                } else if (code == 2) {
-
-                }
+        mAdapter.setOnItemClickListener((view1, position, code) -> {
+            if (code == 1) {
+                createDialog(position, "这一条", 0);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -90,33 +73,25 @@ public class FragmentMine extends BaseFragment {
     }
 
     private void createDialog(final int index, String title, final int deleteType) {
-        getDialog(title).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (deleteType == 0) {
-                    DataSupport.deleteAll(HitoModel.class, "hitokoto = ?", mHitoModels.get(index).getHitokoto());
-                    mHitoModels.remove(index);
-                    mAdapter.notifyItemRemoved(index);
-                } else if (deleteType == 1) {
-                    for (int i = 0; i < mHitoModels.size(); i++) {
-                        if (mHitoModels.get(i).getSelected()) {
-                            DataSupport.deleteAll(HitoModel.class, "hitokoto = ?", mHitoModels.get(i).getHitokoto());
-                        }
+        getDialog(title).setPositiveButton("确定", (dialog, which) -> {
+            if (deleteType == 0) {
+                DataSupport.deleteAll(HitoModel.class, "hitokoto = ?", mHitoModels.get(index).getHitokoto());
+                mHitoModels.remove(index);
+                mAdapter.notifyItemRemoved(index);
+            } else if (deleteType == 1) {
+                for (int i = 0; i < mHitoModels.size(); i++) {
+                    if (mHitoModels.get(i).getSelected()) {
+                        DataSupport.deleteAll(HitoModel.class, "hitokoto = ?", mHitoModels.get(i).getHitokoto());
                     }
-                    reFreshLocalData();
-                    setEditableMode();
-                } else if (deleteType == 2) {
-                    DataSupport.deleteAll(HitoModel.class);
-                    mHitoModels.clear();
-                    mAdapter.notifyDataSetChanged();
                 }
+                reFreshLocalData();
+                setEditableMode();
+            } else if (deleteType == 2) {
+                DataSupport.deleteAll(HitoModel.class);
+                mHitoModels.clear();
+                mAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        }).create()
-                .show();
+        }).setNegativeButton("取消", (dialog, which) -> {}).create().show();
     }
 
     private void reFreshLocalData() {

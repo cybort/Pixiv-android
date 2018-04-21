@@ -46,7 +46,8 @@ public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int p) {
+        int position = holder.getAdapterPosition();
         if (!is_editable) {
             ((ContentViewHolder) holder).mCheckBox.setVisibility(View.GONE);
             ((ContentViewHolder) holder).mImageView.setVisibility(View.VISIBLE);
@@ -61,38 +62,27 @@ public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((ContentViewHolder) holder).mTextView3.setText(HitokotoType.getType(mBooksInfo.get(position).getType()));
         ((ContentViewHolder) holder).mCheckBox.setChecked(mBooksInfo.get(position).getSelected());
 
-        ((ContentViewHolder) holder).mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position, 1);
-            }
-        });
+        ((ContentViewHolder) holder).mImageView.setOnClickListener(v -> mOnItemClickListener.onItemClick(v, position, 1));
 
-        ((ContentViewHolder) holder).mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (is_editable) {
-                    if (!((ContentViewHolder) holder).mCheckBox.isChecked()) {
-                        mBooksInfo.get(position).setSelected(true);
-                        ((ContentViewHolder) holder).mCheckBox.setChecked(true);
-                    } else {
-                        mBooksInfo.get(position).setSelected(false);
-                        ((ContentViewHolder) holder).mCheckBox.setChecked(false);
-                    }
-                } else {
-                    mOnItemClickListener.onItemClick(v, position, 0);
-                }
-            }
-        });
-
-        ((ContentViewHolder) holder).mCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (((ContentViewHolder) holder).mCheckBox.isChecked()) {
+        ((ContentViewHolder) holder).mCardView.setOnClickListener(v -> {
+            if (is_editable) {
+                if (!((ContentViewHolder) holder).mCheckBox.isChecked()) {
                     mBooksInfo.get(position).setSelected(true);
+                    ((ContentViewHolder) holder).mCheckBox.setChecked(true);
                 } else {
                     mBooksInfo.get(position).setSelected(false);
+                    ((ContentViewHolder) holder).mCheckBox.setChecked(false);
                 }
+            } else {
+                mOnItemClickListener.onItemClick(v, position, 0);
+            }
+        });
+
+        ((ContentViewHolder) holder).mCheckBox.setOnClickListener(v -> {
+            if (((ContentViewHolder) holder).mCheckBox.isChecked()) {
+                mBooksInfo.get(position).setSelected(true);
+            } else {
+                mBooksInfo.get(position).setSelected(false);
             }
         });
     }
@@ -122,5 +112,4 @@ public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mCheckBox = itemView.findViewById(R.id.select_item);
         }
     }
-
 }

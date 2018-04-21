@@ -89,53 +89,32 @@ public class FragmentWorkItem extends BaseFragment {
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
-        mCardView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
-                if (!file.exists()) {
-                    file.mkdir();
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TastyToast.makeText(mContext, "文件夹创建成功~",
-                                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                        }
-                    });
-                }
-                File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                        mAuthorWorks.response.get(index).getTitle() + ".jpeg");
-                if (file1.exists()) {
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TastyToast.makeText(mContext, "该文件已存在~",
-                                    TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                        }
-                    });
-                } else {
-                    asyncTask = new MyAsyncTask();
-                    asyncTask.execute(mAuthorWorks.response.get(index).image_urls.getLarge());
-                }
+        mCardView3.setOnClickListener(v -> {
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
+            if (!file.exists()) {
+                file.mkdir();
+                mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
+                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
+            }
+            File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+                    mAuthorWorks.response.get(index).getTitle() + ".jpeg");
+            if (file1.exists()) {
+                mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
+                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            } else {
+                asyncTask = new MyAsyncTask();
+                asyncTask.execute(mAuthorWorks.response.get(index).image_urls.getLarge());
             }
         });
         mCardView4 = view.findViewById(R.id.card_right);
-        mCardView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-            }
-        });
+        mCardView4.setOnClickListener(view1 -> getActivity().finish());
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
         mTagGroup.setTags(mAuthorWorks.response.get(index).tags);
-        mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
-            @Override
-            public void onTagClick(String tag) {
-                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("Label", tag);
-                cm.setPrimaryClip(mClipData);
-                TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-            }
+        mTagGroup.setOnTagClickListener(tag -> {
+            ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("Label", tag);
+            cm.setPrimaryClip(mClipData);
+            TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
         });
         mTextView.setText(getString(R.string.string_author, mAuthorWorks.response.get(index)
                 .user.getName()));
@@ -161,12 +140,7 @@ public class FragmentWorkItem extends BaseFragment {
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setTitle("提示信息");
         progressDialog.setMessage("正在下载...");
-        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressDialog.dismiss();
-            }
-        });
+        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", (dialog, which) -> progressDialog.dismiss());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(true);
     }
@@ -243,13 +217,8 @@ public class FragmentWorkItem extends BaseFragment {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             progressDialog.dismiss();
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TastyToast.makeText(mContext, "下载完成~",
-                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                }
-            });
+            mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
+                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         }
     }
 }

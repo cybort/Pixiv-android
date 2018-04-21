@@ -1,4 +1,4 @@
-package com.example.administrator.essim.utils;
+package com.example.administrator.essim.anotherProj;
 
 
 import android.graphics.Bitmap;
@@ -25,7 +25,9 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.models.PixivMember;
+import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,55 +37,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/**
- * 首页,管理滑动显示
- *
- * @author linxiao
- * @version 1.0.0
- */
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends Fragment {
 
     private static float offset = 1f;
     private static float a;
     private static float b = 400.0f;
     public PixivMember mPixivMember;
-    @Bind(R.id.people_bg)
-    ImageView bg;
-    @Bind(R.id.follow_and_followers)
-    RelativeLayout mRelativeLayout;
-    @Bind(R.id.people_head)
-    CircleImageView head;
-    @Bind(R.id.author_followers)
-    TextView mTextView;
-    @Bind(R.id.author_follow)
-    TextView mTextView2;
-    @Bind(R.id.rlNavBar)
-    Toolbar rlNavBar;
-    @Bind(R.id.viewPager)
-    ViewPager viewPager;
-    @Bind(R.id.tabStrip)
-    PagerSlidingTabStrip tabStrip;
-    @Bind(R.id.llHeader)
-    LinearLayout llHeader;
-    int slidingDistance;
-    int currScrollY;
-    int index;
-    int currentPosition;
-    private View contentView;
+    private ImageView bg;
+    private RelativeLayout mRelativeLayout;
+    private CircleImageView head;
+    private TextView mTextView, mTextView2;
+    private Toolbar rlNavBar;
+    private ViewPager viewPager;
+    private PagerSlidingTabStrip tabStrip;
+    private LinearLayout llHeader;
+    private int slidingDistance, currScrollY, index, currentPosition;
     private String url = "https://api.imjad.cn/pixiv/v1/?type=member&id=";
     private List<ScrollObservableFragment> displayFragments;
     private List<String> displayPageTitles = Arrays.asList("他的作品", "个人信息");
-
-    public HomeFragment() {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,38 +72,34 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (contentView == null) {
-            contentView = inflater.inflate(R.layout.fragment_home, container, false);
-            ButterKnife.bind(this, contentView);
-
-            initView();
-        }
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        initView(v);
         initSlidingParams();
-
-        return contentView;
+        return v;
     }
 
-    private void initView() {
-        rlNavBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
+    private void initView(View v) {
+        llHeader = v.findViewById(R.id.llHeader);
+        tabStrip = v.findViewById(R.id.tabStrip);
+        viewPager = v.findViewById(R.id.viewPager);
+        rlNavBar = v.findViewById(R.id.rlNavBar);
+        mTextView = v.findViewById(R.id.author_followers);
+        mTextView2 = v.findViewById(R.id.author_follow);
+        head = v.findViewById(R.id.people_head);
+        mRelativeLayout = v.findViewById(R.id.follow_and_followers);
+        bg = v.findViewById(R.id.people_bg);
+        rlNavBar.setNavigationOnClickListener(v1 -> getActivity().finish());
         rlNavBar.setTitle(DataSet.sPixivRankItem.response.get(0).works.get(index).work.user.getName() + "的主页");
         displayFragments = new ArrayList<>();
         displayFragments.add(HomeListFragment.newInstance());
         displayFragments.add(new HomeProfileFragment());
 
-        ScrollObservableFragment.OnScrollChangedListener onScrollChangedListener = new ScrollObservableFragment.OnScrollChangedListener() {
-
-            @Override
-            public void onScrollChanged(ScrollObservableFragment fragment, int scrolledX, int scrolledY, int dx, int dy) {
-                if (fragment.equals(displayFragments.get(currentPosition))) {
-                    scrollChangeHeader(scrolledY);
-                }
-            }
-        };
+        ScrollObservableFragment.OnScrollChangedListener onScrollChangedListener =
+                (fragment, scrolledX, scrolledY, dx, dy) -> {
+                    if (fragment.equals(displayFragments.get(currentPosition))) {
+                        scrollChangeHeader(scrolledY);
+                    }
+                };
         for (ScrollObservableFragment fragment : displayFragments) {
             fragment.setOnScrollChangedListener(onScrollChangedListener);
         }
@@ -151,8 +124,6 @@ public class HomeFragment extends BaseFragment {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                LogcatUtils.d("HomeFragment", "position = " + position);
-//                displayFragments.get(position).setScrolledY(currScrollY);
             }
 
             @Override
@@ -183,6 +154,7 @@ public class HomeFragment extends BaseFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(() -> TastyToast.makeText(getContext(), "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -190,12 +162,7 @@ public class HomeFragment extends BaseFragment {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
                 mPixivMember = gson.fromJson(responseData, PixivMember.class);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout();
-                    }
-                });
+                getActivity().runOnUiThread(() -> refreshLayout());
             }
         });
     }
@@ -203,7 +170,7 @@ public class HomeFragment extends BaseFragment {
     private void refreshLayout() {
         mTextView.setText(getString(R.string.author_followers, mPixivMember.response.get(0).stats.getFollowing()));
         mTextView2.setText(getString(R.string.author_follow, mPixivMember.response.get(0).stats.getFriends()));
-        Common.sHomeProfileFragment.refreshLayout(mPixivMember);
+        DataSet.sHomeProfileFragment.refreshLayout(mPixivMember);
     }
 
     /**

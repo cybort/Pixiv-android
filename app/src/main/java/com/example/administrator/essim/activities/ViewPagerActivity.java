@@ -34,12 +34,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         index = intent.getIntExtra("which_one_is_touched", 0);
         mToolbar = findViewById(R.id.view_pager_toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> finish());
         mViewPager = findViewById(R.id.view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {

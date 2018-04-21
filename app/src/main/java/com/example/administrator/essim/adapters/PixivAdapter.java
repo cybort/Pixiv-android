@@ -43,9 +43,10 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int p) {
+        int position = holder.getAdapterPosition();
         if (holder instanceof PhotoHolder) {
-            Glide.with(mContext).load(mPixivRankItem.response.get(0).works.get(position).work.image_urls.getPx_480mw())
+            Glide.with(mContext).load(mPixivRankItem.response.get(0).works.get(holder.getAdapterPosition()).work.image_urls.getPx_480mw())
                     .into(((PhotoHolder) holder).mImageView);
             ((PhotoHolder) holder).mTextView.setText(mPixivRankItem.response.get(0).works.get(position).work.getTitle());
             ((PhotoHolder) holder).mTextView2.setText(mContext.getString(R.string.string_author,
@@ -63,20 +64,10 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 .work.stats.getScored_count().length() - 3)));
             }
             if (mOnItemClickListener != null) {
-                ((PhotoHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOnItemClickListener.onItemClick(holder.itemView, position);
-                    }
-                });
+                ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
             }
         } else {
-            ((BottomViewHolder) holder).mCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(holder.itemView, position);
-                }
-            });
+            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
         }
     }
 

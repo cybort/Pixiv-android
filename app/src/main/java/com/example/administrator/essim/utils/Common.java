@@ -3,6 +3,9 @@ package com.example.administrator.essim.utils;
 
 import android.util.Log;
 
+import com.example.administrator.essim.anotherProj.HomeListFragment;
+import com.example.administrator.essim.anotherProj.HomeProfileFragment;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,9 +18,6 @@ import okhttp3.Request;
  */
 
 public class Common {
-    public static HomeProfileFragment sHomeProfileFragment;
-    public static HomeListFragment sHomeListFragment;
-
     public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(address).build();

@@ -16,9 +16,7 @@
         android:id="@+id/imageView_nav_head"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@mipmap/ic_launcher_round"
-        app:civ_border_color="@color/white"
-        app:civ_border_width="2dp" />
+        android:src="@mipmap/logo" />
 
     <TextView
         android:layout_width="match_parent"

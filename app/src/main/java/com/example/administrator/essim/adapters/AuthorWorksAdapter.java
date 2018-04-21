@@ -56,20 +56,18 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mString.equals("searchResult")) {
             // no need to set headLayout
             bindData(holder, position);
         } else {
-            if (holder instanceof ItemHolder) {
-                //create a empty headLayout
-            } else {
+            if (!(holder instanceof ItemHolder)) {
                 bindData(holder, position - 1);
             }
         }
     }
 
-    private void bindData(final RecyclerView.ViewHolder holder, final int position) {
+    private void bindData(final RecyclerView.ViewHolder holder, int position) {
         ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
         if (mBooksInfo.response.get(position).stats.getViews_count().length() <= 3) {
             ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
@@ -80,12 +78,8 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                 .into(((ContentViewHolder) holder).mImageView);
-        ((ContentViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnItemClickListener.onItemClick(view, position);
-            }
-        });
+        ((ContentViewHolder) holder).itemView.setOnClickListener(view -> mOnItemClickListener.onItemClick(view, position));
+        ((ContentViewHolder) holder).mButton.setOnClickListener((view) -> mOnItemClickListener.onItemClick(view, position));
     }
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {

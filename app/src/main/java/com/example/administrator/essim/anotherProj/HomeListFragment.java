@@ -1,4 +1,4 @@
-package com.example.administrator.essim.utils;
+package com.example.administrator.essim.anotherProj;
 
 
 import android.content.Context;
@@ -17,34 +17,22 @@ import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/**
- * 列表信息展示所用页面
- *
- * @author linxiao
- * @version 1.0.0
- */
 public class HomeListFragment extends ScrollObservableFragment {
 
-    @Bind(R.id.rcvGoodsList)
-    RecyclerView rcvGoodsList;
-    private int scrolledX = 0, scrolledY = 0;
     private Context mContext;
-    private View contentView;
+    private RecyclerView rcvGoodsList;
+    private int scrolledX = 0, scrolledY = 0;
     private AuthorWorksAdapter mAuthorWorksAdapter;
-
-    public HomeListFragment() {
-        // Required empty public constructor
-    }
 
     public static HomeListFragment newInstance() {
         HomeListFragment fragment = new HomeListFragment();
@@ -54,25 +42,16 @@ public class HomeListFragment extends ScrollObservableFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Common.sHomeListFragment = this;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        DataSet.sHomeListFragment = this;
         mContext = getContext();
-        if (contentView == null) {
-            contentView = inflater.inflate(R.layout.fragment_home_list, container, false);
-            ButterKnife.bind(this, contentView);
-            initView();
-        }
-        return contentView;
+        View v = inflater.inflate(R.layout.fragment_home_list, container, false);
+        initView(v);
+        return v;
     }
 
-    private void initView() {
+    private void initView(View v) {
+        rcvGoodsList = v.findViewById(R.id.rcvGoodsList);
         rcvGoodsList.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvGoodsList.setItemAnimator(new DefaultItemAnimator());
         rcvGoodsList.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -95,6 +74,7 @@ public class HomeListFragment extends ScrollObservableFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -103,21 +83,13 @@ public class HomeListFragment extends ScrollObservableFragment {
                 Gson gson = new Gson();
                 DataSet.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sAuthorWorks, getContext(), "AuthorResult");
-                mAuthorWorksAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(mContext, PixivItemActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        intent.putExtra("which kind data type", "AuthorWorks");
-                        mContext.startActivity(intent);
-                    }
+                mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
+                    Intent intent = new Intent(mContext, PixivItemActivity.class);
+                    intent.putExtra("which one is selected", position);
+                    intent.putExtra("which kind data type", "AuthorWorks");
+                    mContext.startActivity(intent);
                 });
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        rcvGoodsList.setAdapter(mAuthorWorksAdapter);
-                    }
-                });
+                getActivity().runOnUiThread(() -> rcvGoodsList.setAdapter(mAuthorWorksAdapter));
             }
         });
     }

@@ -68,12 +68,7 @@ public class FragmentPixiv extends BaseFragment {
         Toolbar toolbar = v.findViewById(R.id.toolbar_pixiv);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        toolbar.setNavigationOnClickListener(v1 -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         list.add("Rank  List");
         list.add("Hot  Tags");
         fragments.add(new FragmentPixivLeft());
@@ -104,12 +99,7 @@ public class FragmentPixiv extends BaseFragment {
             }
         });
         mTextView = v.findViewById(R.id.toolbar_title_one);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        mTextView.setOnClickListener(v12 -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
 
         menuRed = v.findViewById(R.id.menu_red);
         fab1 = v.findViewById(R.id.fab1);

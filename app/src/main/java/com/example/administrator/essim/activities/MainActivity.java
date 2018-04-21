@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -51,36 +52,30 @@ public class MainActivity extends AppCompatActivity
         mContext = this;
         initFragments();
         BottomBar bottomBar = findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                switch (tabId) {
-                    case R.id.tab_pixiv:
-                        if (lastShowFragment != 0) {
-                            switchFrament(lastShowFragment, 0);
-                            lastShowFragment = 0;
-                        }
-                        break;
-                    case R.id.tab_hitokoto:
-                        if (lastShowFragment != 1) {
-                            switchFrament(lastShowFragment, 1);
-                            lastShowFragment = 1;
-                        }
-                        break;
-                    case R.id.tab_mine:
-                        if (lastShowFragment != 2) {
-                            switchFrament(lastShowFragment, 2);
-                            lastShowFragment = 2;
-                        }
-                        break;
-                }
+        bottomBar.setOnTabSelectListener(tabId -> {
+            switch (tabId) {
+                case R.id.tab_pixiv:
+                    if (lastShowFragment != 0) {
+                        switchFrament(lastShowFragment, 0);
+                        lastShowFragment = 0;
+                    }
+                    break;
+                case R.id.tab_hitokoto:
+                    if (lastShowFragment != 1) {
+                        switchFrament(lastShowFragment, 1);
+                        lastShowFragment = 1;
+                    }
+                    break;
+                case R.id.tab_mine:
+                    if (lastShowFragment != 2) {
+                        switchFrament(lastShowFragment, 2);
+                        lastShowFragment = 2;
+                    }
+                    break;
             }
         });
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
+        bottomBar.setOnTabReselectListener(tabId -> {
 
-            }
         });
 
         sDrawerLayout = findViewById(R.id.drawer_layout);
@@ -142,7 +137,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent mIntent;

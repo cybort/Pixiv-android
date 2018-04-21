@@ -23,6 +23,7 @@ import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.DataSet;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
 
@@ -71,6 +72,7 @@ public class FragmentTagResult extends BaseFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -79,21 +81,13 @@ public class FragmentTagResult extends BaseFragment {
                 Gson gson = new Gson();
                 DataSet.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sSearchResult, getContext(), "searchResult");
-                mAuthorWorksAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(mContext, PixivItemActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        intent.putExtra("which kind data type", "TagResult");
-                        mContext.startActivity(intent);
-                    }
+                mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
+                    Intent intent = new Intent(mContext, PixivItemActivity.class);
+                    intent.putExtra("which one is selected", position);
+                    intent.putExtra("which kind data type", "TagResult");
+                    mContext.startActivity(intent);
                 });
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView.setAdapter(mAuthorWorksAdapter);
-                    }
-                });
+                getActivity().runOnUiThread(() -> mRecyclerView.setAdapter(mAuthorWorksAdapter));
             }
         });
     }

@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.ViewPagerActivity" />
-        <activity android:name=".utils.CloudMainActivity" />
+        <activity android:name=".anotherProj.CloudMainActivity" />
         <activity android:name=".activities.PixivItemActivity"/>
         <activity android:name=".activities.TagResultActivity"/>
         <activity android:name=".activities.MyWelcomeActivity"

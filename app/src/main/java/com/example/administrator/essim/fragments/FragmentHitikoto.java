@@ -60,29 +60,16 @@ public class FragmentHitikoto extends BaseFragment {
         mTextView4 = view.findViewById(R.id.hitokoto_catname);
         mTextView5 = view.findViewById(R.id.hitokoto_resouce);
         mTextView6 = view.findViewById(R.id.toolbar_title_two);
-        mTextView6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        mTextView6.setOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         mButton = view.findViewById(R.id.refresh);
         mButton2 = view.findViewById(R.id.collect_it);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getData(url_head + catname);
-            }
-        });
-        mButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HitoModel hitoModel = mHitoModel;
-                hitoModel.save();
-                need_to_refresh = true;
-                TastyToast.makeText(mContext, "已添加到收藏~",
-                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-            }
+        mButton.setOnClickListener(v -> getData(url_head + catname));
+        mButton2.setOnClickListener(v -> {
+            HitoModel hitoModel = mHitoModel;
+            hitoModel.save();
+            need_to_refresh = true;
+            TastyToast.makeText(mContext, "已添加到收藏~",
+                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
         });
         mAppCompatSpinner = view.findViewById(R.id.spinner);
         mAppCompatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -124,18 +111,14 @@ public class FragmentHitikoto extends BaseFragment {
         mToolbar = view.findViewById(R.id.toolbar_hitokoto);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.sDrawerLayout.openDrawer(Gravity.START, true);
-            }
-        });
+        mToolbar.setNavigationOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
     }
 
     private void getData(String address) {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
             @Override
@@ -143,16 +126,13 @@ public class FragmentHitikoto extends BaseFragment {
                 responseData = response.body().string();
                 finalResponseData = responseData.replaceAll("from", "from_where");
                 mHitoModel = gson.fromJson(finalResponseData, HitoModel.class);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTextView1.setText(mHitoModel.getHitokoto());
-                        mTextView2.setText(getString(R.string.author_is, mHitoModel.getCreator()));
-                        mTextView3.setText(Common.getTime(mHitoModel.getCreated_at()));
-                        mTextView4.setText(mHitoModel.getFrom_where());
-                        mTextView4.requestFocus();
-                        mTextView5.setText(HitokotoType.getType(mHitoModel.getType()));
-                    }
+                getActivity().runOnUiThread(() -> {
+                    mTextView1.setText(mHitoModel.getHitokoto());
+                    mTextView2.setText(getString(R.string.author_is, mHitoModel.getCreator()));
+                    mTextView3.setText(Common.getTime(mHitoModel.getCreated_at()));
+                    mTextView4.setText(mHitoModel.getFrom_where());
+                    mTextView4.requestFocus();
+                    mTextView5.setText(HitokotoType.getType(mHitoModel.getType()));
                 });
             }
         });

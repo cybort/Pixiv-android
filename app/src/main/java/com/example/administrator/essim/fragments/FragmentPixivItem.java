@@ -28,7 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.models.DataSet;
-import com.example.administrator.essim.utils.CloudMainActivity;
+import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -91,13 +91,10 @@ public class FragmentPixivItem extends BaseFragment {
                 .works.get(index).work.image_urls.getPx_480mw())
                 .into(mImageView2);
         mTextView = view.findViewById(R.id.detail_author);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CloudMainActivity.class);
-                intent.putExtra("which one is selected", index);
-                mContext.startActivity(intent);
-            }
+        mTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, CloudMainActivity.class);
+            intent.putExtra("which one is selected", index);
+            mContext.startActivity(intent);
         });
         mTextView2 = view.findViewById(R.id.detail_img_size);
         mTextView3 = view.findViewById(R.id.detail_create_time);
@@ -106,55 +103,36 @@ public class FragmentPixivItem extends BaseFragment {
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
-        mCardView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
-                if (!file.exists()) {
-                    file.mkdir();
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TastyToast.makeText(mContext, "文件夹创建成功~",
-                                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                        }
-                    });
-                }
-                File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
-                if (file1.exists()) {
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TastyToast.makeText(mContext, "该文件已存在~",
-                                    TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                        }
-                    });
-                } else {
-                    asyncTask = new MyAsyncTask();
-                    asyncTask.execute(DataSet.sPixivRankItem.response.get(0).works
-                            .get(index).work.image_urls.getLarge());
-                }
+        mCardView3.setOnClickListener(v -> {
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
+            if (!file.exists()) {
+                file.mkdir();
+                mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
+                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
+            }
+            File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+                    DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
+            if (file1.exists()) {
+                mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
+                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            } else {
+                asyncTask = new MyAsyncTask();
+                asyncTask.execute(DataSet.sPixivRankItem.response.get(0).works
+                        .get(index).work.image_urls.getLarge());
             }
         });
         mCardView4 = view.findViewById(R.id.card_right);
-        mCardView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CloudMainActivity.class);
-                intent.putExtra("which one is selected", index);
-                mContext.startActivity(intent);
-            }
+        mCardView4.setOnClickListener(view1 -> {
+            Intent intent = new Intent(mContext, CloudMainActivity.class);
+            intent.putExtra("which one is selected", index);
+            mContext.startActivity(intent);
         });
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
         mTagGroup.setTags(DataSet.sPixivRankItem.response.get(0).works.get(index).work.tags);
-        mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
-            @Override
-            public void onTagClick(String tag) {
-                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("Label", tag);
-                cm.setPrimaryClip(mClipData);
-            }
+        mTagGroup.setOnTagClickListener(tag -> {
+            ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("Label", tag);
+            cm.setPrimaryClip(mClipData);
         });
         mTextView.setText(getString(R.string.string_author,
                 DataSet.sPixivRankItem.response.get(0).works.get(index).work.user.getName()));
@@ -181,12 +159,7 @@ public class FragmentPixivItem extends BaseFragment {
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setTitle("提示信息");
         progressDialog.setMessage("正在下载...");
-        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressDialog.dismiss();
-            }
-        });
+        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", (dialog, which) -> progressDialog.dismiss());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(true);
     }
@@ -273,13 +246,8 @@ public class FragmentPixivItem extends BaseFragment {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             progressDialog.dismiss();
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TastyToast.makeText(mContext, "下载完成~",
-                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                }
-            });
+            mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
+                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         }
 
     }
