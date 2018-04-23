@@ -36,7 +36,6 @@ public class FragmentMine extends BaseFragment {
     private RecyclerView mRecyclerView;
     private List<HitoModel> mHitoModels;
     private ListHitokotoAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
@@ -52,9 +51,9 @@ public class FragmentMine extends BaseFragment {
         mTextView = view.findViewById(R.id.toolbar_title_three);
         mTextView.setOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         mRecyclerView = view.findViewById(R.id.mine_recy);
-        mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         //读取数据库
         mHitoModels = DataSupport.findAll(HitoModel.class);
