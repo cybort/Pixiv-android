@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
-import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -43,7 +42,7 @@ public class HomeListFragment extends ScrollObservableFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        DataSet.sHomeListFragment = this;
+        Reference.sHomeListFragment = this;
         mContext = getContext();
         View v = inflater.inflate(R.layout.fragment_home_list, container, false);
         initView(v);
@@ -66,7 +65,7 @@ public class HomeListFragment extends ScrollObservableFragment {
             }
         });
         String url = "https://api.imjad.cn/pixiv/v1/?type=member_illust&id=";
-        getData(url + DataSet.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
+        getData(url + Reference.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
                 .user.getId());
     }
 
@@ -81,8 +80,8 @@ public class HomeListFragment extends ScrollObservableFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                DataSet.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
-                mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sAuthorWorks, getContext(), "AuthorResult");
+                Reference.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
+                mAuthorWorksAdapter = new AuthorWorksAdapter(Reference.sAuthorWorks, getContext(), "AuthorResult");
                 mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
                     Intent intent = new Intent(mContext, PixivItemActivity.class);
                     intent.putExtra("which one is selected", position);

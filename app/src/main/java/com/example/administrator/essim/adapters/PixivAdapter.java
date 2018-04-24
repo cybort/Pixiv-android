@@ -67,7 +67,7 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
             }
         } else {
-            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
+            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1));
         }
     }
 

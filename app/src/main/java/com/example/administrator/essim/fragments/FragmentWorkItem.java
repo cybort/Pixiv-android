@@ -28,7 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.models.AuthorWorks;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -63,9 +63,9 @@ public class FragmentWorkItem extends BaseFragment {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
         if (((PixivItemActivity) getActivity()).dataYp == 0) {
-            mAuthorWorks = DataSet.sAuthorWorks;
+            mAuthorWorks = Reference.sAuthorWorks;
         } else {
-            mAuthorWorks = DataSet.sSearchResult;
+            mAuthorWorks = Reference.sSearchResult;
         }
         reFreshLayout(view);
         return view;

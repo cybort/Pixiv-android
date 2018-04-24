@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -83,11 +83,11 @@ public class FragmentPixivItem extends BaseFragment {
     private void reFreshLayout(View view) {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
-        Glide.with(getContext()).load(DataSet.sPixivRankItem.response.get(0)
+        Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
                 .into(mImageView);
-        Glide.with(getContext()).load(DataSet.sPixivRankItem.response.get(0)
+        Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .into(mImageView2);
         mTextView = view.findViewById(R.id.detail_author);
@@ -111,13 +111,13 @@ public class FragmentPixivItem extends BaseFragment {
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
             }
             File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                    DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
+                    Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg");
             if (file1.exists()) {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             } else {
                 asyncTask = new MyAsyncTask();
-                asyncTask.execute(DataSet.sPixivRankItem.response.get(0).works
+                asyncTask.execute(Reference.sPixivRankItem.response.get(0).works
                         .get(index).work.image_urls.getLarge());
             }
         });
@@ -128,30 +128,30 @@ public class FragmentPixivItem extends BaseFragment {
             mContext.startActivity(intent);
         });
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
-        mTagGroup.setTags(DataSet.sPixivRankItem.response.get(0).works.get(index).work.tags);
+        mTagGroup.setTags(Reference.sPixivRankItem.response.get(0).works.get(index).work.tags);
         mTagGroup.setOnTagClickListener(tag -> {
             ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData mClipData = ClipData.newPlainText("Label", tag);
             cm.setPrimaryClip(mClipData);
         });
         mTextView.setText(getString(R.string.string_author,
-                DataSet.sPixivRankItem.response.get(0).works.get(index).work.user.getName()));
-        mTextView2.setText(getString(R.string.string_full_size, DataSet.sPixivRankItem.response.get(0)
-                .works.get(index).work.getWidth(), DataSet.sPixivRankItem.response.get(0)
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getName()));
+        mTextView2.setText(getString(R.string.string_full_size, Reference.sPixivRankItem.response.get(0)
+                .works.get(index).work.getWidth(), Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.getHeight()));
-        mTextView3.setText(getString(R.string.string_create_time, DataSet.sPixivRankItem.response.get(0)
+        mTextView3.setText(getString(R.string.string_create_time, Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.getCreated_time()));
         mTextView4.setText(getString(R.string.string_viewd,
-                DataSet.sPixivRankItem.response.get(0).works.get(index).work.stats.getViews_count().substring(0,
-                        DataSet.sPixivRankItem.response.get(0).works.get(index)
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.stats.getViews_count().substring(0,
+                        Reference.sPixivRankItem.response.get(0).works.get(index)
                                 .work.stats.getViews_count().length() - 3)));
-        if (DataSet.sPixivRankItem.response.get(0).works.get(index).work.stats.getScored_count().length() <= 3) {
-            mTextView5.setText(DataSet.sPixivRankItem.response.get(0).works
+        if (Reference.sPixivRankItem.response.get(0).works.get(index).work.stats.getScored_count().length() <= 3) {
+            mTextView5.setText(Reference.sPixivRankItem.response.get(0).works
                     .get(index).work.stats.getScored_count());
         } else {
             mTextView5.setText(getString(R.string.string_viewd,
-                    DataSet.sPixivRankItem.response.get(0).works.get(index)
-                            .work.stats.getScored_count().substring(0, DataSet.sPixivRankItem.response.get(0).works.get(index)
+                    Reference.sPixivRankItem.response.get(0).works.get(index)
+                            .work.stats.getScored_count().substring(0, Reference.sPixivRankItem.response.get(0).works.get(index)
                             .work.stats.getScored_count().length() - 3)));
         }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
@@ -190,12 +190,12 @@ public class FragmentPixivItem extends BaseFragment {
 
                 FileOutputStream outputStream = new FileOutputStream(
                         Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                DataSet.sPixivRankItem.response.get(0).works.get(index).
+                                Reference.sPixivRankItem.response.get(0).works.get(index).
                                         work.getTitle() + ".jpeg");
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
-                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getId());
+                        Reference.sPixivRankItem.response.get(0).works.get(index).work.getId());
                 connection.connect();
                 // 获取输入流
                 inputStream = connection.getInputStream();
@@ -216,14 +216,14 @@ public class FragmentPixivItem extends BaseFragment {
                 try {
                     MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
                             Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg",
+                            Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg",
                             null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                        DataSet.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg"))));
+                        Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + ".jpeg"))));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

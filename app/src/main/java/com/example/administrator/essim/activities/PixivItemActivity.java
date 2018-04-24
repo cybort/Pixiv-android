@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.example.administrator.essim.fragments.FragmentWorkItem;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 
 public class PixivItemActivity extends SingleFragmentActivity {
 
@@ -33,10 +33,10 @@ public class PixivItemActivity extends SingleFragmentActivity {
 
         if (dataType.equals("TagResult")) {
             dataYp = 1;
-            mToolbar.setTitle(DataSet.sSearchResult.response.get(index).getTitle());
+            mToolbar.setTitle(Reference.sSearchResult.response.get(index).getTitle());
         } else if (dataType.equals("AuthorWorks")) {
             dataYp = 0;
-            mToolbar.setTitle(DataSet.sAuthorWorks.response.get(index).getTitle());
+            mToolbar.setTitle(Reference.sAuthorWorks.response.get(index).getTitle());
         }
     }
 }

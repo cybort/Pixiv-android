@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.models.PixivMember;
-import com.example.administrator.essim.utils.Common;
 
 
 public class HomeProfileFragment extends ScrollObservableFragment {
@@ -22,7 +20,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        DataSet.sHomeProfileFragment = this;
+        Reference.sHomeProfileFragment = this;
         View v = inflater.inflate(R.layout.fragment_home_profile, container, false);
         initView(v);
         return v;

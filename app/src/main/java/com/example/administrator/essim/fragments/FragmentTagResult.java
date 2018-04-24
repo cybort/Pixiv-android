@@ -18,9 +18,8 @@ import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.activities.SingleFragmentActivity;
 import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
-import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -62,8 +61,8 @@ public class FragmentTagResult extends BaseFragment {
             mToolbar.setTitle(word);
             getData(head + word + bottom);
         } else {
-            mToolbar.setTitle(DataSet.sHotTags.get(index).getName());
-            getData(head + DataSet.sHotTags.get(index).getName() + bottom);
+            mToolbar.setTitle(Reference.sHotTags.get(index).getName());
+            getData(head + Reference.sHotTags.get(index).getName() + bottom);
         }
         return view;
     }
@@ -79,8 +78,8 @@ public class FragmentTagResult extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                DataSet.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
-                mAuthorWorksAdapter = new AuthorWorksAdapter(DataSet.sSearchResult, getContext(), "searchResult");
+                Reference.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
+                mAuthorWorksAdapter = new AuthorWorksAdapter(Reference.sSearchResult, getContext(), "searchResult");
                 mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
                     Intent intent = new Intent(mContext, PixivItemActivity.class);
                     intent.putExtra("which one is selected", position);

@@ -7,12 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.TagResultActivity;
 import com.example.administrator.essim.adapters.HotTagAdapter;
 import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.models.HotTag;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
@@ -44,12 +46,13 @@ public class FragmentPixivRight extends BaseFragment {
         mRecyclerView = view.findViewById(R.id.tag_list);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        getData();
+        String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
+        getData(url);
         return view;
     }
 
-    private void getData() {
-        Common.sendOkhttpRequest("https://api.imjad.cn/pixiv/v1/?type=tags", new Callback() {
+    private void getData(String url) {
+        Common.sendOkhttpRequest(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
@@ -61,8 +64,8 @@ public class FragmentPixivRight extends BaseFragment {
                 Gson gson = new Gson();
                 final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {
                 }.getType());
-                DataSet.sHotTags = booksInfo.subList(0, 72);
-                mHotTagAdapter = new HotTagAdapter(DataSet.sHotTags, getContext());
+                Reference.sHotTags = booksInfo.subList(0, 72);
+                mHotTagAdapter = new HotTagAdapter(Reference.sHotTags, getContext());
                 mHotTagAdapter.setOnTagListItemClickListener(new OnTagListItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {

@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
-import com.example.administrator.essim.models.DataSet;
+import com.example.administrator.essim.models.Reference;
 
 
 public class ViewPagerActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return DataSet.sPixivRankItem.response.get(0).works.size();
+                return Reference.sPixivRankItem.response.get(0).works.size();
             }
         });
         mViewPager.setCurrentItem(index);
@@ -56,7 +56,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     public void changeTitle() {
-        mToolbar.setTitle(DataSet.sPixivRankItem.response.get(0)
+        mToolbar.setTitle(Reference.sPixivRankItem.response.get(0)
                 .works.get(mViewPager.getCurrentItem()).work.getTitle());
     }
 }

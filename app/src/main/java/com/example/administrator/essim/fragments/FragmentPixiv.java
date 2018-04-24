@@ -6,12 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.interfaces.OnChangeDataSet;
+import com.example.administrator.essim.models.Reference;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -32,12 +36,17 @@ import java.util.List;
 
 public class FragmentPixiv extends BaseFragment {
 
-    public FloatingActionMenu menuRed;
-    List<Fragment> fragments = new ArrayList<Fragment>();
-    ArrayList<String> list = new ArrayList<String>();
+    private int gotoPage;
     private TextView mTextView;
+    public FloatingActionMenu menuRed;
+    private ViewPager vp;
+    private List<Fragment> fragments = new ArrayList<Fragment>();
+    private ArrayList<String> list = new ArrayList<String>();
     private FloatingActionButton fab1, fab2, fab3;
     private OnChangeDataSet mChangeDataSet;
+    final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10"};
+
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -75,7 +84,7 @@ public class FragmentPixiv extends BaseFragment {
         fragments.add(new FragmentPixivRight());
         FragAdapter adapter = new FragAdapter(getChildFragmentManager(), fragments, list);
 
-        ViewPager vp = v.findViewById(R.id.viewpager);
+        vp = v.findViewById(R.id.viewpager);
         vp.setAdapter(adapter);
 
         final TabLayout mTabLayout = v.findViewById(R.id.tabs);
@@ -109,6 +118,7 @@ public class FragmentPixiv extends BaseFragment {
         fab1.setOnClickListener(clickListener);
         fab2.setOnClickListener(clickListener);
         fab3.setOnClickListener(clickListener);
+
         return v;
     }
 
@@ -124,6 +134,63 @@ public class FragmentPixiv extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_turn:
+                if (vp.getCurrentItem() == 0) {
+                    createDialog();
+                } else if (vp.getCurrentItem() != 0) {
+                    vp.setCurrentItem(0);
+                }
+                return true;
+            case R.id.action_search:
+                if (vp.getCurrentItem() != 1) {
+                    vp.setCurrentItem(1);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private String getRankType() {
+        if (Reference.sFragmentPixivLeft.currentDataType == 0) {
+            return "日榜";
+        } else if (Reference.sFragmentPixivLeft.currentDataType == 1) {
+            return "周榜";
+        } else {
+            return "月榜";
+        }
+    }
+
+    private void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setIcon(R.mipmap.logo);
+        builder.setTitle("当前位置：" + getRankType() + "，第" + String.valueOf(Reference.sFragmentPixivLeft.now_page - 1) + "页");
+        builder.setSingleChoiceItems(arrayOfString, Reference.sFragmentPixivLeft.now_page - 2,
+                (dialogInterface, i) -> gotoPage = i + 1);
+        builder.setPositiveButton("跳转", (dialogInterface, i) -> {
+            if (Reference.sFragmentPixivLeft.now_page - 1 != gotoPage) {
+                Reference.sFragmentPixivLeft.getData(Reference.sFragmentPixivLeft.now_link_address +
+                        "&page=" + String.valueOf(gotoPage), true);
+                Reference.sFragmentPixivLeft.now_page = gotoPage;
+            }
+        })
+        .setNegativeButton("取消", (dialogInterface, i) -> {
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
+        p.height = (int) (dm.heightPixels * 0.6);
+        p.width = (int) (dm.widthPixels * 1.0);
+        dialog.getWindow().setAttributes(p);
+    }
+
     public void setChangeDataSet(OnChangeDataSet changeDataSet) {
         mChangeDataSet = changeDataSet;
     }
@@ -135,7 +202,6 @@ public class FragmentPixiv extends BaseFragment {
 
         private FragAdapter(FragmentManager fm, List<Fragment> fragments, List<String> FragmentTitles) {
             super(fm);
-            // TODO Auto-generated constructor stub
             this.mFragments = fragments;
             this.mFragmentTitles = FragmentTitles;
         }

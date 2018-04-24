@@ -1,5 +1,6 @@
 package com.example.administrator.essim.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.HotTag;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -72,7 +74,7 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mOnTagListItemClickListener.onSearch(((HeaderViewHolder) holder).imageButton,
                             ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
                 } else {
-                    TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.CONFUSING, Toast.LENGTH_SHORT).show();
+                    TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 }
             });
 
