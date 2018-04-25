@@ -36,7 +36,7 @@ import java.util.List;
 
 public class FragmentPixiv extends BaseFragment {
 
-    private int gotoPage;
+    public int gotoPage;
     private TextView mTextView;
     public FloatingActionMenu menuRed;
     private ViewPager vp;

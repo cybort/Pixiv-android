@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -148,5 +149,16 @@ public class FragmentHitikoto extends BaseFragment {
     public void onCreate(Bundle b) {
         super.onCreate(b);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getData(url_head + catname);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

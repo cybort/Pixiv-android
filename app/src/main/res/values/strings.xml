@@ -226,4 +226,5 @@
     <string name="don_t_care">Don\'t care</string>
     <string name="report">Report</string>
     <string name="turn_page">翻页</string>
+    <string name="refresh">刷新</string>
 </resources>

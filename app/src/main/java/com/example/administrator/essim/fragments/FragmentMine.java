@@ -1,5 +1,8 @@
 package com.example.administrator.essim.fragments;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.adapters.ListHitokotoAdapter;
+import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
 import com.example.administrator.essim.models.HitoModel;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -58,9 +62,23 @@ public class FragmentMine extends BaseFragment {
         //读取数据库
         mHitoModels = DataSupport.findAll(HitoModel.class);
         mAdapter = new ListHitokotoAdapter(mHitoModels, mContext);
-        mAdapter.setOnItemClickListener((view1, position, code) -> {
-            if (code == 1) {
-                createDialog(position, "这一条", 0);
+        mAdapter.setOnItemClickListener(new OnListHitokotoClickListener() {
+            @Override
+            public void onItemClick(View view, int position, int code) {
+                if (code == 1) {
+                    createDialog(position, "这一条", 0);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData mClipData = ClipData.newPlainText("Label", mHitoModels.get(position).getHitokoto());
+                if(cm != null) {
+                    cm.setPrimaryClip(mClipData);
+                }
+                TastyToast.makeText(mContext, mHitoModels.get(position).getHitokoto() + " 已复制到剪切板~"
+                        , TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
             }
         });
         mRecyclerView.setAdapter(mAdapter);

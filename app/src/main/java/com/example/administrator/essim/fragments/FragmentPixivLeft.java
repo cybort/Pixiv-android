@@ -144,8 +144,8 @@ public class FragmentPixivLeft extends BaseFragment {
                     mProgressBar.setVisibility(View.GONE);
                 });
                 now_link_address = address;
+                ((FragmentPixiv) getParentFragment()).gotoPage = now_page;
                 now_page++;
-                Common.showLog(now_page);
             }
         });
     }

@@ -85,6 +85,10 @@ public class ListHitokotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mBooksInfo.get(position).setSelected(false);
             }
         });
+        ((ContentViewHolder) holder).itemView.setOnLongClickListener(view -> {
+            mOnItemClickListener.onItemLongClick(view, position);
+            return false;
+        });
     }
 
     public void setOnItemClickListener(OnListHitokotoClickListener mOnItemClickListener) {
