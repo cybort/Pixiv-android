@@ -36,18 +36,17 @@ import java.util.List;
 
 public class FragmentPixiv extends BaseFragment {
 
+    private final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+            "20"};
     public int gotoPage;
-    private TextView mTextView;
     public FloatingActionMenu menuRed;
+    private TextView mTextView;
     private ViewPager vp;
     private List<Fragment> fragments = new ArrayList<Fragment>();
     private ArrayList<String> list = new ArrayList<String>();
     private FloatingActionButton fab1, fab2, fab3;
     private OnChangeDataSet mChangeDataSet;
-    private final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-            "20"};
-
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -178,8 +177,8 @@ public class FragmentPixiv extends BaseFragment {
                 Reference.sFragmentPixivLeft.now_page = gotoPage;
             }
         })
-        .setNegativeButton("取消", (dialogInterface, i) -> {
-        });
+                .setNegativeButton("取消", (dialogInterface, i) -> {
+                });
 
         AlertDialog dialog = builder.create();
         dialog.show();

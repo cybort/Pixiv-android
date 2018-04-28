@@ -74,7 +74,7 @@ public class FragmentMine extends BaseFragment {
             public void onItemLongClick(View view, int position) {
                 ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData mClipData = ClipData.newPlainText("Label", mHitoModels.get(position).getHitokoto());
-                if(cm != null) {
+                if (cm != null) {
                     cm.setPrimaryClip(mClipData);
                 }
                 TastyToast.makeText(mContext, mHitoModels.get(position).getHitokoto() + " 已复制到剪切板~"
@@ -108,7 +108,8 @@ public class FragmentMine extends BaseFragment {
                 mHitoModels.clear();
                 mAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("取消", (dialog, which) -> {}).create().show();
+        }).setNegativeButton("取消", (dialog, which) -> {
+        }).create().show();
     }
 
     private void reFreshLocalData() {

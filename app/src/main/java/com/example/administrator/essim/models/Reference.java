@@ -1,6 +1,5 @@
 package com.example.administrator.essim.models;
 
-import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.HomeListFragment;
 import com.example.administrator.essim.anotherProj.HomeProfileFragment;
 import com.example.administrator.essim.fragments.FragmentPixivLeft;
@@ -13,7 +12,6 @@ public class Reference {
     public static AuthorWorks sAuthorWorks, sSearchResult;
     public static PixivRankItem sPixivRankItem;
     public static FragmentPixivLeft sFragmentPixivLeft;
-
     public static HomeProfileFragment sHomeProfileFragment;
     public static HomeListFragment sHomeListFragment;
 }

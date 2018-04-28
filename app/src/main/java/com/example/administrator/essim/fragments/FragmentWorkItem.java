@@ -167,7 +167,7 @@ public class FragmentWorkItem extends BaseFragment {
 
                 FileOutputStream outputStream = new FileOutputStream(
                         Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg");
+                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId() + ".jpeg");
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
@@ -192,7 +192,7 @@ public class FragmentWorkItem extends BaseFragment {
                 try {
                     MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
                             Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            mAuthorWorks.response.get(index).getTitle()  + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg",
+                            mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId() + ".jpeg",
                             null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -200,7 +200,7 @@ public class FragmentWorkItem extends BaseFragment {
 
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(
                         new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg"))));
+                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId() + ".jpeg"))));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

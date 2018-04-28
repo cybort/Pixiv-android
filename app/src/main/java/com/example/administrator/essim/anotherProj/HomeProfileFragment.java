@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.models.PixivMember;
+import com.example.administrator.essim.models.Reference;
 
 
 public class HomeProfileFragment extends ScrollObservableFragment {

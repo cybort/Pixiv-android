@@ -4,9 +4,11 @@ import java.util.List;
 
 public class PixivIllustItem {
     public List<Response> response;
-    public class Response
-    {
+
+    public class Response {
         public String id;
+        public String title;
+        public MetaData metadata;
 
         public String getId() {
             return id;
@@ -24,14 +26,18 @@ public class PixivIllustItem {
             this.title = title;
         }
 
-        public String title;
+        public class MetaData {
+            public List<Page> pages;
 
-        public class MetaData
-        {
-            public class Page
-            {
-                public class ImageUrl
-                {
+            public class Page {
+                public ImageUrl image_urls;
+
+                public class ImageUrl {
+                    public String large;
+                    public String px_128x128;
+                    public String px_480mw;
+                    public String medium;
+
                     public String getLarge() {
                         return large;
                     }
@@ -63,19 +69,8 @@ public class PixivIllustItem {
                     public void setMedium(String medium) {
                         this.medium = medium;
                     }
-
-                    public String large;
-                    public String px_128x128;
-                    public String px_480mw;
-                    public String medium;
                 }
-
-                public ImageUrl image_urls;
             }
-
-            public List<Page> pages;
         }
-
-        public MetaData metadata;
     }
 }

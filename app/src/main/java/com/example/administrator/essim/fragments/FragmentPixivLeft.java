@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -14,8 +12,8 @@ import android.widget.ProgressBar;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.PixivAdapter;
-import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.models.PixivRankItem;
+import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
@@ -34,8 +32,10 @@ import okhttp3.Response;
 
 public class FragmentPixivLeft extends BaseFragment {
 
+    private static final int PER_PAGE_SIZE = 20;
     public int now_page = 1;
     public int currentDataType;
+    public String now_link_address;
     private PixivAdapter mPixivAdapter;
     private String responseData = "";
     private RecyclerView mRecyclerView;
@@ -43,11 +43,9 @@ public class FragmentPixivLeft extends BaseFragment {
     private Gson gson = new Gson();
     private PullToRefreshView mPullToRefreshView;
     private ProgressBar mProgressBar;
-    public String now_link_address;
     private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date=" + Common.getLastDay();
     private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date=" + Common.getLastDay();
     private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=monthly&per_page=20&date=" + Common.getLastDay();
-    private static final int PER_PAGE_SIZE = 20;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

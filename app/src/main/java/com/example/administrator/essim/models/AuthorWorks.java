@@ -111,6 +111,7 @@ public class AuthorWorks {
 
         public class User {
             public String name;
+            public String id;
 
             public String getName() {
                 return name;
@@ -127,8 +128,6 @@ public class AuthorWorks {
             public void setId(String id) {
                 this.id = id;
             }
-
-            public String id;
         }
 
     }

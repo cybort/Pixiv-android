@@ -1,6 +1,5 @@
 package com.example.administrator.essim.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.HotTag;
 import com.sdsmdg.tastytoast.TastyToast;
