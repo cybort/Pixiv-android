@@ -1,5 +1,6 @@
 package com.example.administrator.essim.models;
 
+import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.HomeListFragment;
 import com.example.administrator.essim.anotherProj.HomeProfileFragment;
 import com.example.administrator.essim.fragments.FragmentPixivLeft;

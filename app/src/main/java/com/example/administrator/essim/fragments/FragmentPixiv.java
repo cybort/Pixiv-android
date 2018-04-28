@@ -44,8 +44,9 @@ public class FragmentPixiv extends BaseFragment {
     private ArrayList<String> list = new ArrayList<String>();
     private FloatingActionButton fab1, fab2, fab3;
     private OnChangeDataSet mChangeDataSet;
-    final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "10"};
+    private final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+            "20"};
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override

@@ -29,14 +29,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/pixiv_image">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <RelativeLayout
                 android:id="@+id/pixiv_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/eight_dip"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/pixiv_head" />
+                android:layout_margin="@dimen/twelve_dip"
+                android:layout_marginEnd="@dimen/twelve_dip"
+                android:background="@drawable/round"
+                android:backgroundTint="@color/colorPrimary"
+                android:transitionName="shareView">
+
+                <TextView
+                    android:id="@+id/pixiv_item_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/pixiv_title"

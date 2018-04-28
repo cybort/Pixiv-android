@@ -24,5 +24,5 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:titleTextColor="#fff"></android.support.v7.widget.Toolbar>
+        app:titleTextColor="#fff" />
 </FrameLayout>

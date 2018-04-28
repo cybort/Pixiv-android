@@ -14,6 +14,7 @@ import android.view.View;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
 import com.example.administrator.essim.models.Reference;
+import com.example.administrator.essim.utils.Common;
 
 
 public class ViewPagerActivity extends AppCompatActivity {
@@ -29,7 +30,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_view_pager);
-
         Intent intent = getIntent();
         index = intent.getIntExtra("which_one_is_touched", 0);
         mToolbar = findViewById(R.id.view_pager_toolbar);

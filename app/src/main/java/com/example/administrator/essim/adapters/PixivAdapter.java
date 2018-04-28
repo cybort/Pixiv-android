@@ -51,9 +51,14 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ((PhotoHolder) holder).mTextView.setText(mPixivRankItem.response.get(0).works.get(position).work.getTitle());
             ((PhotoHolder) holder).mTextView2.setText(mContext.getString(R.string.string_author,
                     mPixivRankItem.response.get(0).works.get(position).work.user.getName()));
-            ((PhotoHolder) holder).mTextView3.setText(mContext.getString(R.string.string_viewd,
-                    mPixivRankItem.response.get(0).works.get(position).work.stats.getViews_count().substring(0, mPixivRankItem.response.get(0).works.get(position)
-                            .work.stats.getViews_count().length() - 3)));
+            if (mPixivRankItem.response.get(0).works.get(position).work.stats.getViews_count().length() <= 3) {
+                ((PhotoHolder) holder).mTextView3.setText(mPixivRankItem.response.get(0).works
+                        .get(position).work.stats.getViews_count());
+            } else {
+                ((PhotoHolder) holder).mTextView3.setText(mContext.getString(R.string.string_viewd,
+                        mPixivRankItem.response.get(0).works.get(position).work.stats.getViews_count().substring(0, mPixivRankItem.response.get(0).works.get(position)
+                                .work.stats.getViews_count().length() - 3)));
+            }
             if (mPixivRankItem.response.get(0).works.get(position).work.stats.getScored_count().length() <= 3) {
                 ((PhotoHolder) holder).mTextView4.setText(mPixivRankItem.response.get(0).works
                         .get(position).work.stats.getScored_count());
@@ -63,6 +68,7 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 .work.stats.getScored_count().substring(0, mPixivRankItem.response.get(0).works.get(position)
                                 .work.stats.getScored_count().length() - 3)));
             }
+            ((PhotoHolder) holder).mTextView5.setText(String.format("%sP", mPixivRankItem.response.get(0).works.get(position).work.getPage_count()));
             if (mOnItemClickListener != null) {
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
             }
@@ -96,7 +102,7 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private static class PhotoHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
-        private TextView mTextView, mTextView2, mTextView3, mTextView4;
+        private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5;
 
         private PhotoHolder(final View itemView) {
             super(itemView);
@@ -105,6 +111,7 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mTextView2 = itemView.findViewById(R.id.pixiv_author);
             mTextView3 = itemView.findViewById(R.id.viewed);
             mTextView4 = itemView.findViewById(R.id.liked);
+            mTextView5 = itemView.findViewById(R.id.pixiv_item_number);
         }
     }
 

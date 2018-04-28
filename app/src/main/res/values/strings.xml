@@ -9,6 +9,8 @@
     <string name="action_view_detail">查看详情</string>
     <string name="original">原图:%spx*%spx</string>
     <string name="date_is">日期:%s</string>
+    <string name="illust_id">作品ID：%s</string>
+    <string name="author_id">画师ID：%s</string>
     <string name="author_is">作者：%s</string>
     <string name="action_edit">编辑</string>
     <string name="download">下载原图</string>

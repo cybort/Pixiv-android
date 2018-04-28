@@ -46,7 +46,7 @@ public class FragmentWorkItem extends BaseFragment {
 
     private int index;
     private ImageView mImageView, mImageView2;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5;
+    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7;
     private MyAsyncTask asyncTask;
     private ProgressDialog progressDialog;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
@@ -86,6 +86,8 @@ public class FragmentWorkItem extends BaseFragment {
         mTextView3 = view.findViewById(R.id.detail_create_time);
         mTextView4 = view.findViewById(R.id.viewed);
         mTextView5 = view.findViewById(R.id.liked);
+        mTextView6 = view.findViewById(R.id.illust_id);
+        mTextView7 = view.findViewById(R.id.author_id);
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
@@ -97,7 +99,7 @@ public class FragmentWorkItem extends BaseFragment {
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
             }
             File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                    mAuthorWorks.response.get(index).getTitle() + ".jpeg");
+                    mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId() + ".jpeg");
             if (file1.exists()) {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
@@ -135,6 +137,10 @@ public class FragmentWorkItem extends BaseFragment {
                     mAuthorWorks.response.get(index).stats.getScored_count()
                             .substring(0, mAuthorWorks.response.get(index).stats.getScored_count().length() - 3)));
         }
+        mTextView6.setText(getString(R.string.illust_id,
+                mAuthorWorks.response.get(index).getId()));
+        mTextView7.setText(getString(R.string.author_id,
+                mAuthorWorks.response.get(index).user.getId()));
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         progressDialog = new ProgressDialog(mContext);
@@ -161,7 +167,7 @@ public class FragmentWorkItem extends BaseFragment {
 
                 FileOutputStream outputStream = new FileOutputStream(
                         Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                mAuthorWorks.response.get(index).getTitle() + ".jpeg");
+                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg");
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
@@ -186,7 +192,7 @@ public class FragmentWorkItem extends BaseFragment {
                 try {
                     MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
                             Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            mAuthorWorks.response.get(index).getTitle() + ".jpeg",
+                            mAuthorWorks.response.get(index).getTitle()  + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg",
                             null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -194,7 +200,7 @@ public class FragmentWorkItem extends BaseFragment {
 
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(
                         new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                                mAuthorWorks.response.get(index).getTitle() + ".jpeg"))));
+                                mAuthorWorks.response.get(index).getTitle() + "_" + mAuthorWorks.response.get(index).getId()  + ".jpeg"))));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
