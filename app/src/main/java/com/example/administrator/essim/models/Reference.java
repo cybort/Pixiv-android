@@ -9,8 +9,9 @@ import java.util.List;
 
 public class Reference {
     public static List<HotTag> sHotTags = new ArrayList<>();
-    public static AuthorWorks sAuthorWorks, sSearchResult;
+    public static AuthorWorks sAuthorWorks, sSearchResult, tempWork;
     public static PixivRankItem sPixivRankItem;
+    public static PixivIllustItem sPixivIllustItem;
     public static FragmentPixivLeft sFragmentPixivLeft;
     public static HomeProfileFragment sHomeProfileFragment;
     public static HomeListFragment sHomeListFragment;

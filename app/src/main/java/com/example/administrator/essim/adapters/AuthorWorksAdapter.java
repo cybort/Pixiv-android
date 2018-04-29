@@ -76,6 +76,7 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     mBooksInfo.response.get(position).stats.getViews_count().substring(0,
                             mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
         }
+        ((ContentViewHolder) holder).mTextView2.setText(String.format("%sP", mBooksInfo.response.get(position).getPage_count()));
         Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                 .into(((ContentViewHolder) holder).mImageView);
         ((ContentViewHolder) holder).itemView.setOnClickListener(view -> mOnItemClickListener.onItemClick(view, position));
@@ -94,12 +95,14 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static class ContentViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
         TextView mTextView4;
+        TextView mTextView2;
         ImageView mImageView;
         Button mButton;
 
         private ContentViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.author_item_title);
+            mTextView2 = itemView.findViewById(R.id.all_item_size);
             mTextView4 = itemView.findViewById(R.id.viewed);
             mImageView = itemView.findViewById(R.id.author_item_img);
             mButton = itemView.findViewById(R.id.check_detail);

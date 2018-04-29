@@ -2,10 +2,6 @@ package com.example.administrator.essim.utils;
 
 
 import android.util.Log;
-
-import com.example.administrator.essim.anotherProj.HomeListFragment;
-import com.example.administrator.essim.anotherProj.HomeProfileFragment;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

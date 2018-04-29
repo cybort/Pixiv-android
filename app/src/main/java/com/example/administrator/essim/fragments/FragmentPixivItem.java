@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -26,29 +25,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.CloudMainActivity;
-import com.example.administrator.essim.models.PixivIllustItem;
 import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
-import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.gujun.android.taggroup.TagGroup;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 
 /**
@@ -58,11 +49,12 @@ import okhttp3.Response;
 public class FragmentPixivItem extends BaseFragment {
 
     private int index;
-    private ImageView mImageView, mImageView2;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7;
+    private String filePath;
     private MyAsyncTask asyncTask;
     private ProgressDialog progressDialog;
+    private ImageView mImageView, mImageView2;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
+    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8;
 
     public static FragmentPixivItem newInstance(int position) {
         Bundle args = new Bundle();
@@ -85,14 +77,18 @@ public class FragmentPixivItem extends BaseFragment {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
         reFreshLayout(view);
-        getData("https://api.imjad.cn/pixiv/v1/?type=illust&id=" + Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.getId());
         return view;
     }
 
     private void reFreshLayout(View view) {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
+        mImageView2.setOnClickListener(view12 -> {
+            Intent intent = new Intent(mContext, ImageDetailActivity.class);
+            intent.putExtra("which one is selected", index);
+            intent.putExtra("where is from", "RankList");
+            mContext.startActivity(intent);
+        });
         Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
@@ -112,9 +108,14 @@ public class FragmentPixivItem extends BaseFragment {
         mTextView5 = view.findViewById(R.id.liked);
         mTextView6 = view.findViewById(R.id.illust_id);
         mTextView7 = view.findViewById(R.id.author_id);
+        mTextView8 = view.findViewById(R.id.all_item_size);
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
+        filePath = Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
+                String.valueOf(0) + ".jpeg";
         mCardView3.setOnClickListener(v -> {
             File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
             if (!file.exists()) {
@@ -122,9 +123,7 @@ public class FragmentPixivItem extends BaseFragment {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
             }
-            File file1 = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                    Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" + Reference.sPixivRankItem.response.get(0).works.get(index).
-                    work.getId() + ".jpeg");
+            File file1 = new File(filePath);
             if (file1.exists()) {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
@@ -172,6 +171,7 @@ public class FragmentPixivItem extends BaseFragment {
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getId()));
         mTextView7.setText(getString(R.string.author_id,
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getId()));
+        mTextView8.setText(String.format("%sP", Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count()));
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         progressDialog = new ProgressDialog(mContext);
@@ -180,30 +180,6 @@ public class FragmentPixivItem extends BaseFragment {
         progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", (dialog, which) -> progressDialog.dismiss());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(true);
-    }
-
-    private void getData(String address) {
-        Common.sendOkhttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseData = response.body().string();
-                Gson gson = new Gson();
-                PixivIllustItem pixivIllustItem = gson.fromJson(responseData, PixivIllustItem.class);
-                List<String> urlList = new ArrayList<>();
-                if (Integer.valueOf(Reference.sPixivRankItem.response.get(0).works.get(index).work.page_count) != 1) {
-                    for (int i = 0; i < pixivIllustItem.response.get(0).metadata.pages.size(); i++) {
-                        urlList.add(pixivIllustItem.response.get(0).metadata.pages.get(i).image_urls.getPx_480mw());
-                    }
-                } else {
-                    urlList.add(Reference.sPixivRankItem.response.get(0).works.get(index).work.image_urls.getPx_480mw());
-                }
-            }
-        });
     }
 
     @Override
@@ -230,11 +206,7 @@ public class FragmentPixivItem extends BaseFragment {
             Bitmap bitmap = null;
             try {
 
-                FileOutputStream outputStream = new FileOutputStream(
-                        Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                                Reference.sPixivRankItem.response.get(0).works.get(index).
-                                        work.getTitle() + "_" + Reference.sPixivRankItem.response.get(0).works.get(index).
-                                work.getId() + ".jpeg");
+                FileOutputStream outputStream = new FileOutputStream(filePath);
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
@@ -256,19 +228,11 @@ public class FragmentPixivItem extends BaseFragment {
                 }
                 outputStream.close();
                 progressDialog.setMessage("正在下载...");
-                try {
-                    MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
-                            Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                            Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() +
-                                    "_" + Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + ".jpeg",
-                            null);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
 
-                mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Download/",
-                        Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() +
-                                "_" + Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + ".jpeg"))));
+                File imageFile = new File(filePath);
+                Uri uri = Uri.fromFile(imageFile);
+                //发送广播，通知图库更新
+                mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -294,6 +258,5 @@ public class FragmentPixivItem extends BaseFragment {
             mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
                     TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         }
-
     }
 }

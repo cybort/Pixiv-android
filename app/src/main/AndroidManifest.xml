@@ -25,10 +25,12 @@
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.ViewPagerActivity" />
         <activity android:name=".anotherProj.CloudMainActivity" />
-        <activity android:name=".activities.PixivItemActivity"/>
-        <activity android:name=".activities.TagResultActivity"/>
-        <activity android:name=".activities.MyWelcomeActivity"
-            android:theme="@style/WelcomeScreenTheme"/>
+        <activity android:name=".activities.PixivItemActivity" />
+        <activity android:name=".activities.TagResultActivity" />
+        <activity
+            android:name=".activities.MyWelcomeActivity"
+            android:theme="@style/WelcomeScreenTheme" />
+        <activity android:name=".activities.ImageDetailActivity"></activity>
     </application>
 
 </manifest>

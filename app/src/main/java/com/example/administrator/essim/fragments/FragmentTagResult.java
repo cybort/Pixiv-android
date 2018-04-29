@@ -6,10 +6,15 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,6 +40,12 @@ public class FragmentTagResult extends BaseFragment {
     private AuthorWorksAdapter mAuthorWorksAdapter;
     private RecyclerView mRecyclerView;
     private Toolbar mToolbar;
+    private String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
+    private String bottom = "&per_page=20";
+    private String word;
+    private String temp;
+    private int nowIndex, togo;
+    private final String[] arrayOfString = {" 100users入り", " 500users入り", " 1000users入り", " 5000users入り", " 10000users入り"};
 
     //5000users入り
     @Override
@@ -54,14 +65,13 @@ public class FragmentTagResult extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        String head = "https://api.imjad.cn/pixiv/v1/?type=search&word=";
-        String bottom = "&per_page=20";
         if (index == -1) {
-            String word = ((TagResultActivity) getActivity()).words;
+            word = ((TagResultActivity) getActivity()).words;
             mToolbar.setTitle(word);
             getData(head + word + bottom);
         } else {
             mToolbar.setTitle(Reference.sHotTags.get(index).getName());
+            word = Reference.sHotTags.get(index).getName();
             getData(head + Reference.sHotTags.get(index).getName() + bottom);
         }
         return view;
@@ -86,8 +96,64 @@ public class FragmentTagResult extends BaseFragment {
                     intent.putExtra("which kind data type", "TagResult");
                     mContext.startActivity(intent);
                 });
-                getActivity().runOnUiThread(() -> mRecyclerView.setAdapter(mAuthorWorksAdapter));
+                getActivity().runOnUiThread(() -> {
+                    mRecyclerView.setAdapter(mAuthorWorksAdapter);
+                    mAuthorWorksAdapter.notifyDataSetChanged();
+                });
+
             }
         });
+    }
+
+    private void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setIcon(R.mipmap.logo);
+        builder.setTitle("更多选项：");
+        builder.setSingleChoiceItems(arrayOfString, nowIndex,
+                (dialogInterface, i) -> {
+                    temp = arrayOfString[i];
+                    togo = i;
+                });
+        builder.setPositiveButton("跳转", (dialogInterface, i) -> {
+            if (nowIndex != togo) {
+                getData(head + word + temp + bottom);
+                nowIndex = togo;
+            }
+        })
+        .setNegativeButton("取消", (dialogInterface, i) -> {
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        DisplayMetrics dm = new DisplayMetrics();
+
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
+        p.height = (int) (dm.heightPixels * 0.6);
+        p.width = (int) (dm.widthPixels * 1.0);
+        dialog.getWindow().setAttributes(p);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_change_search:
+                createDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.tag_result, menu);
+    }
+
+    @Override
+    public void onCreate(Bundle b) {
+        super.onCreate(b);
+        setHasOptionsMenu(true);
     }
 }

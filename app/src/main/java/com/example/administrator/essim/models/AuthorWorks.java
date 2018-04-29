@@ -58,6 +58,15 @@ public class AuthorWorks {
             this.created_time = created_time;
         }
 
+        public String getPage_count() {
+            return page_count;
+        }
+
+        public void setPage_count(String page_count) {
+            this.page_count = page_count;
+        }
+
+        public String page_count;
         public class ImgUrl {
             public String px_128x128;
             public String px_480mw;

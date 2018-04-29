@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="viewpager_indicator">%1$d/%2$d</string>
     <string name="action_cloud">Cloud</string>
     <string name="action_delete_all">删除全部</string>
     <string name="action_view_detail">查看详情</string>
@@ -229,4 +229,6 @@
     <string name="report">Report</string>
     <string name="turn_page">翻页</string>
     <string name="refresh">刷新</string>
+    <string name="download_origin">下载原图</string>
+    <string name="searchtype">搜索选项</string>
 </resources>
