@@ -45,7 +45,7 @@ public class FragmentPixivLeft extends BaseFragment {
     private ProgressBar mProgressBar;
     private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date=" + Common.getLastDay();
     private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date=" + Common.getLastDay();
-    private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=monthly&per_page=20&date=" + Common.getLastDay();
+    private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&mode=monthly&per_page=20&date=" + Common.getLastDay();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -144,6 +144,7 @@ public class FragmentPixivLeft extends BaseFragment {
                 now_link_address = address;
                 ((FragmentPixiv) getParentFragment()).gotoPage = now_page;
                 now_page++;
+                Common.showLog(now_link_address);
             }
         });
     }

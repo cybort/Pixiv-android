@@ -20,6 +20,7 @@
         <RelativeLayout
             android:layout_width="@dimen/author_item_width"
             android:id="@+id/rela_left"
+            android:background="#F4F4F4"
             android:layout_height="wrap_content">
 
             <ImageView

@@ -37,8 +37,8 @@ public class PixivRankItem {
                 public String id;
                 public String title;
                 public List<String> tags;
-                public String width;
-                public String height;
+                public int width;
+                public int height;
                 public ImageUrls image_urls;
                 public User user;
                 public String created_time;
@@ -69,19 +69,19 @@ public class PixivRankItem {
                     this.title = title;
                 }
 
-                public String getWidth() {
+                public int getWidth() {
                     return width;
                 }
 
-                public void setWidth(String width) {
+                public void setWidth(int width) {
                     this.width = width;
                 }
 
-                public String getHeight() {
+                public int getHeight() {
                     return height;
                 }
 
-                public void setHeight(String height) {
+                public void setHeight(int height) {
                     this.height = height;
                 }
 

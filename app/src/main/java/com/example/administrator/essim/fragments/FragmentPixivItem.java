@@ -17,9 +17,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.example.administrator.essim.models.Reference;
+import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -83,12 +86,20 @@ public class FragmentPixivItem extends BaseFragment {
     private void reFreshLayout(View view) {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
+        ViewGroup.LayoutParams params = mImageView2.getLayoutParams();
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        params.height = (((dm.widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.getHeight()) /
+                Reference.sPixivRankItem.response.get(0).works.get(index).work.getWidth());
+        mImageView2.setLayoutParams(params);
         mImageView2.setOnClickListener(view12 -> {
             Intent intent = new Intent(mContext, ImageDetailActivity.class);
             intent.putExtra("which one is selected", index);
             intent.putExtra("where is from", "RankList");
             mContext.startActivity(intent);
         });
+        Glide.get(mContext).clearMemory();
         Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
                 .works.get(index).work.image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))

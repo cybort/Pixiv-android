@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,12 +75,20 @@ public class FragmentWorkItem extends BaseFragment {
     private void reFreshLayout(View view) {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
+        ViewGroup.LayoutParams params = mImageView2.getLayoutParams();
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        params.height = (((dm.widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
+                Reference.tempWork.response.get(index).getHeight()) /
+                Reference.tempWork.response.get(index).getWidth());
+        mImageView2.setLayoutParams(params);
         mImageView2.setOnClickListener(view12 -> {
             Intent intent = new Intent(mContext, ImageDetailActivity.class);
             intent.putExtra("which one is selected", index);
             intent.putExtra("where is from", "WorkList");
             mContext.startActivity(intent);
         });
+        Glide.get(mContext).clearMemory();
         Glide.with(getContext())
                 .load(Reference.tempWork.response.get(index).image_urls.getPx_480mw())
                 .bitmapTransform(new BlurTransformation(getContext(), 20, 2))

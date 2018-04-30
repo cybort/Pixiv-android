@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
-import com.example.administrator.essim.interfaces.DownLoadOrigin;
 import com.example.administrator.essim.models.Reference;
 import com.sdsmdg.tastytoast.TastyToast;
 

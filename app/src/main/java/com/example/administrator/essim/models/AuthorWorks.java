@@ -12,8 +12,8 @@ public class AuthorWorks {
         public ImgUrl image_urls;
         public List<String> tools;
         public List<String> tags;
-        public String width;
-        public String height;
+        public int width;
+        public int height;
         public String created_time;
         public Stats stats;
         public User user;
@@ -34,19 +34,19 @@ public class AuthorWorks {
             this.title = title;
         }
 
-        public String getWidth() {
+        public int getWidth() {
             return width;
         }
 
-        public void setWidth(String width) {
+        public void setWidth(int width) {
             this.width = width;
         }
 
-        public String getHeight() {
+        public int getHeight() {
             return height;
         }
 
-        public void setHeight(String height) {
+        public void setHeight(int height) {
             this.height = height;
         }
 
@@ -140,6 +140,21 @@ public class AuthorWorks {
         }
 
     }
+
+    public class Pagination
+    {
+        public String getTotal() {
+            return total;
+        }
+
+        public void setTotal(String total) {
+            this.total = total;
+        }
+
+        public String total;
+    }
+
+    public Pagination pagination;
 
 
 }

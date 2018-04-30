@@ -35,6 +35,7 @@ public class FragmentPixivRight extends BaseFragment {
 
     private HotTagAdapter mHotTagAdapter;
     private RecyclerView mRecyclerView;
+    private static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class FragmentPixivRight extends BaseFragment {
         mRecyclerView = view.findViewById(R.id.tag_list);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
+
         getData(url);
         return view;
     }
@@ -62,7 +63,7 @@ public class FragmentPixivRight extends BaseFragment {
                 Gson gson = new Gson();
                 final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {
                 }.getType());
-                Reference.sHotTags = booksInfo.subList(0, 72);
+                Reference.sHotTags = booksInfo.subList(0, 81);
                 mHotTagAdapter = new HotTagAdapter(Reference.sHotTags, getContext());
                 mHotTagAdapter.setOnTagListItemClickListener(new OnTagListItemClickListener() {
                     @Override
