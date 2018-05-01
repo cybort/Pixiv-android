@@ -20,7 +20,7 @@
     <string name="author_followers">粉丝: %s</string>
     <string name="string_author">画师：%s</string>
     <string name="string_author_detail">%s的个人主页</string>
-    <string name="string_full_size">原图尺寸：%spx*%spx</string>
+    <string name="string_full_size">原图尺寸：%dpx*%dpx</string>
     <string name="string_create_time">投稿时间：%s</string>
     <string name="string_viewd">%sK</string>
     <string name="action_refresh">Refresh</string>

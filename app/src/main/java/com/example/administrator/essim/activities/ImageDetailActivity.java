@@ -28,8 +28,8 @@ import okhttp3.Response;
 public class ImageDetailActivity extends AppCompatActivity {
 
     public int index;
-    private String fromWhere;
     public ViewPager mViewPager;
+    private String fromWhere;
     private TextView mTextView, mTextView2;
     private DownLoadOrigin mDownLoadOrigin;
 
@@ -47,13 +47,12 @@ public class ImageDetailActivity extends AppCompatActivity {
         mTextView = findViewById(R.id.image_order);
         mTextView2 = findViewById(R.id.download_origin);
         mTextView2.setOnClickListener(view -> {
-            if(mDownLoadOrigin != null)
-            {
+            if (mDownLoadOrigin != null) {
                 mDownLoadOrigin.downOriginImage(mViewPager.getCurrentItem());
             }
         });
         mViewPager = findViewById(R.id.view_pager);
-        if(fromWhere.equals("RankList")) {
+        if (fromWhere.equals("RankList")) {
             Common.showLog("RANKLIST, RANKLIST");
             mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -78,9 +77,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                     Reference.sPixivRankItem.response.get(0).works.get(index).work.page_count));
             getData("https://api.imjad.cn/pixiv/v1/?type=illust&id=" + Reference.sPixivRankItem.response.get(0)
                     .works.get(index).work.getId());
-        }
-        else if(fromWhere.equals("WorkList"))
-        {
+        } else if (fromWhere.equals("WorkList")) {
             Common.showLog("WorkList, WorkList");
             mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -108,8 +105,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void setDownLoadOrigin(DownLoadOrigin downLoadOrigin)
-    {
+    public void setDownLoadOrigin(DownLoadOrigin downLoadOrigin) {
         this.mDownLoadOrigin = downLoadOrigin;
     }
 
@@ -125,7 +121,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                 String responseData = response.body().string();
                 Gson gson = new Gson();
                 Reference.sPixivIllustItem = gson.fromJson(responseData, PixivIllustItem.class);
-                if(fromWhere.equals("RankList")) {
+                if (fromWhere.equals("RankList")) {
                     runOnUiThread(() -> mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
                         @Override
                         public Fragment getItem(int position) {
@@ -145,9 +141,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                             }
                         }
                     }));
-                }
-                else
-                {
+                } else {
                     runOnUiThread(() -> mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
                         @Override
                         public Fragment getItem(int position) {

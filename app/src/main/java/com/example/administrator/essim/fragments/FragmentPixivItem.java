@@ -21,7 +21,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +30,6 @@ import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -111,6 +109,7 @@ public class FragmentPixivItem extends BaseFragment {
         mTextView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, CloudMainActivity.class);
             intent.putExtra("which one is selected", index);
+            intent.putExtra("where is from", "RankList");
             mContext.startActivity(intent);
         });
         mTextView2 = view.findViewById(R.id.detail_img_size);
@@ -123,12 +122,12 @@ public class FragmentPixivItem extends BaseFragment {
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
-        filePath = Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+        filePath = Environment.getExternalStorageDirectory().getPath() + "/PixivPictures/" +
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
                 String.valueOf(0) + ".jpeg";
         mCardView3.setOnClickListener(v -> {
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/PixivPictures");
             if (!file.exists()) {
                 file.mkdir();
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -148,6 +147,7 @@ public class FragmentPixivItem extends BaseFragment {
         mCardView4.setOnClickListener(view1 -> {
             Intent intent = new Intent(mContext, CloudMainActivity.class);
             intent.putExtra("which one is selected", index);
+            intent.putExtra("where is from", "RankList");
             mContext.startActivity(intent);
         });
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);

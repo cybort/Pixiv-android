@@ -89,9 +89,14 @@ public class Common {
     }
 
     public static int getPageCount(String itemCount) {
-        if (Integer.valueOf(itemCount) / 20 < 20) {
+        if (Integer.valueOf(itemCount) < 20) {
+            return 1;
+        }
+        else if((Integer.valueOf(itemCount) / 20 < 20) && (Integer.valueOf(itemCount) / 20 >= 1))
+        {
             return Integer.valueOf(itemCount) / 20;
-        } else {
+        }
+        else {
             return 20;
         }
     }

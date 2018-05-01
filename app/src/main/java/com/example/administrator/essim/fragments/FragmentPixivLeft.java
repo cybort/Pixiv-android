@@ -129,7 +129,8 @@ public class FragmentPixivLeft extends BaseFragment {
                         }
                     } else {
                         Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                        intent.putExtra("which_one_is_touched", position);
+                        intent.putExtra("which one is selected", position);
+                        intent.putExtra("where is from", "FragmentLeft");
                         mContext.startActivity(intent);
                     }
                 });

@@ -9,6 +9,8 @@ public class PixivIllustItem {
         public String id;
         public String title;
         public MetaData metadata;
+        public String page_count;
+        public MetaData.Page.ImageUrl image_urls;
 
         public String getId() {
             return id;
@@ -22,20 +24,16 @@ public class PixivIllustItem {
             return title;
         }
 
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
         public String getPage_count() {
             return page_count;
         }
 
         public void setPage_count(String page_count) {
             this.page_count = page_count;
-        }
-
-        public String page_count;
-
-        public MetaData.Page.ImageUrl image_urls;
-
-        public void setTitle(String title) {
-            this.title = title;
         }
 
         public class MetaData {

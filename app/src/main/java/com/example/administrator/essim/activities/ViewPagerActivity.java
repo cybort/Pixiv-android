@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
+import com.example.administrator.essim.fragments.FragmentWorkItem;
 import com.example.administrator.essim.models.Reference;
 
 
@@ -20,6 +21,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 
     public ViewPager mViewPager;
     public Toolbar mToolbar;
+    public String where_is_from;
     private int index;
 
     @Override
@@ -30,7 +32,13 @@ public class ViewPagerActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_view_pager);
         Intent intent = getIntent();
-        index = intent.getIntExtra("which_one_is_touched", 0);
+        where_is_from = intent.getStringExtra("where is from");
+        if (where_is_from.equals("FragmentTagResult")) {
+            Reference.tempWork = Reference.sSearchResult;
+        } else if (where_is_from.equals("FragmentAuthorHome")) {
+            Reference.tempWork = Reference.sAuthorWorks;
+        }
+        index = intent.getIntExtra("which one is selected", 0);
         mToolbar = findViewById(R.id.view_pager_toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(v -> finish());
@@ -39,12 +47,20 @@ public class ViewPagerActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                return FragmentPixivItem.newInstance(position);
+                if (where_is_from.equals("FragmentLeft")) {
+                    return FragmentPixivItem.newInstance(position);
+                } else {
+                    return FragmentWorkItem.newInstance(position);
+                }
             }
 
             @Override
             public int getCount() {
-                return Reference.sPixivRankItem.response.get(0).works.size();
+                if (where_is_from.equals("FragmentLeft")) {
+                    return Reference.sPixivRankItem.response.get(0).works.size();
+                } else {
+                    return Reference.tempWork.response.size();
+                }
             }
         });
         mViewPager.setCurrentItem(index);
@@ -55,7 +71,11 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     public void changeTitle() {
-        mToolbar.setTitle(Reference.sPixivRankItem.response.get(0)
-                .works.get(mViewPager.getCurrentItem()).work.getTitle());
+        if (where_is_from.equals("FragmentLeft")) {
+            mToolbar.setTitle(Reference.sPixivRankItem.response.get(0)
+                    .works.get(mViewPager.getCurrentItem()).work.getTitle());
+        } else {
+            mToolbar.setTitle(Reference.tempWork.response.get(mViewPager.getCurrentItem()).getTitle());
+        }
     }
 }

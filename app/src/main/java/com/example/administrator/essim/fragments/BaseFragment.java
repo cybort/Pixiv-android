@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.administrator.essim.utils.Common;
 
 /**
  * Created by Administrator on 2018/3/26 0026.
@@ -25,8 +24,7 @@ public class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         Glide.get(mContext).clearMemory();
         super.onDestroy();
     }

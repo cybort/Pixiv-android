@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -28,13 +27,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
-import com.example.administrator.essim.activities.PixivItemActivity;
-import com.example.administrator.essim.models.AuthorWorks;
+import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.example.administrator.essim.models.Reference;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,21 +50,27 @@ public class FragmentWorkItem extends BaseFragment {
     private ProgressDialog progressDialog;
     private ImageView mImageView, mImageView2;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8;
+    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8, mTextView9;
+
+    public static FragmentWorkItem newInstance(int position) {
+        Bundle args = new Bundle();
+        args.putSerializable("index", position);
+        FragmentWorkItem fragment = new FragmentWorkItem();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_work_item, container, false);
-        index = ((PixivItemActivity) getActivity()).index;
+        index = (int) getArguments().getSerializable("index");
+        if (index == ((ViewPagerActivity) getActivity()).getIndexNow()) {
+            setUserVisibleHint(true);
+        }
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mActivity, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
-        if (((PixivItemActivity) getActivity()).dataYp == 0) {
-            Reference.tempWork = Reference.sAuthorWorks;
-        } else {
-            Reference.tempWork = Reference.sSearchResult;
         }
         reFreshLayout(view);
         return view;
@@ -104,14 +108,15 @@ public class FragmentWorkItem extends BaseFragment {
         mTextView6 = view.findViewById(R.id.illust_id);
         mTextView7 = view.findViewById(R.id.author_id);
         mTextView8 = view.findViewById(R.id.all_item_size);
+        mTextView9 = view.findViewById(R.id.exit_this);
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
-        filePath = Environment.getExternalStorageDirectory().getPath() + "/Download/" +
-                Reference.tempWork.response.get(index).getTitle() + "_" + Reference.tempWork.response.get(index).getId() +"_" +
-                String.valueOf(0)+ ".jpeg";
+        filePath = Environment.getExternalStorageDirectory().getPath() + "/PixivPictures/" +
+                Reference.tempWork.response.get(index).getTitle() + "_" + Reference.tempWork.response.get(index).getId() + "_" +
+                String.valueOf(0) + ".jpeg";
         mCardView3.setOnClickListener(v -> {
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/PixivPictures");
             if (!file.exists()) {
                 file.mkdir();
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -127,7 +132,17 @@ public class FragmentWorkItem extends BaseFragment {
             }
         });
         mCardView4 = view.findViewById(R.id.card_right);
-        mCardView4.setOnClickListener(view1 -> getActivity().finish());
+        if (((ViewPagerActivity) getActivity()).where_is_from.equals("FragmentTagResult")) {
+            mTextView9.setText(getString(R.string.more_files));
+            mCardView4.setOnClickListener(view1 -> {
+                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                intent.putExtra("which one is selected", index);
+                intent.putExtra("where is from", "TagResult");
+                mContext.startActivity(intent);
+            });
+        } else {
+            mCardView4.setOnClickListener(view1 -> getActivity().finish());
+        }
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
         mTagGroup.setTags(Reference.tempWork.response.get(index).tags);
         mTagGroup.setOnTagClickListener(tag -> {
@@ -168,6 +183,16 @@ public class FragmentWorkItem extends BaseFragment {
         progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", (dialog, which) -> progressDialog.dismiss());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(true);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (getActivity() != null) {
+                ((ViewPagerActivity) getActivity()).changeTitle();
+            }
+        }
     }
 
     private class MyAsyncTask extends AsyncTask<String, Integer, Bitmap> {

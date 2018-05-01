@@ -1,11 +1,7 @@
 package com.example.administrator.essim.fragments;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.PixivItemActivity;
 import com.example.administrator.essim.activities.SingleFragmentActivity;
 import com.example.administrator.essim.activities.TagResultActivity;
+import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.Reference;
@@ -39,27 +34,20 @@ import okhttp3.Response;
 
 public class FragmentTagResult extends BaseFragment {
 
+    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
+            " 5000users入り", " 10000users入り"};
     private int index;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private int nowSearchType, togo, nowPage = 1, aimPage = 1;
     private AuthorWorksAdapter mAuthorWorksAdapter;
     private String head = "https://api.imjad.cn/pixiv/v1/?type=search&per_page=20&word=",
-            word, temp = " 1000users入り";
-    private static final String[] arrayOfSearchType = {" 1000users入り", " 2000users入り",
-            " 5000users入り", " 10000users入り"};
+            word, temp = " 500users入り";
 
-    //5000users入り
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tag_result, container, false);
         index = ((TagResultActivity) getActivity()).index;
-
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
         Toolbar toolbar = ((SingleFragmentActivity) getActivity()).mToolbar;
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mProgressBar = view.findViewById(R.id.my_progress);
@@ -71,11 +59,15 @@ public class FragmentTagResult extends BaseFragment {
         if (index == -1) {
             word = ((TagResultActivity) getActivity()).words;
             toolbar.setTitle(word);
-            getData(head + word + temp + " 500users入り");
+            getData(head + word + temp);
+        } else if (index == -2) {
+            word = "R-18";
+            toolbar.setTitle(word);
+            getData(head + word + temp);
         } else {
             toolbar.setTitle(Reference.sHotTags.get(index).getName());
             word = Reference.sHotTags.get(index).getName();
-            getData(head + Reference.sHotTags.get(index).getName() + temp  + "&page=" + String.valueOf(nowPage));
+            getData(head + Reference.sHotTags.get(index).getName() + temp + "&page=" + String.valueOf(nowPage));
         }
         return view;
     }
@@ -95,16 +87,26 @@ public class FragmentTagResult extends BaseFragment {
                 Reference.sSearchResult = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(Reference.sSearchResult, getContext(), "searchResult");
                 mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
-                    Intent intent = new Intent(mContext, PixivItemActivity.class);
+                    Intent intent = new Intent(mContext, ViewPagerActivity.class);
                     intent.putExtra("which one is selected", position);
-                    intent.putExtra("which kind data type", "TagResult");
+                    intent.putExtra("where is from", "FragmentTagResult");
                     mContext.startActivity(intent);
                 });
                 getActivity().runOnUiThread(() -> {
-                    mRecyclerView.setAdapter(mAuthorWorksAdapter);
-                    mAuthorWorksAdapter.notifyDataSetChanged();
-                    mProgressBar.setVisibility(View.INVISIBLE);
+                    if(Integer.valueOf(Reference.sSearchResult.pagination.getTotal())>=1) {
+                        mRecyclerView.setAdapter(mAuthorWorksAdapter);
+                        mAuthorWorksAdapter.notifyDataSetChanged();
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        mRecyclerView.setAdapter(mAuthorWorksAdapter);
+                        mAuthorWorksAdapter.notifyDataSetChanged();
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        TastyToast.makeText(mContext, "再怎么找也找不到了", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+                    }
                 });
+                Common.showLog(address);
             }
         });
     }
@@ -113,6 +115,7 @@ public class FragmentTagResult extends BaseFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setIcon(R.mipmap.logo);
         builder.setTitle("筛选结果：");
+        builder.setCancelable(true);
         builder.setSingleChoiceItems(arrayOfSearchType, nowSearchType,
                 (dialogInterface, i) -> {
                     temp = arrayOfSearchType[i];
@@ -121,6 +124,8 @@ public class FragmentTagResult extends BaseFragment {
         builder.setPositiveButton("确定", (dialogInterface, i) -> {
             if (nowSearchType != togo) {
                 nowPage = 1;
+                aimPage = 1;
+                Common.showLog("现在变成第1ye ");
                 getData(head + word + temp + "&page=" + String.valueOf(nowPage));
                 nowSearchType = togo;
             }
@@ -139,6 +144,7 @@ public class FragmentTagResult extends BaseFragment {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setIcon(R.mipmap.logo);
+        builder.setCancelable(true);
         builder.setTitle("当前位置: 第" + String.valueOf(nowPage) + "/" +
                 String.valueOf(arrString.length) + "页");
         builder.setSingleChoiceItems(arrString, nowPage - 1, (dialogInterface, i) -> {
@@ -147,9 +153,11 @@ public class FragmentTagResult extends BaseFragment {
         builder.setPositiveButton("跳转", (dialogInterface, i) -> {
             if (nowPage != aimPage) {
                 nowPage = aimPage;
-                getData(head + Reference.sHotTags.get(index).getName() + temp + "&page=" + String.valueOf(nowPage));
-            } else {
-                Common.showLog("什么也不做");
+                if (index >= 0) {
+                    getData(head + Reference.sHotTags.get(index).getName() + temp + "&page=" + String.valueOf(nowPage));
+                } else {
+                    getData(head + word + temp + "&page=" + String.valueOf(nowPage));
+                }
             }
         });
         builder.setNegativeButton("取消", (dialogInterface, i) -> {
@@ -157,13 +165,6 @@ public class FragmentTagResult extends BaseFragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
-        p.height = (int) (dm.heightPixels * 0.6);
-        p.width = (int) (dm.widthPixels * 1.0);
-        dialog.getWindow().setAttributes(p);
     }
 
     @Override

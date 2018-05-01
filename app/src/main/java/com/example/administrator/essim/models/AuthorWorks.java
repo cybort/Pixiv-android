@@ -4,6 +4,7 @@ import java.util.List;
 
 public class AuthorWorks {
     public List<Response> response;
+    public Pagination pagination;
 
     public class Response {
 
@@ -17,6 +18,7 @@ public class AuthorWorks {
         public String created_time;
         public Stats stats;
         public User user;
+        public String page_count;
 
         public String getId() {
             return id;
@@ -66,7 +68,6 @@ public class AuthorWorks {
             this.page_count = page_count;
         }
 
-        public String page_count;
         public class ImgUrl {
             public String px_128x128;
             public String px_480mw;
@@ -121,6 +122,7 @@ public class AuthorWorks {
         public class User {
             public String name;
             public String id;
+            public ProfileUrl profile_image_urls;
 
             public String getName() {
                 return name;
@@ -137,12 +139,25 @@ public class AuthorWorks {
             public void setId(String id) {
                 this.id = id;
             }
+
+            public class ProfileUrl {
+                public String px_50x50;
+
+                public String getPx_50x50() {
+                    return px_50x50;
+                }
+
+                public void setPx_50x50(String px_50x50) {
+                    this.px_50x50 = px_50x50;
+                }
+            }
         }
 
     }
 
-    public class Pagination
-    {
+    public class Pagination {
+        public String total;
+
         public String getTotal() {
             return total;
         }
@@ -150,11 +165,7 @@ public class AuthorWorks {
         public void setTotal(String total) {
             this.total = total;
         }
-
-        public String total;
     }
-
-    public Pagination pagination;
 
 
 }

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.PixivItemActivity;
+import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.Reference;
@@ -64,9 +64,13 @@ public class HomeListFragment extends ScrollObservableFragment {
                 }
             }
         });
-        String url = "https://api.imjad.cn/pixiv/v1/?type=member_illust&id=";
-        getData(url + Reference.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
-                .user.getId());
+        String url = "https://api.imjad.cn/pixiv/v1/?type=member_illust&per_page=20&id=";
+        if (((CloudMainActivity) getActivity()).where_is_from.equals("TagResult")) {
+            getData(url + Reference.tempWork.response.get(((CloudMainActivity) getActivity()).index).user.getId());
+        } else {
+            getData(url + Reference.sPixivRankItem.response.get(0).works.get(((CloudMainActivity) getActivity()).index).work
+                    .user.getId());
+        }
     }
 
     private void getData(String address) {
@@ -83,9 +87,9 @@ public class HomeListFragment extends ScrollObservableFragment {
                 Reference.sAuthorWorks = gson.fromJson(responseData, AuthorWorks.class);
                 mAuthorWorksAdapter = new AuthorWorksAdapter(Reference.sAuthorWorks, getContext(), "AuthorResult");
                 mAuthorWorksAdapter.setOnItemClickListener((view, position) -> {
-                    Intent intent = new Intent(mContext, PixivItemActivity.class);
+                    Intent intent = new Intent(mContext, ViewPagerActivity.class);
                     intent.putExtra("which one is selected", position);
-                    intent.putExtra("which kind data type", "AuthorWorks");
+                    intent.putExtra("where is from", "FragmentAuthorHome");
                     mContext.startActivity(intent);
                 });
                 getActivity().runOnUiThread(() -> rcvGoodsList.setAdapter(mAuthorWorksAdapter));

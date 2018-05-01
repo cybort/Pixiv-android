@@ -33,9 +33,9 @@ import okhttp3.Response;
 
 public class FragmentPixivRight extends BaseFragment {
 
+    private static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
     private HotTagAdapter mHotTagAdapter;
     private RecyclerView mRecyclerView;
-    private static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

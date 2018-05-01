@@ -167,6 +167,7 @@ public class FragmentPixiv extends BaseFragment {
     private void createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setIcon(R.mipmap.logo);
+        builder.setCancelable(true);
         builder.setTitle("当前位置：" + getRankType() + "，第" + String.valueOf(Reference.sFragmentPixivLeft.now_page - 1) + "页");
         builder.setSingleChoiceItems(arrayOfString, Reference.sFragmentPixivLeft.now_page - 2,
                 (dialogInterface, i) -> gotoPage = i + 1);
@@ -182,13 +183,6 @@ public class FragmentPixiv extends BaseFragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
-        p.height = (int) (dm.heightPixels * 0.6);
-        p.width = (int) (dm.widthPixels * 1.0);
-        dialog.getWindow().setAttributes(p);
     }
 
     public void setChangeDataSet(OnChangeDataSet changeDataSet) {

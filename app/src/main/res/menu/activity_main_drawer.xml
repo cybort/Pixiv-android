@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group_one"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
@@ -19,20 +21,14 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="hahah" />
+        <item
+            android:id="@+id/nav_go_r_18"
+            android:icon="@drawable/ic_directions_car_black_24dp"
+            android:title="通往新世界的大门" />
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_mood_black_24dp"
+            android:title="关于" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_mood_black_24dp"
-                android:title="about" />
-        </menu>
-    </item>
-
 </menu>

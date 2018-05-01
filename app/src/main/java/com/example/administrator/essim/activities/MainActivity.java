@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -132,6 +133,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("店长推荐：");
+        builder.setMessage("你是萝莉控吗？");
+        builder.setCancelable(true);
+        builder.setPositiveButton("我是", (dialogInterface, i) -> {
+            Intent intent = new Intent(mContext, TagResultActivity.class);
+            intent.putExtra("which one is selected", -2);
+            mContext.startActivity(intent);
+        })
+                .setNegativeButton("我不是", (dialogInterface, i) -> runOnUiThread(() ->
+                        TastyToast.makeText(MainActivity.this, "你是个好人", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show()));
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -147,8 +164,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_go_r_18) {
+            createDialog();
         } else if (id == R.id.nav_send) {
             mIntent = new Intent(this, AboutActivity.class);
             startActivity(mIntent);

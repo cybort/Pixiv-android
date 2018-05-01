@@ -33,6 +33,14 @@ public class FragmentImageDetail extends BaseFragment {
     private String pathOne, pathTwo;
     private ProgressDialog progressDialog;
 
+    public static FragmentImageDetail newInstance(int position) {
+        Bundle args = new Bundle();
+        args.putSerializable("index", position);
+        FragmentImageDetail fragment = new FragmentImageDetail();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_detail, container, false);
         index = (int) getArguments().getSerializable("index");
@@ -63,11 +71,11 @@ public class FragmentImageDetail extends BaseFragment {
     }
 
     private void createDialog(int index) {
-        pathOne = Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+        pathOne = Environment.getExternalStorageDirectory().getPath() + "/PixivPictures/" +
                 Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
                 Reference.sPixivIllustItem.response.get(0).getId() + "_" +
                 String.valueOf(0) + ".jpeg";
-        pathTwo = Environment.getExternalStorageDirectory().getPath() + "/Download/" +
+        pathTwo = Environment.getExternalStorageDirectory().getPath() + "/PixivPictures/" +
                 Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
                 Reference.sPixivIllustItem.response.get(0).getId() + "_" +
                 String.valueOf(index) + ".jpeg";
@@ -75,7 +83,7 @@ public class FragmentImageDetail extends BaseFragment {
         builder.setIcon(R.mipmap.logo);
         builder.setTitle("下载原图");
         builder.setPositiveButton("确定", (dialogInterface, i) -> {
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download");
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/PixivPictures");
             if (!file.exists()) {
                 file.mkdir();
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -182,13 +190,5 @@ public class FragmentImageDetail extends BaseFragment {
             mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
                     TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         }
-    }
-
-    public static FragmentImageDetail newInstance(int position) {
-        Bundle args = new Bundle();
-        args.putSerializable("index", position);
-        FragmentImageDetail fragment = new FragmentImageDetail();
-        fragment.setArguments(args);
-        return fragment;
     }
 }

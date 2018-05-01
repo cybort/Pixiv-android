@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment {
     private static float a;
     private static float b = 400.0f;
     public PixivMember mPixivMember;
+    public int index;
     private ImageView bg;
     private RelativeLayout mRelativeLayout;
     private CircleImageView head;
@@ -57,7 +58,7 @@ public class HomeFragment extends Fragment {
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabStrip;
     private LinearLayout llHeader;
-    private int slidingDistance, currScrollY, index, currentPosition;
+    private int slidingDistance, currScrollY, currentPosition;
     private String url = "https://api.imjad.cn/pixiv/v1/?type=member&id=";
     private List<ScrollObservableFragment> displayFragments;
     private List<String> displayPageTitles = Arrays.asList("他的作品", "个人信息");
@@ -139,15 +140,24 @@ public class HomeFragment extends Fragment {
         });
         tabStrip.setViewPager(viewPager);
         viewPager.setCurrentItem(currentPosition);
-        Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0).works.
-                get(index).work.image_urls.getPx_480mw())
-                .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
-                .into(bg);
         DownLoad downLoad = new DownLoad();
-        downLoad.execute(Reference.sPixivRankItem.response.get(0).
-                works.get(index).work.user.profile_image_urls.getPx_170x170());
-        getData(url + Reference.sPixivRankItem.response.get(0).works
-                .get(index).work.user.getId());
+        if (((CloudMainActivity) getActivity()).where_is_from.equals("TagResult")) {
+            Glide.with(getContext()).load(Reference.tempWork.response.get(index).image_urls.getPx_480mw())
+                    .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
+                    .into(bg);
+            downLoad.execute(Reference.tempWork.response.get(index).user.profile_image_urls.getPx_50x50());
+            getData(url + Reference.tempWork.response.get(index).user.getId());
+        } else {
+            Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0).works.
+                    get(index).work.image_urls.getPx_480mw())
+                    .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
+                    .into(bg);
+
+            downLoad.execute(Reference.sPixivRankItem.response.get(0).
+                    works.get(index).work.user.profile_image_urls.getPx_170x170());
+            getData(url + Reference.sPixivRankItem.response.get(0).works
+                    .get(index).work.user.getId());
+        }
     }
 
     private void getData(String address) {

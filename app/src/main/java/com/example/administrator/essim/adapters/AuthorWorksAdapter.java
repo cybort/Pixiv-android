@@ -13,16 +13,17 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.AuthorWorks;
+import com.example.administrator.essim.utils.Common;
 
 
 public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int ITEM_TYPE_HEADER = 0;
     private final int ITEM_TYPE_CONTENT = 1;
-    private LayoutInflater mLayoutInflater;
+    private String mString;
     private Context mContext;
     private AuthorWorks mBooksInfo;
-    private String mString;
+    private LayoutInflater mLayoutInflater;
     private OnItemClickListener mOnItemClickListener;
 
     public AuthorWorksAdapter(AuthorWorks booksInfo, Context context, String adapterType) {
@@ -79,7 +80,10 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((ContentViewHolder) holder).mTextView2.setText(String.format("%sP", mBooksInfo.response.get(position).getPage_count()));
         Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                 .into(((ContentViewHolder) holder).mImageView);
-        ((ContentViewHolder) holder).itemView.setOnClickListener(view -> mOnItemClickListener.onItemClick(view, position));
+        ((ContentViewHolder) holder).itemView.setOnClickListener(view -> {
+            mOnItemClickListener.onItemClick(view, position);
+            Common.showLog("点击了第" + String.valueOf(position));
+        });
         ((ContentViewHolder) holder).mButton.setOnClickListener((view) -> mOnItemClickListener.onItemClick(view, position));
     }
 
@@ -89,7 +93,11 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return mBooksInfo.response.size();
+        if (mString.equals("searchResult")) {
+            return mBooksInfo.response.size();
+        } else {
+            return mBooksInfo.response.size() + 1;
+        }
     }
 
     public static class ContentViewHolder extends RecyclerView.ViewHolder {
