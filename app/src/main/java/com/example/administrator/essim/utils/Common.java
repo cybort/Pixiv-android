@@ -1,8 +1,16 @@
 package com.example.administrator.essim.utils;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.administrator.essim.models.Reference;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,12 +63,34 @@ import okhttp3.Request;
  */
 
 public class Common {
+
+    public static final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+    public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
+    public static final String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
+            "mode=daily&per_page=20&date=" + Common.getLastDay();
+    public static final String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
+            "mode=weekly&per_page=20&date=" + Common.getLastDay();
+    public static final String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
+            "mode=monthly&per_page=20&date=" + Common.getLastDay();
+    public static final String url_rank_rookie = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
+            "mode=rookie&per_page=14&date=" + Common.getLastDay();
+    public static final String url_rank_original = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
+            "mode=original&per_page=14&date=" + Common.getLastDay();
+    public static final String url_rank_male = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
+            "mode=male&per_page=20&date=" + Common.getLastDay();
+    public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
+            "mode=female&per_page=20&date=" + Common.getLastDay();
+    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
+
+    //创建网络连接并且设置回调
     public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(address).build();
         client.newCall(request).enqueue(callback);
     }
 
+    //接收时间戳，格式化时间并返回
     public static String getTime(String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
         if (time.length() == 13) {
@@ -72,10 +102,7 @@ public class Common {
         return "没有日期数据哦";
     }
 
-    public static void showLog(String message) {
-        Log.d("this is a message: ", message);
-    }
-
+    //得到当前时间回退两天的日期
     public static String getLastDay() {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DATE, -2);
@@ -84,20 +111,76 @@ public class Common {
         return df.format(today);
     }
 
+    //快速打LOG
     public static <T> void showLog(T t) {
         Log.d("a line of my log", String.valueOf(t));
     }
 
+    //返回分页的页数
     public static int getPageCount(String itemCount) {
         if (Integer.valueOf(itemCount) < 20) {
             return 1;
-        }
-        else if((Integer.valueOf(itemCount) / 20 < 20) && (Integer.valueOf(itemCount) / 20 >= 1))
-        {
+        } else if ((Integer.valueOf(itemCount) / 20 < 20) && (Integer.valueOf(itemCount) / 20 >= 1)) {
             return Integer.valueOf(itemCount) / 20;
-        }
-        else {
+        } else {
             return 20;
         }
+    }
+
+    public static String getRankType() {
+        switch (Reference.sFragmentPixivLeft.currentDataType) {
+            case 0:
+                return "日榜";
+            case 1:
+                return "周榜";
+            case 2:
+                return "月榜";
+            case 3:
+                return "新人";
+            case 4:
+                return "原创";
+            case 5:
+                return "男性向";
+            default:
+                return "女性向";
+        }
+    }
+
+    //通知相册更新图片
+    public static void sendBroadcast(Context context, File file, int index, int photoType) {
+        try {
+            String fileName;
+            switch (photoType) {
+                case 0:     //来自排行榜的图片
+                    fileName = Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
+                            Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
+                            String.valueOf(0) + ".jpeg";
+                    break;
+                case 1:     //来自热门标签或者用户主页的图片
+                    fileName = Reference.tempWork.response.get(index).getTitle() + "_" +
+                            Reference.tempWork.response.get(index).getId() + "_" +
+                            String.valueOf(0) + ".jpeg";
+                    break;
+                case 2:
+                    fileName = Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
+                            Reference.sPixivIllustItem.response.get(0).getId() + "_" +
+                            String.valueOf(0) + ".jpeg";
+                    break;
+                case 3:
+                    fileName = Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
+                            Reference.sPixivIllustItem.response.get(0).getId() + "_" +
+                            String.valueOf(index) + ".jpeg";
+                    break;
+                default:
+                    fileName = null;
+                    break;
+            }
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+            Common.showLog("开始更新了");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(file.getPath()))));
     }
 }

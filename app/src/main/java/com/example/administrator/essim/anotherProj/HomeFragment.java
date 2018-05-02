@@ -90,7 +90,6 @@ public class HomeFragment extends Fragment {
         mRelativeLayout = v.findViewById(R.id.follow_and_followers);
         bg = v.findViewById(R.id.people_bg);
         rlNavBar.setNavigationOnClickListener(v1 -> getActivity().finish());
-        rlNavBar.setTitle(Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getName() + "的主页");
         displayFragments = new ArrayList<>();
         displayFragments.add(HomeListFragment.newInstance());
         displayFragments.add(new HomeProfileFragment());
@@ -142,12 +141,14 @@ public class HomeFragment extends Fragment {
         viewPager.setCurrentItem(currentPosition);
         DownLoad downLoad = new DownLoad();
         if (((CloudMainActivity) getActivity()).where_is_from.equals("TagResult")) {
+            rlNavBar.setTitle(Reference.tempWork.response.get(index).user.getName() + "的主页");
             Glide.with(getContext()).load(Reference.tempWork.response.get(index).image_urls.getPx_480mw())
                     .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
                     .into(bg);
             downLoad.execute(Reference.tempWork.response.get(index).user.profile_image_urls.getPx_50x50());
             getData(url + Reference.tempWork.response.get(index).user.getId());
         } else {
+            rlNavBar.setTitle(Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getName() + "的主页");
             Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0).works.
                     get(index).work.image_urls.getPx_480mw())
                     .bitmapTransform(new BlurTransformation(getContext(), 20, 2))

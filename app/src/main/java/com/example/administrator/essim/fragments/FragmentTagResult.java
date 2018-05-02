@@ -1,12 +1,12 @@
 package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +24,14 @@ import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
+import com.nightonke.boommenu.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
@@ -34,13 +42,14 @@ import okhttp3.Response;
 
 public class FragmentTagResult extends BaseFragment {
 
-    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
-            " 5000users入り", " 10000users入り"};
+
     private int index;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private int nowSearchType, togo, nowPage = 1, aimPage = 1;
     private AuthorWorksAdapter mAuthorWorksAdapter;
+    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
+            " 5000users入り", " 10000users入り"};
     private String head = "https://api.imjad.cn/pixiv/v1/?type=search&per_page=20&word=",
             word, temp = " 500users入り";
 
@@ -93,13 +102,11 @@ public class FragmentTagResult extends BaseFragment {
                     mContext.startActivity(intent);
                 });
                 getActivity().runOnUiThread(() -> {
-                    if(Integer.valueOf(Reference.sSearchResult.pagination.getTotal())>=1) {
+                    if (Integer.valueOf(Reference.sSearchResult.pagination.getTotal()) >= 1) {
                         mRecyclerView.setAdapter(mAuthorWorksAdapter);
                         mAuthorWorksAdapter.notifyDataSetChanged();
                         mProgressBar.setVisibility(View.INVISIBLE);
-                    }
-                    else
-                    {
+                    } else {
                         mRecyclerView.setAdapter(mAuthorWorksAdapter);
                         mAuthorWorksAdapter.notifyDataSetChanged();
                         mProgressBar.setVisibility(View.INVISIBLE);
@@ -125,7 +132,6 @@ public class FragmentTagResult extends BaseFragment {
             if (nowSearchType != togo) {
                 nowPage = 1;
                 aimPage = 1;
-                Common.showLog("现在变成第1ye ");
                 getData(head + word + temp + "&page=" + String.valueOf(nowPage));
                 nowSearchType = togo;
             }

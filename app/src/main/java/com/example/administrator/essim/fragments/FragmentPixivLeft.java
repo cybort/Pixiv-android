@@ -2,6 +2,7 @@ package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
+import com.nightonke.boommenu.BoomMenuButton;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.yalantis.phoenix.PullToRefreshView;
 
@@ -25,6 +27,14 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.example.administrator.essim.utils.Common.url_rank_daily;
+import static com.example.administrator.essim.utils.Common.url_rank_female;
+import static com.example.administrator.essim.utils.Common.url_rank_male;
+import static com.example.administrator.essim.utils.Common.url_rank_monthly;
+import static com.example.administrator.essim.utils.Common.url_rank_original;
+import static com.example.administrator.essim.utils.Common.url_rank_rookie;
+import static com.example.administrator.essim.utils.Common.url_rank_weekly;
 
 /**
  * Created by Administrator on 2018/1/15 0015.
@@ -39,13 +49,10 @@ public class FragmentPixivLeft extends BaseFragment {
     private PixivAdapter mPixivAdapter;
     private String responseData = "";
     private RecyclerView mRecyclerView;
-    private FloatingActionMenu mFloatingActionMenu;
+    private BoomMenuButton bmb;
     private Gson gson = new Gson();
     private PullToRefreshView mPullToRefreshView;
     private ProgressBar mProgressBar;
-    private String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=daily&per_page=20&date=" + Common.getLastDay();
-    private String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&mode=weekly&per_page=20&date=" + Common.getLastDay();
-    private String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&mode=monthly&per_page=20&date=" + Common.getLastDay();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +61,7 @@ public class FragmentPixivLeft extends BaseFragment {
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView = view.findViewById(R.id.pixiv_recy);
-        mFloatingActionMenu = getActivity().findViewById(R.id.menu_red);
+        bmb = getActivity().findViewById(R.id.bmb);
         mProgressBar = view.findViewById(R.id.loading);
         mPullToRefreshView = view.findViewById(R.id.pull_wo_refresh);
         mPullToRefreshView.setOnRefreshListener(() -> {
@@ -73,35 +80,73 @@ public class FragmentPixivLeft extends BaseFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 if (dy > 0) {
-                    mFloatingActionMenu.hideMenuButton(true);
+
                 } else {
-                    mFloatingActionMenu.showMenuButton(true);
                 }
             }
         });
+        now_link_address = url_rank_daily;
         getData(url_rank_daily, false);
         currentDataType = 0;
         ((FragmentPixiv) getParentFragment()).setChangeDataSet(dataType -> {
-            if (dataType == 0) {
-                if (currentDataType != 0) {
-                    now_page = 1;
-                    getData(url_rank_daily, false);
-                    currentDataType = 0;
-                }
-            } else if (dataType == 1) {
-                if (currentDataType != 1) {
-                    now_page = 1;
-                    getData(url_rank_weekly, false);
-                    currentDataType = 1;
-                }
-            } else if (dataType == 2) {
-                if (currentDataType != 2) {
-                    now_page = 1;
-                    getData(url_rank_monthly, false);
-                    currentDataType = 2;
-                }
+            switch (dataType) {
+                case 0:
+                    if (currentDataType != 0) {
+                        now_page = 1;
+                        now_link_address = url_rank_daily;
+                        getData(url_rank_daily, false);
+                        currentDataType = 0;
+                    }
+                    break;
+                case 1:
+                    if (currentDataType != 1) {
+                        now_page = 1;
+                        now_link_address = url_rank_weekly;
+                        getData(url_rank_weekly, false);
+                        currentDataType = 1;
+                    }
+                    break;
+                case 2:
+                    if (currentDataType != 2) {
+                        now_page = 1;
+                        now_link_address = url_rank_monthly;
+                        getData(url_rank_monthly, false);
+                        currentDataType = 2;
+                    }
+                    break;
+                case 3:
+                    if (currentDataType != 3) {
+                        now_page = 1;
+                        now_link_address = url_rank_rookie;
+                        getData(url_rank_rookie, false);
+                        currentDataType = 3;
+                    }
+                    break;
+                case 4:
+                    if (currentDataType != 4) {
+                        now_page = 1;
+                        now_link_address = url_rank_original;
+                        getData(url_rank_original, false);
+                        currentDataType = 4;
+                    }
+                    break;
+                case 5:
+                    if (currentDataType != 5) {
+                        now_page = 1;
+                        now_link_address = url_rank_male;
+                        getData(url_rank_male, false);
+                        currentDataType = 5;
+                    }
+                    break;
+                case 6:
+                    if (currentDataType != 6) {
+                        now_page = 1;
+                        now_link_address = url_rank_female;
+                        getData(url_rank_female, false);
+                        currentDataType = 6;
+                    }
+                    break;
             }
         });
         return view;
@@ -142,7 +187,6 @@ public class FragmentPixivLeft extends BaseFragment {
                     }
                     mProgressBar.setVisibility(View.GONE);
                 });
-                now_link_address = address;
                 ((FragmentPixiv) getParentFragment()).gotoPage = now_page;
                 now_page++;
                 Common.showLog(now_link_address);

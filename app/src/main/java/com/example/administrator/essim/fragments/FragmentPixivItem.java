@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +29,7 @@ import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherProj.CloudMainActivity;
 import com.example.administrator.essim.models.Reference;
+import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -50,8 +50,8 @@ import me.gujun.android.taggroup.TagGroup;
 public class FragmentPixivItem extends BaseFragment {
 
     private int index;
-    private String filePath;
     private MyAsyncTask asyncTask;
+    private File parentFile, realFile;
     private ProgressDialog progressDialog;
     private ImageView mImageView, mImageView2;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
@@ -122,19 +122,17 @@ public class FragmentPixivItem extends BaseFragment {
         mCardView = view.findViewById(R.id.card_first);
         mCardView2 = view.findViewById(R.id.card_second);
         mCardView3 = view.findViewById(R.id.card_left);
-        filePath = Environment.getExternalStorageDirectory().getPath() + "/PixivPictures/" +
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
-                String.valueOf(0) + ".jpeg";
         mCardView3.setOnClickListener(v -> {
-            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/PixivPictures");
-            if (!file.exists()) {
-                file.mkdir();
+            parentFile = new File(Environment.getExternalStorageDirectory().getPath(), "PixivPictures");
+            if (!parentFile.exists()) {
+                parentFile.mkdir();
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
             }
-            File file1 = new File(filePath);
-            if (file1.exists()) {
+            realFile = new File(parentFile.getPath(), Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
+                    Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
+                    String.valueOf(0) + ".jpeg");
+            if (realFile.exists()) {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             } else {
@@ -216,8 +214,7 @@ public class FragmentPixivItem extends BaseFragment {
 
             Bitmap bitmap = null;
             try {
-
-                FileOutputStream outputStream = new FileOutputStream(filePath);
+                FileOutputStream outputStream = new FileOutputStream(realFile);
                 URL url = new URL(params[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
@@ -238,12 +235,7 @@ public class FragmentPixivItem extends BaseFragment {
                     outputStream.write(data, 0, len);
                 }
                 outputStream.close();
-                progressDialog.setMessage("正在下载...");
-
-                File imageFile = new File(filePath);
-                Uri uri = Uri.fromFile(imageFile);
-                //发送广播，通知图库更新
-                mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+                Common.sendBroadcast(mContext, realFile, index, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

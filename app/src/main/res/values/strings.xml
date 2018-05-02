@@ -231,4 +231,7 @@
     <string name="refresh">刷新</string>
     <string name="download_origin">下载原图</string>
     <string name="searchtype">搜索选项</string>
+    <string name="string_rank">排行榜</string>
+    <string name="get_more_files">查看更多</string>
+    <string name="special">特辑</string>
 </resources>
