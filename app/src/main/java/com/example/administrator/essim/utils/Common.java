@@ -81,7 +81,7 @@ public class Common {
             "mode=male&per_page=20&date=" + Common.getLastDay();
     public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
             "mode=female&per_page=20&date=" + Common.getLastDay();
-    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
+    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
 
     //创建网络连接并且设置回调
     public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {

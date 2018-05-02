@@ -3,6 +3,7 @@ package com.example.administrator.essim.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.PixivRankItem;
+import com.example.administrator.essim.models.Reference;
 
 /**
  * Created by Administrator on 2018/3/23 0023.
@@ -46,6 +48,9 @@ public class PixivAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int p) {
         int position = holder.getAdapterPosition();
         if (holder instanceof PhotoHolder) {
+            ViewGroup.LayoutParams params = ((PhotoHolder) holder).mImageView.getLayoutParams();
+            params.height = (mContext.getResources().getDisplayMetrics().widthPixels- mContext.getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) * mPixivRankItem.response.get(0).works.get(position).work.getHeight() / mPixivRankItem.response.get(0).works.get(position).work.getWidth();
+            ((PhotoHolder) holder).mImageView.setLayoutParams(params);
             Glide.with(mContext).load(mPixivRankItem.response.get(0).works.get(holder.getAdapterPosition()).work.image_urls.getPx_480mw())
                     .into(((PhotoHolder) holder).mImageView);
             ((PhotoHolder) holder).mTextView.setText(mPixivRankItem.response.get(0).works.get(position).work.getTitle());

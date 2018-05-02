@@ -86,7 +86,10 @@ public class FragmentPixiv extends BaseFragment {
         mTextView.setOnClickListener(v12 -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
 
         BoomMenuButton bmb = v.findViewById(R.id.bmb);
+        bmb.setUse3DTransformAnimation(true);
         bmb.setShowDuration(400);
+        bmb.setHideDuration(550);
+        bmb.setFrames(60);
         bmb.setNormalColor(getResources().getColor(R.color.colorAccent));
         for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
