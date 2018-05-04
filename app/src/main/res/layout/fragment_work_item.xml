@@ -141,7 +141,6 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/viewed"
                         android:layout_marginEnd="@dimen/sixteen_dip"
-                        android:layout_marginTop="2dp"
                         android:src="@drawable/ic_remove_red_eye_black_24dp" />
 
                     <TextView
@@ -162,7 +161,6 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/liked"
                         android:layout_marginEnd="@dimen/sixteen_dip"
-                        android:layout_marginTop="2dp"
                         android:padding="1dp"
                         android:src="@drawable/ic_favorite_white_24dp" />
 

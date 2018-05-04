@@ -2,8 +2,7 @@ package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,10 @@ import android.widget.ProgressBar;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.adapters.PixivAdapter;
+import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.models.PixivRankItem;
 import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -42,11 +40,11 @@ import static com.example.administrator.essim.utils.Common.url_rank_weekly;
 
 public class FragmentPixivLeft extends BaseFragment {
 
-    private static final int PER_PAGE_SIZE = 20;
+    private static final int PER_PAGE_SIZE = Common.arrayOfString.length;
     public int now_page = 1;
     public int currentDataType;
     public String now_link_address;
-    private PixivAdapter mPixivAdapter;
+    private PixivAdapterGrid mPixivAdapter;
     private String responseData = "";
     private RecyclerView mRecyclerView;
     private BoomMenuButton bmb;
@@ -58,8 +56,7 @@ public class FragmentPixivLeft extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pixiv_left, container, false);
         Reference.sFragmentPixivLeft = this;
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         mRecyclerView = view.findViewById(R.id.pixiv_recy);
         bmb = getActivity().findViewById(R.id.bmb);
         mProgressBar = view.findViewById(R.id.loading);
@@ -73,7 +70,23 @@ public class FragmentPixivLeft extends BaseFragment {
             }
         });
 
+        /*
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));*/
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,2);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mPixivAdapter.getItemViewType(position) == 2 || mPixivAdapter.getItemViewType(position) == 3) {
+                    return gridLayoutManager.getSpanCount();
+                }else{
+                    return 1;
+                }
+            }
+        });
+        mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -157,6 +170,7 @@ public class FragmentPixivLeft extends BaseFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                mProgressBar.setVisibility(View.GONE);
                 getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 
@@ -164,7 +178,7 @@ public class FragmentPixivLeft extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
                 responseData = response.body().string();
                 Reference.sPixivRankItem = gson.fromJson(responseData, PixivRankItem.class);
-                mPixivAdapter = new PixivAdapter(Reference.sPixivRankItem, mContext);
+                mPixivAdapter = new PixivAdapterGrid(Reference.sPixivRankItem, mContext);
                 mPixivAdapter.setOnItemClickListener((view, position) -> {
                     if (position == -1) {
                         if (now_page <= PER_PAGE_SIZE) {

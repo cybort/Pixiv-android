@@ -65,22 +65,22 @@ import okhttp3.Request;
 public class Common {
 
     public static final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+            "10"};
     public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
     public static final String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
-            "mode=daily&per_page=20&date=" + Common.getLastDay();
+            "mode=daily&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
-            "mode=weekly&per_page=20&date=" + Common.getLastDay();
+            "mode=weekly&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=monthly&per_page=20&date=" + Common.getLastDay();
+            "mode=monthly&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_rookie = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=rookie&per_page=14&date=" + Common.getLastDay();
+            "mode=rookie&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_original = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=original&per_page=14&date=" + Common.getLastDay();
+            "mode=original&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_male = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=male&per_page=20&date=" + Common.getLastDay();
+            "mode=male&per_page=30&date=" + Common.getLastDay();
     public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=female&per_page=20&date=" + Common.getLastDay();
+            "mode=female&per_page=30&date=" + Common.getLastDay();
     public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
 
     //创建网络连接并且设置回调
@@ -88,6 +88,15 @@ public class Common {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(address).build();
         client.newCall(request).enqueue(callback);
+    }
+
+    public static boolean isNumeric(String str){
+        for (int i = str.length();--i>=0;){
+            if (!Character.isDigit(str.charAt(i))){
+                return false;
+            }
+        }
+        return true;
     }
 
     //接收时间戳，格式化时间并返回

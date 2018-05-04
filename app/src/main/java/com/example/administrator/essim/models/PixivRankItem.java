@@ -43,13 +43,13 @@ public class PixivRankItem {
                 public User user;
                 public String created_time;
                 public Stats stats;
-                public String page_count;
+                public int page_count;
 
-                public String getPage_count() {
+                public int getPage_count() {
                     return page_count;
                 }
 
-                public void setPage_count(String page_count) {
+                public void setPage_count(int page_count) {
                     this.page_count = page_count;
                 }
 

@@ -86,6 +86,7 @@ public class FragmentTagResult extends BaseFragment {
         Common.sendOkhttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                mProgressBar.setVisibility(View.GONE);
                 getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             }
 

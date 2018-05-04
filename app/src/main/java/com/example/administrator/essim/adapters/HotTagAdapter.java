@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.HotTag;
+import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.List;

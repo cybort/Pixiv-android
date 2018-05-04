@@ -85,9 +85,7 @@ public class FragmentPixivItem extends BaseFragment {
         mImageView = view.findViewById(R.id.item_background_img);
         mImageView2 = view.findViewById(R.id.detail_img);
         ViewGroup.LayoutParams params = mImageView2.getLayoutParams();
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        params.height = (((dm.widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
+        params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getHeight()) /
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getWidth());
         mImageView2.setLayoutParams(params);
@@ -180,7 +178,11 @@ public class FragmentPixivItem extends BaseFragment {
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.getId()));
         mTextView7.setText(getString(R.string.author_id,
                 Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getId()));
-        mTextView8.setText(String.format("%sP", Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count()));
+        if (Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count() > 1) {
+            mTextView8.setText(String.format("%sP", Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count()));
+        } else {
+            mTextView8.setVisibility(View.INVISIBLE);
+        }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         progressDialog = new ProgressDialog(mContext);

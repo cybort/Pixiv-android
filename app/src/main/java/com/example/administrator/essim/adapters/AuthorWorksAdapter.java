@@ -77,7 +77,11 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     mBooksInfo.response.get(position).stats.getViews_count().substring(0,
                             mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
         }
-        ((ContentViewHolder) holder).mTextView2.setText(String.format("%sP", mBooksInfo.response.get(position).getPage_count()));
+        if (Integer.valueOf(mBooksInfo.response.get(position).getPage_count()) > 1) {
+            ((ContentViewHolder) holder).mTextView2.setText(String.format("%sP", mBooksInfo.response.get(position).getPage_count()));
+        } else {
+            ((ContentViewHolder) holder).mTextView2.setVisibility(View.INVISIBLE);
+        }
         Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                 .into(((ContentViewHolder) holder).mImageView);
         ((ContentViewHolder) holder).itemView.setOnClickListener(view -> {

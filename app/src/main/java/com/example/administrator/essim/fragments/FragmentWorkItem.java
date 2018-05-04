@@ -172,7 +172,13 @@ public class FragmentWorkItem extends BaseFragment {
                 Reference.tempWork.response.get(index).getId()));
         mTextView7.setText(getString(R.string.author_id,
                 Reference.tempWork.response.get(index).user.getId()));
-        mTextView8.setText(String.format("%sP", Reference.tempWork.response.get(index).getPage_count()));
+        if(Integer.valueOf(Reference.tempWork.response.get(index).getPage_count()) > 1) {
+            mTextView8.setText(String.format("%sP", Reference.tempWork.response.get(index).getPage_count()));
+        }
+        else
+        {
+            mTextView8.setVisibility(View.INVISIBLE);
+        }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         progressDialog = new ProgressDialog(mContext);
