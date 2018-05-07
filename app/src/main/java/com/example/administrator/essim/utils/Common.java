@@ -4,13 +4,11 @@ package com.example.administrator.essim.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.administrator.essim.models.Reference;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,6 +80,7 @@ public class Common {
     public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
             "mode=female&per_page=30&date=" + Common.getLastDay();
     public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
+    public static final String illust_item = "https://api.imjad.cn/pixiv/v1/?type=illust&id=";
 
     //创建网络连接并且设置回调
     public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
@@ -90,9 +89,9 @@ public class Common {
         client.newCall(request).enqueue(callback);
     }
 
-    public static boolean isNumeric(String str){
-        for (int i = str.length();--i>=0;){
-            if (!Character.isDigit(str.charAt(i))){
+    public static boolean isNumeric(String str) {
+        for (int i = str.length(); --i >= 0; ) {
+            if (!Character.isDigit(str.charAt(i))) {
                 return false;
             }
         }
@@ -155,41 +154,8 @@ public class Common {
         }
     }
 
-    //通知相册更新图片
-    public static void sendBroadcast(Context context, File file, int index, int photoType) {
-        try {
-            String fileName;
-            switch (photoType) {
-                case 0:     //来自排行榜的图片
-                    fileName = Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
-                            Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
-                            String.valueOf(0) + ".jpeg";
-                    break;
-                case 1:     //来自热门标签或者用户主页的图片
-                    fileName = Reference.tempWork.response.get(index).getTitle() + "_" +
-                            Reference.tempWork.response.get(index).getId() + "_" +
-                            String.valueOf(0) + ".jpeg";
-                    break;
-                case 2:
-                    fileName = Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
-                            Reference.sPixivIllustItem.response.get(0).getId() + "_" +
-                            String.valueOf(0) + ".jpeg";
-                    break;
-                case 3:
-                    fileName = Reference.sPixivIllustItem.response.get(0).getTitle() + "_" +
-                            Reference.sPixivIllustItem.response.get(0).getId() + "_" +
-                            String.valueOf(index) + ".jpeg";
-                    break;
-                default:
-                    fileName = null;
-                    break;
-            }
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-            Common.showLog("开始更新了");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(file.getPath()))));
+    public static void refreshAlbum(Context context, File file) {
+        context.sendBroadcast(new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE", Uri.fromFile(file)));
     }
+
 }

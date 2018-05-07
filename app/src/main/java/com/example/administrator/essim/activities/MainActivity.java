@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment[] mFragments;
     private int lastShowFragment;
     private Context mContext;
+    private ImageView mImageView;
     private long mExitTime;
     private WelcomeHelper welcomeScreen;
 
@@ -80,6 +82,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        mImageView = navigationView.getHeaderView(0).findViewById(R.id.imageView_nav_head);
+        mImageView.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 
     public void switchFrament(int lastIndex, int index) {

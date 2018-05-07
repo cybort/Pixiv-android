@@ -172,11 +172,9 @@ public class FragmentWorkItem extends BaseFragment {
                 Reference.tempWork.response.get(index).getId()));
         mTextView7.setText(getString(R.string.author_id,
                 Reference.tempWork.response.get(index).user.getId()));
-        if(Integer.valueOf(Reference.tempWork.response.get(index).getPage_count()) > 1) {
+        if (Integer.valueOf(Reference.tempWork.response.get(index).getPage_count()) > 1) {
             mTextView8.setText(String.format("%sP", Reference.tempWork.response.get(index).getPage_count()));
-        }
-        else
-        {
+        } else {
             mTextView8.setVisibility(View.INVISIBLE);
         }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
@@ -233,7 +231,7 @@ public class FragmentWorkItem extends BaseFragment {
                     outputStream.write(data, 0, len);
                 }
                 outputStream.close();
-                Common.sendBroadcast(mContext, realFile, index, 1);
+                Common.refreshAlbum(mContext, realFile);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

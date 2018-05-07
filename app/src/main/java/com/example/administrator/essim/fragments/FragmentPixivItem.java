@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,7 +236,7 @@ public class FragmentPixivItem extends BaseFragment {
                     outputStream.write(data, 0, len);
                 }
                 outputStream.close();
-                Common.sendBroadcast(mContext, realFile, index, 0);
+                Common.refreshAlbum(mContext, realFile);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

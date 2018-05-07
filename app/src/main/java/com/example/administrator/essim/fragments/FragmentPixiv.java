@@ -47,6 +47,41 @@ public class FragmentPixiv extends BaseFragment {
     private List<Fragment> fragments = new ArrayList<Fragment>();
     private ArrayList<String> list = new ArrayList<String>();
     private OnChangeDataSet mChangeDataSet;
+    private OnBMClickListener clickListener = new OnBMClickListener() {
+        @Override
+        public void onBoomButtonClick(int index) {
+            if (vp.getCurrentItem() != 0) {
+                vp.setCurrentItem(0);
+            }
+            if (mChangeDataSet != null) {
+                switch (index) {
+                    case 0:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 1:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 2:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 3:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 4:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 5:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    case 6:
+                        mChangeDataSet.changeData(index);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +90,8 @@ public class FragmentPixiv extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationOnClickListener(v1 -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
-        list.add("Rank  List");
-        list.add("Hot  Tags");
+        list.add("榜单");
+        list.add("热门标签");
         fragments.add(new FragmentPixivLeft());
         fragments.add(new FragmentPixivRight());
         FragAdapter adapter = new FragAdapter(getChildFragmentManager(), fragments, list);
@@ -104,43 +139,6 @@ public class FragmentPixiv extends BaseFragment {
 
         return v;
     }
-
-    private OnBMClickListener clickListener = new OnBMClickListener() {
-        @Override
-        public void onBoomButtonClick(int index) {
-            if(vp.getCurrentItem() != 0)
-            {
-                vp.setCurrentItem(0);
-            }
-            if (mChangeDataSet != null) {
-                switch (index) {
-                    case 0:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 1:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 2:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 3:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 4:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 5:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    case 6:
-                        mChangeDataSet.changeData(index);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -82,8 +82,11 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             ((ContentViewHolder) holder).mTextView2.setVisibility(View.INVISIBLE);
         }
+
         Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
                 .into(((ContentViewHolder) holder).mImageView);
+        Common.showLog("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
+                mBooksInfo.response.get(position).getId());
         ((ContentViewHolder) holder).itemView.setOnClickListener(view -> {
             mOnItemClickListener.onItemClick(view, position);
             Common.showLog("点击了第" + String.valueOf(position));

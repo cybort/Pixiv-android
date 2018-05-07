@@ -31,6 +31,8 @@
             android:name=".activities.MyWelcomeActivity"
             android:theme="@style/WelcomeScreenTheme" />
         <activity android:name=".activities.ImageDetailActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.SearchIDActivity"></activity>
     </application>
 
 </manifest>

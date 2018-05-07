@@ -86,6 +86,15 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         return getContentItemCount() + mBottomCount;
     }
 
+    private static class BottomViewHolder extends RecyclerView.ViewHolder {
+        private CardView mCardView;
+
+        private BottomViewHolder(View itemView) {
+            super(itemView);
+            mCardView = itemView.findViewById(R.id.card_footer);
+        }
+    }
+
     private class PhotoHolder extends RecyclerView.ViewHolder {
         private ImageView mImageView;
         private TextView mTextView;
@@ -94,15 +103,6 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             mImageView = itemView.findViewById(R.id.pixiv_image);
             mTextView = itemView.findViewById(R.id.pixiv_item_size);
-        }
-    }
-
-    private static class BottomViewHolder extends RecyclerView.ViewHolder {
-        private CardView mCardView;
-
-        private BottomViewHolder(View itemView) {
-            super(itemView);
-            mCardView = itemView.findViewById(R.id.card_footer);
         }
     }
 }

@@ -1,49 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.SearchResultActivity">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_pixiv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:title="搜索结果"
+        app:titleTextColor="#fff">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_pixiv"
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.CardView 
+        android:layout_below="@+id/toolbar_pixiv"
+        android:id="@+id/card_pixiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="@dimen/eight_dip"
+        android:layout_marginRight="@dimen/eight_dip"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@animator/touch_raise"
+        app:cardCornerRadius="@dimen/card_recycler_elevation">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:title="搜索结果"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="#fff">
+            android:layout_height="wrap_content">
 
-        </android.support.v7.widget.Toolbar>
+            <ImageView
+                android:id="@+id/pixiv_image"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:scaleType="centerCrop" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:tag="tab_indicator_accent_color,bg_primary_color"
-            app:tabIndicatorHeight="3dp"
-            app:tabSelectedTextColor="#FFFFFF"
-            app:tabTextColor="#FFFFFF" />
 
-    </android.support.design.widget.AppBarLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_below="@+id/pixiv_image"
+                android:layout_height="wrap_content">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_below="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="@dimen/eighteen_sp"
+                android:id="@+id/illust_title"
+                android:layout_margin="@dimen/twelve_dip"
+                android:textColor="@color/colorPrimary"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/down_load"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/eight_dip"
+                android:background="@drawable/btn_bg_red"
+                android:gravity="center"
+                android:text="@string/download_origin"
+                android:textColor="@color/white" />
+            </RelativeLayout>
 
-    </android.support.v4.view.ViewPager>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/my_progress"
+        android:layout_margin="@dimen/sixteen_dip"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/card_pixiv"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+
 
 </RelativeLayout>

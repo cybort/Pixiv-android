@@ -1,6 +1,7 @@
 package com.example.administrator.essim.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.SearchIDActivity;
 import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
 import com.example.administrator.essim.models.HotTag;
 import com.example.administrator.essim.utils.Common;
@@ -68,9 +70,13 @@ public class HotTagAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).imageButton.setOnClickListener(v -> {
                 search_text = ((HeaderViewHolder) holder).editText.getText().toString().trim();
-                if (!search_text.isEmpty()) {
+                if (!search_text.isEmpty() && !Common.isNumeric(((HeaderViewHolder) holder).editText.getText().toString().trim())) {
                     mOnTagListItemClickListener.onSearch(((HeaderViewHolder) holder).imageButton,
                             ((HeaderViewHolder) holder).editText.getText().toString().trim(), -1);
+                } else if (!search_text.isEmpty() && Common.isNumeric(((HeaderViewHolder) holder).editText.getText().toString().trim())) {
+                    Intent intent = new Intent(mContext, SearchIDActivity.class);
+                    intent.putExtra("what is the id", ((HeaderViewHolder) holder).editText.getText().toString().trim());
+                    mContext.startActivity(intent);
                 } else {
                     TastyToast.makeText(mContext, "请输入搜索的内容！", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 }

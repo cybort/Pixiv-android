@@ -147,11 +147,7 @@ public class FragmentImageDetail extends BaseFragment {
                     outputStream.write(data, 0, len);
                 }
                 outputStream.close();
-                if (index == -1) {
-                    Common.sendBroadcast(mContext, realFile, index, 2);
-                } else {
-                    Common.sendBroadcast(mContext, realFile, index, 3);
-                }
+                Common.refreshAlbum(mContext, realFile);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

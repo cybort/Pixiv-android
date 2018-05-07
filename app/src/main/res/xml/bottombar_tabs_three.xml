@@ -10,14 +10,14 @@
     <tab
         id="@+id/tab_hitokoto"
         icon="@drawable/ic_event_note_black_24dp"
-        title="Hitokoto"
+        title="一言"
         inActiveColor="@color/bottom_item_unselected"
         activeColor="@color/bottom_item_selected"
         barColorWhenSelected="@color/bottom_bg_white" />
     <tab
         id="@+id/tab_mine"
         icon="@drawable/ic_favorite_white_24dp"
-        title="Mine"
+        title="我的"
         inActiveColor="@color/bottom_item_unselected"
         activeColor="@color/bottom_item_selected"
         barColorWhenSelected="@color/bottom_bg_white" />

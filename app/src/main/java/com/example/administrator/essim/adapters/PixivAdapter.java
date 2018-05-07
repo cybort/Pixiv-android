@@ -3,7 +3,6 @@ package com.example.administrator.essim.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.interfaces.OnItemClickListener;
 import com.example.administrator.essim.models.PixivRankItem;
-import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
 
 /**
  * Created by Administrator on 2018/3/23 0023.

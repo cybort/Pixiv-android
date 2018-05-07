@@ -36,7 +36,7 @@
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="12dp"
                 android:layout_weight="5"
-                android:hint="search in pixiv" />
+                android:hint="关键词/作品ID" />
 
             <ImageButton
                 android:id="@+id/do_search"

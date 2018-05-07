@@ -75,13 +75,13 @@ public class FragmentPixivLeft extends BaseFragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));*/
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 if (mPixivAdapter.getItemViewType(position) == 2 || mPixivAdapter.getItemViewType(position) == 3) {
                     return gridLayoutManager.getSpanCount();
-                }else{
+                } else {
                     return 1;
                 }
             }

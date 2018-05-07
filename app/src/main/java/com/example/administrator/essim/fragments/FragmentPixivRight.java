@@ -74,7 +74,7 @@ public class FragmentPixivRight extends BaseFragment {
 
                     @Override
                     public void onSearch(View view, String searchKey, int position) {
-                        if(position == -1) {
+                        if (position == -1) {
                             Intent intent = new Intent(mContext, TagResultActivity.class);
                             intent.putExtra("which one is selected", position);
                             intent.putExtra("what is searching", searchKey);

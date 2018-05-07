@@ -1,7 +1,6 @@
 package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,14 +23,6 @@ import com.example.administrator.essim.models.AuthorWorks;
 import com.example.administrator.essim.models.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
-import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
-import com.nightonke.boommenu.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
@@ -43,15 +34,15 @@ import okhttp3.Response;
 public class FragmentTagResult extends BaseFragment {
 
 
+    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
+            " 5000users入り", " 10000users入り"};
     private int index;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private int nowSearchType, togo, nowPage = 1, aimPage = 1;
+    private int nowSearchType = -1, togo = -1, nowPage = 1, aimPage = 1;
     private AuthorWorksAdapter mAuthorWorksAdapter;
-    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
-            " 5000users入り", " 10000users入り"};
     private String head = "https://api.imjad.cn/pixiv/v1/?type=search&per_page=20&word=",
-            word, temp = " 500users入り";
+            word, temp = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

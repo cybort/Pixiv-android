@@ -27,8 +27,8 @@
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_scroll">ScrollActivity</string>
-    <string name="ceuilisa">CeuiLiSA</string>
-    <string name="fatemercis">fatemercis@gmail.com</string>
+    <string name="ceuilisa">未登录</string>
+    <string name="fatemercis">没有什么能展示的</string>
     <string name="main_card_title">Title goes here</string>
     <string name="main_card_title_short">Title</string>
     <string name="main_card_subtitle">Subtitle here</string>
@@ -234,4 +234,14 @@
     <string name="string_rank">排行榜</string>
     <string name="get_more_files">查看更多</string>
     <string name="special">特辑</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="not_login">未登录</string>
+    <string name="nothing_to_show">nothing to show</string>
+    <string name="title_activity_try_to_login">TryToLoginActivity</string>
+    <string name="password">密码</string>
+    <string name="pixiv_name">pixiv用户名/邮箱</string>
+    <string name="dont_have_account">没有账号？</string>
+    <string name="input_your_nico">输入你的昵称</string>
+    <string name="search_for_hot">热度排序</string>
+    <string name="download_oringin">下载原图</string>
 </resources>
