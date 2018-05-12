@@ -1,88 +1,84 @@
 package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import java.util.Objects;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.TagResultActivity;
-import com.example.administrator.essim.adapters.HotTagAdapter;
-import com.example.administrator.essim.interfaces.OnTagListItemClickListener;
-import com.example.administrator.essim.models.HotTag;
-import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.sdsmdg.tastytoast.TastyToast;
-
-import java.io.IOException;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-
-/**
- * Created by Administrator on 2018/1/15 0015.
- */
+import com.example.administrator.essim.activities.MainActivity;
+import com.example.administrator.essim.activities.SearchTagActivity;
+import com.example.administrator.essim.adapters.TrendingtagAdapter;
+import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.Reference;
+import com.example.administrator.essim.response.TrendingtagResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class FragmentPixivRight extends BaseFragment {
 
-    private HotTagAdapter mHotTagAdapter;
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private TrendingtagAdapter mPixivAdapter;
+    private SharedPreferences mSharedPreferences;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pixiv_right, container, false);
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView = view.findViewById(R.id.tag_list);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-
-        getData(Common.url);
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_pixiv_right, container, false);
+        initView(v);
+        return v;
     }
 
-    private void getData(String url) {
-        Common.sendOkhttpRequest(url, new Callback() {
+    private void initView(View v)
+    {
+        Reference.sFragmentPixivRight = this;
+        mProgressBar = v.findViewById(R.id.try_login);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mRecyclerView = v.findViewById(R.id.pixiv_recy);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
+    }
+
+    public void getData()
+    {
+        mProgressBar.setVisibility(View.VISIBLE);
+        Call<TrendingtagResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getIllustTrendTags(mSharedPreferences.getString("Authorization", ""));
+        call.enqueue(new Callback<TrendingtagResponse>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            public void onResponse(Call<TrendingtagResponse> call, retrofit2.Response<TrendingtagResponse> response) {
+                Reference.sTrendingtagResponse = response.body();
+                try {
+                    mPixivAdapter = new TrendingtagAdapter(Reference.sTrendingtagResponse.getTrend_tags(), mContext);
+                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
+                        Intent intent = new Intent(mContext, SearchTagActivity.class);
+                        intent.putExtra("what is the keyword", Reference.sTrendingtagResponse.getTrend_tags()
+                        .get(position).getTag());
+                        mContext.startActivity(intent);
+                    });
+                    mRecyclerView.setAdapter(mPixivAdapter);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseData = response.body().string();
-                Gson gson = new Gson();
-                final List<HotTag> booksInfo = gson.fromJson(responseData, new TypeToken<List<HotTag>>() {
-                }.getType());
-                Reference.sHotTags = booksInfo.subList(0, 81);
-                mHotTagAdapter = new HotTagAdapter(Reference.sHotTags, getContext());
-                mHotTagAdapter.setOnTagListItemClickListener(new OnTagListItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(mContext, TagResultActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        mContext.startActivity(intent);
-                    }
-
-                    @Override
-                    public void onSearch(View view, String searchKey, int position) {
-                        if (position == -1) {
-                            Intent intent = new Intent(mContext, TagResultActivity.class);
-                            intent.putExtra("which one is selected", position);
-                            intent.putExtra("what is searching", searchKey);
-                            mContext.startActivity(intent);
-                        }
-                    }
-                });
-                getActivity().runOnUiThread(() -> mRecyclerView.setAdapter(mHotTagAdapter));
+            public void onFailure(Call<TrendingtagResponse> call, Throwable throwable) {
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

@@ -12,9 +12,9 @@
         android:elevation="1dp"
         android:fitsSystemWindows="true"
         android:theme="@style/Theme.AppCompat"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="mercis_bv的个人主页" />
+        app:title=" " />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
@@ -36,7 +36,7 @@
                 android:id="@+id/people_bg"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
-                android:background="@color/white_gray"
+                android:background="@color/colorPrimary"
                 android:scaleType="centerCrop" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -67,10 +67,10 @@
                     android:id="@+id/center_one"
                     android:layout_width="2dp"
                     android:layout_height="15dp"
+                    android:layout_marginTop="4dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginEnd="@dimen/twelve_dip"
                     android:layout_marginStart="@dimen/twelve_dip"
-                    android:layout_marginTop="4dp"
                     android:background="@color/white" />
 
                 <TextView
@@ -81,10 +81,21 @@
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:layout_width="70dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/post_like_user"
+                    android:padding="2dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/btn_bg_white"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
+                    android:layout_toEndOf="@+id/author_follow"/>
+
             </RelativeLayout>
 
         </RelativeLayout>
-
 
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabStrip"

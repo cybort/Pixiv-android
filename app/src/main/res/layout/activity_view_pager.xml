@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
-
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +21,7 @@
         android:elevation="12dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextColor="#fff" />
 </FrameLayout>

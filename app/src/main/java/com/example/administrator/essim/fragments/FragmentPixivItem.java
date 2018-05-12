@@ -1,15 +1,11 @@
 package com.example.administrator.essim.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -23,21 +19,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.ImageDetailActivity;
-import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.anotherProj.CloudMainActivity;
-import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.ImageDetailActivity;
+import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.anotherproj.CloudMainActivity;
+import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.utils.DownloadTask;
+import com.example.administrator.essim.utils.GlideUtil;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.gujun.android.taggroup.TagGroup;
 
@@ -49,16 +43,17 @@ import me.gujun.android.taggroup.TagGroup;
 public class FragmentPixivItem extends BaseFragment {
 
     private int index;
-    private MyAsyncTask asyncTask;
+    private DownloadTask asyncTask;
+    private IllustsBean mIllustsBeans;
     private File parentFile, realFile;
-    private ProgressDialog progressDialog;
     private ImageView mImageView, mImageView2;
     private CardView mCardView, mCardView2, mCardView3, mCardView4;
     private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8;
 
-    public static FragmentPixivItem newInstance(int position) {
+    public static FragmentPixivItem newInstance(IllustsBean illustsBean, int index) {
         Bundle args = new Bundle();
-        args.putSerializable("index", position);
+        args.putSerializable("index", index);
+        args.putSerializable("illust item", illustsBean);
         FragmentPixivItem fragment = new FragmentPixivItem();
         fragment.setArguments(args);
         return fragment;
@@ -68,6 +63,7 @@ public class FragmentPixivItem extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pixiv_item, container, false);
         index = (int) getArguments().getSerializable("index");
+        mIllustsBeans = (IllustsBean) getArguments().getSerializable("illust item");
         if (index == ((ViewPagerActivity) getActivity()).getIndexNow()) {
             setUserVisibleHint(true);
         }
@@ -85,30 +81,20 @@ public class FragmentPixivItem extends BaseFragment {
         mImageView2 = view.findViewById(R.id.detail_img);
         ViewGroup.LayoutParams params = mImageView2.getLayoutParams();
         params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.getHeight()) /
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.getWidth());
+                mIllustsBeans.getHeight()) / mIllustsBeans.getWidth());
         mImageView2.setLayoutParams(params);
         mImageView2.setOnClickListener(view12 -> {
             Intent intent = new Intent(mContext, ImageDetailActivity.class);
-            intent.putExtra("which one is selected", index);
-            intent.putExtra("where is from", "RankList");
+            intent.putExtra("illust", mIllustsBeans);
             mContext.startActivity(intent);
         });
         Glide.get(mContext).clearMemory();
-        Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.image_urls.getPx_480mw())
-                .bitmapTransform(new BlurTransformation(getContext(), 20, 2))
+        Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(mIllustsBeans))
+                .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(mImageView);
-        Glide.with(getContext()).load(Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.image_urls.getPx_480mw())
+        Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(mIllustsBeans))
                 .into(mImageView2);
         mTextView = view.findViewById(R.id.detail_author);
-        mTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, CloudMainActivity.class);
-            intent.putExtra("which one is selected", index);
-            intent.putExtra("where is from", "RankList");
-            mContext.startActivity(intent);
-        });
         mTextView2 = view.findViewById(R.id.detail_img_size);
         mTextView3 = view.findViewById(R.id.detail_create_time);
         mTextView4 = view.findViewById(R.id.viewed);
@@ -126,27 +112,36 @@ public class FragmentPixivItem extends BaseFragment {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
             }
-            realFile = new File(parentFile.getPath(), Reference.sPixivRankItem.response.get(0).works.get(index).work.getTitle() + "_" +
-                    Reference.sPixivRankItem.response.get(0).works.get(index).work.getId() + "_" +
+            realFile = new File(parentFile.getPath(), mIllustsBeans.getTitle() + "_" +
+                    mIllustsBeans.getId() + "_" +
                     String.valueOf(0) + ".jpeg");
             if (realFile.exists()) {
                 mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             } else {
-                asyncTask = new MyAsyncTask();
-                asyncTask.execute(Reference.sPixivRankItem.response.get(0).works
-                        .get(index).work.image_urls.getLarge());
+                asyncTask = new DownloadTask(realFile, mContext, mIllustsBeans);
+                if (mIllustsBeans.getPage_count() > 1) {
+                    asyncTask.execute(mIllustsBeans.getMeta_pages().get(0).getImage_urlsX().getOriginal());
+                } else {
+                    asyncTask.execute(mIllustsBeans.getMeta_single_page().getOriginal_image_url());
+                }
+                asyncTask = null;
             }
         });
         mCardView4 = view.findViewById(R.id.card_right);
         mCardView4.setOnClickListener(view1 -> {
             Intent intent = new Intent(mContext, CloudMainActivity.class);
-            intent.putExtra("which one is selected", index);
-            intent.putExtra("where is from", "RankList");
+            intent.putExtra("user id", mIllustsBeans.getUser().getId());
             mContext.startActivity(intent);
         });
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         TagGroup mTagGroup = view.findViewById(R.id.tag_group);
-        mTagGroup.setTags(Reference.sPixivRankItem.response.get(0).works.get(index).work.tags);
+        List<String> tagTemp = new ArrayList<>();
+        for (int i = 0; i < mIllustsBeans.getTags().size(); i++) {
+            tagTemp.add(mIllustsBeans.getTags().get(i).getName());
+        }
+        mTagGroup.setTags(tagTemp);
         mTagGroup.setOnTagClickListener(tag -> {
             ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData mClipData = ClipData.newPlainText("Label", tag);
@@ -154,42 +149,29 @@ public class FragmentPixivItem extends BaseFragment {
             TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
         });
         mTextView.setText(getString(R.string.string_author,
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getName()));
-        mTextView2.setText(getString(R.string.string_full_size, Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.getWidth(), Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.getHeight()));
-        mTextView3.setText(getString(R.string.string_create_time, Reference.sPixivRankItem.response.get(0)
-                .works.get(index).work.getCreated_time()));
-        mTextView4.setText(getString(R.string.string_viewd,
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.stats.getViews_count().substring(0,
-                        Reference.sPixivRankItem.response.get(0).works.get(index)
-                                .work.stats.getViews_count().length() - 3)));
-        if (Reference.sPixivRankItem.response.get(0).works.get(index).work.stats.getScored_count().length() <= 3) {
-            mTextView5.setText(Reference.sPixivRankItem.response.get(0).works
-                    .get(index).work.stats.getScored_count());
+                mIllustsBeans.getUser().getName()));
+        mTextView2.setText(getString(R.string.string_full_size, mIllustsBeans.getWidth(), mIllustsBeans.getHeight()));
+        mTextView3.setText(getString(R.string.string_create_time, mIllustsBeans.getCreate_date()));
+        if (mIllustsBeans.getTotal_view() >= 1000) {
+            mTextView4.setText(getString(R.string.string_viewd,
+                    String.valueOf(mIllustsBeans.getTotal_view() / 1000)));
         } else {
-            mTextView5.setText(getString(R.string.string_viewd,
-                    Reference.sPixivRankItem.response.get(0).works.get(index)
-                            .work.stats.getScored_count().substring(0, Reference.sPixivRankItem.response.get(0).works.get(index)
-                            .work.stats.getScored_count().length() - 3)));
+            mTextView4.setText(String.valueOf(mIllustsBeans.getTotal_view()));
         }
-        mTextView6.setText(getString(R.string.illust_id,
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.getId()));
-        mTextView7.setText(getString(R.string.author_id,
-                Reference.sPixivRankItem.response.get(0).works.get(index).work.user.getId()));
-        if (Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count() > 1) {
-            mTextView8.setText(String.format("%sP", Reference.sPixivRankItem.response.get(0).works.get(index).work.getPage_count()));
+        if (mIllustsBeans.getTotal_bookmarks() >= 1000) {
+            mTextView5.setText(getString(R.string.string_viewd,
+                    String.valueOf(mIllustsBeans.getTotal_bookmarks() / 1000)));
+
+        } else {
+            mTextView5.setText(String.valueOf(mIllustsBeans.getTotal_bookmarks()));
+        }
+        mTextView6.setText(getString(R.string.illust_id, String.valueOf(mIllustsBeans.getId())));
+        mTextView7.setText(getString(R.string.author_id, String.valueOf(mIllustsBeans.getUser().getId())));
+        if (mIllustsBeans.getPage_count() > 1) {
+            mTextView8.setText(String.format("%sP", String.valueOf(mIllustsBeans.getPage_count())));
         } else {
             mTextView8.setVisibility(View.INVISIBLE);
         }
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        progressDialog = new ProgressDialog(mContext);
-        progressDialog.setTitle("提示信息");
-        progressDialog.setMessage("正在下载...");
-        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", (dialog, which) -> progressDialog.dismiss());
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setCancelable(true);
     }
 
     @Override
@@ -199,68 +181,6 @@ public class FragmentPixivItem extends BaseFragment {
             if (getActivity() != null) {
                 ((ViewPagerActivity) getActivity()).changeTitle();
             }
-        }
-    }
-
-    private class MyAsyncTask extends AsyncTask<String, Integer, Bitmap> {
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog.show();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            InputStream inputStream = null;
-
-            Bitmap bitmap = null;
-            try {
-                FileOutputStream outputStream = new FileOutputStream(realFile);
-                URL url = new URL(params[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestProperty("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
-                        Reference.sPixivRankItem.response.get(0).works.get(index).work.getId());
-                connection.connect();
-                // 获取输入流
-                inputStream = connection.getInputStream();
-                // 获取文件流大小，用于更新进度
-                long file_length = connection.getContentLength();
-                int len;
-                int total_length = 0;
-                byte[] data = new byte[1024];
-                while ((len = inputStream.read(data)) != -1) {
-                    total_length += len;
-                    int value = (int) ((total_length / (float) file_length) * 100);
-                    // 调用update函数，更新进度
-                    publishProgress(value);
-                    outputStream.write(data, 0, len);
-                }
-                outputStream.close();
-                Common.refreshAlbum(mContext, realFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progressDialog.setProgress(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            progressDialog.dismiss();
-            mActivity.runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
-                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         }
     }
 }

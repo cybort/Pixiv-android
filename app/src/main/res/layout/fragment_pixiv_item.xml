@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/item_background_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,8 +34,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:background="#F4F4F4"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="#F4F4F4">
 
                     <ImageView
                         android:id="@+id/detail_img"
@@ -78,11 +78,11 @@
                         android:id="@+id/detail_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/sixteen_dip"
                         android:layout_marginEnd="85dp"
+                        android:layout_marginStart="@dimen/sixteen_dip"
                         android:layout_marginTop="@dimen/eight_dip"
-                        android:singleLine="true"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:textColor="@color/colorPrimary"
                         android:textSize="17sp" />
 
@@ -90,11 +90,11 @@
                         android:id="@+id/author_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:layout_below="@+id/detail_author"
                         android:layout_marginEnd="75dp"
                         android:layout_marginStart="@dimen/sixteen_dip"
                         android:layout_marginTop="4dp"
+                        android:singleLine="true"
                         android:textSize="17sp" />
 
                     <TextView
@@ -137,6 +137,7 @@
                         android:text="16k"
                         android:textSize="17sp" />
 
+
                     <ImageView
                         android:id="@+id/img_viewd"
                         android:layout_width="24dp"
@@ -144,6 +145,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/viewed"
                         android:layout_marginEnd="@dimen/sixteen_dip"
+                        android:contentDescription="TODO"
                         android:src="@drawable/ic_remove_red_eye_black_24dp" />
 
                     <TextView
@@ -152,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/viewed"
                         android:layout_marginEnd="4dp"
-                       android:layout_marginTop="3dp"
+                        android:layout_marginTop="3dp"
                         android:layout_toStartOf="@+id/img_liked"
                         android:text="6K"
                         android:textSize="17sp" />
@@ -161,10 +163,10 @@
                         android:id="@+id/img_liked"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginTop="1dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/liked"
                         android:layout_marginEnd="@dimen/sixteen_dip"
+                        android:layout_marginTop="1dp"
                         android:padding="1dp"
                         android:src="@drawable/ic_favorite_white_24dp" />
 
@@ -243,4 +245,4 @@
             </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

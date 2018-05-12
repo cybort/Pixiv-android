@@ -14,9 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
-import com.example.administrator.essim.models.HitoModel;
-import com.example.administrator.essim.models.HitokotoType;
+import com.example.administrator.essim.response.HitoModel;
+import com.example.administrator.essim.response.HitokotoType;
 
 import java.util.List;
 

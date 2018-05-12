@@ -1,97 +1,95 @@
 package com.example.administrator.essim.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.interfaces.OnItemClickListener;
-import com.example.administrator.essim.models.AuthorWorks;
-import com.example.administrator.essim.utils.Common;
+import com.example.administrator.essim.activities.OnItemClickListener;
+import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.utils.GlideUtil;
 
-
+/**
+ * Created by Administrator on 2018/3/23 0023.
+ */
 public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final int ITEM_TYPE_HEADER = 0;
+    private final int ITEM_TYPE_HEAD = 3;
+    private final int ITEM_TYPE_BOTTOM = 2;
     private final int ITEM_TYPE_CONTENT = 1;
-    private String mString;
     private Context mContext;
-    private AuthorWorks mBooksInfo;
     private LayoutInflater mLayoutInflater;
+    private List<IllustsBean> mPixivRankItem;
     private OnItemClickListener mOnItemClickListener;
 
-    public AuthorWorksAdapter(AuthorWorks booksInfo, Context context, String adapterType) {
-        mBooksInfo = booksInfo;
+    public AuthorWorksAdapter(List<IllustsBean> item, Context context) {
+        mPixivRankItem = item;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
-        mString = adapterType;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == ITEM_TYPE_HEAD) {
+            return new ItemHolder(mLayoutInflater.inflate(R.layout.head_blank, parent, false));
+        } else if (viewType == ITEM_TYPE_BOTTOM) {
+            return new BottomViewHolder(mLayoutInflater.inflate(R.layout.bottom_refresh, parent, false));
+        } else {
+            return new PhotoHolder(mLayoutInflater.inflate(R.layout.pixiv_item_grid, parent, false));
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int p) {
+
+        if (holder instanceof PhotoHolder) {
+            int position = p - 1;
+            Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(mPixivRankItem.get(position)))
+                    .into(((PhotoHolder) holder).mImageView);
+            if (mPixivRankItem.get(position).isIs_bookmarked()) {
+                ((PhotoHolder) holder).mImageView2.setImageResource(R.drawable.ic_favorite_white_24dp);
+            } else {
+                ((PhotoHolder) holder).mImageView2.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+            if (mPixivRankItem.get(position).getPage_count() > 1) {
+                ((PhotoHolder) holder).mTextView.setText(String.format("%sP", String.valueOf(mPixivRankItem.get(position).getPage_count())));
+            } else {
+                ((PhotoHolder) holder).mTextView.setVisibility(View.INVISIBLE);
+            }
+            if (mOnItemClickListener != null) {
+                ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
+                ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
+            }
+        } else if (holder instanceof BottomViewHolder) {
+            ((BottomViewHolder) holder).mTextView.setText("加载更多");
+            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1, 0));
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < 1) {
-            return ITEM_TYPE_HEADER;
-        } else {
+        if (position == 0) {
+            return ITEM_TYPE_HEAD;
+        } else if (position > 0 && position < mPixivRankItem.size() + 1) {
             return ITEM_TYPE_CONTENT;
+        } else {
+            return ITEM_TYPE_BOTTOM;
         }
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (mString.equals("searchResult")) {
-            // no need to set headLayout
-            return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
-        } else {
-            if (viewType == ITEM_TYPE_HEADER) {
-                return new ItemHolder(mLayoutInflater.inflate(R.layout.head_blank, parent, false));
-            } else {
-                return new ContentViewHolder(mLayoutInflater.inflate(R.layout.author_detail_item, parent, false));
-            }
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if (mString.equals("searchResult")) {
-            // no need to set headLayout
-            bindData(holder, position);
-        } else {
-            if (!(holder instanceof ItemHolder)) {
-                bindData(holder, position - 1);
-            }
-        }
-    }
-
-    private void bindData(final RecyclerView.ViewHolder holder, int position) {
-        ((ContentViewHolder) holder).mTextView.setText(mBooksInfo.response.get(position).getTitle());
-        if (mBooksInfo.response.get(position).stats.getViews_count().length() <= 3) {
-            ((ContentViewHolder) holder).mTextView4.setText(mBooksInfo.response.get(position).stats.getViews_count());
-        } else {
-            ((ContentViewHolder) holder).mTextView4.setText(mContext.getString(R.string.string_viewd,
-                    mBooksInfo.response.get(position).stats.getViews_count().substring(0,
-                            mBooksInfo.response.get(position).stats.getViews_count().length() - 3)));
-        }
-        if (Integer.valueOf(mBooksInfo.response.get(position).getPage_count()) > 1) {
-            ((ContentViewHolder) holder).mTextView2.setText(String.format("%sP", mBooksInfo.response.get(position).getPage_count()));
-        } else {
-            ((ContentViewHolder) holder).mTextView2.setVisibility(View.INVISIBLE);
-        }
-
-        Glide.with(mContext).load(mBooksInfo.response.get(position).image_urls.getPx_480mw())
-                .into(((ContentViewHolder) holder).mImageView);
-        Common.showLog("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
-                mBooksInfo.response.get(position).getId());
-        ((ContentViewHolder) holder).itemView.setOnClickListener(view -> {
-            mOnItemClickListener.onItemClick(view, position);
-            Common.showLog("点击了第" + String.valueOf(position));
-        });
-        ((ContentViewHolder) holder).mButton.setOnClickListener((view) -> mOnItemClickListener.onItemClick(view, position));
+    private int getContentItemCount() {
+        return mPixivRankItem.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
@@ -100,33 +98,39 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        if (mString.equals("searchResult")) {
-            return mBooksInfo.response.size();
+        if (mPixivRankItem.size() == 0) {
+            return 0;
         } else {
-            return mBooksInfo.response.size() + 1;
+            return getContentItemCount() + 2;
         }
     }
 
-    public static class ContentViewHolder extends RecyclerView.ViewHolder {
-        TextView mTextView;
-        TextView mTextView4;
-        TextView mTextView2;
-        ImageView mImageView;
-        Button mButton;
-
-        private ContentViewHolder(View itemView) {
-            super(itemView);
-            mTextView = itemView.findViewById(R.id.author_item_title);
-            mTextView2 = itemView.findViewById(R.id.all_item_size);
-            mTextView4 = itemView.findViewById(R.id.viewed);
-            mImageView = itemView.findViewById(R.id.author_item_img);
-            mButton = itemView.findViewById(R.id.check_detail);
-        }
-    }
-
-    private class ItemHolder extends RecyclerView.ViewHolder {
+    private static class ItemHolder extends RecyclerView.ViewHolder {
         private ItemHolder(View itemView) {
             super(itemView);
+        }
+    }
+
+    private static class PhotoHolder extends RecyclerView.ViewHolder {
+        private ImageView mImageView, mImageView2;
+        private TextView mTextView;
+
+        private PhotoHolder(final View itemView) {
+            super(itemView);
+            mImageView = itemView.findViewById(R.id.pixiv_image);
+            mImageView2 = itemView.findViewById(R.id.post_like);
+            mTextView = itemView.findViewById(R.id.pixiv_item_size);
+        }
+    }
+
+    private static class BottomViewHolder extends RecyclerView.ViewHolder {
+        private CardView mCardView;
+        private TextView mTextView;
+
+        private BottomViewHolder(View itemView) {
+            super(itemView);
+            mTextView = itemView.findViewById(R.id.get_more_data);
+            mCardView = itemView.findViewById(R.id.card_footer);
         }
     }
 }

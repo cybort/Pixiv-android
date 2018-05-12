@@ -1,4 +1,4 @@
-package com.example.administrator.essim.anotherProj;
+package com.example.administrator.essim.anotherproj;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,18 +11,16 @@ import com.example.administrator.essim.R;
 
 public class CloudMainActivity extends AppCompatActivity {
 
-    public int index;
-    public String where_is_from;
+    public int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        index = intent.getIntExtra("which one is selected", 0);
-        where_is_from = intent.getStringExtra("where is from");
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        Intent intent = getIntent();
+        userId = intent.getIntExtra("user id", 0);
         setContentView(R.layout.activity_main_myself);
     }
 }

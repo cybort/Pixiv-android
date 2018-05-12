@@ -18,13 +18,14 @@ import android.widget.TextView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
-import com.example.administrator.essim.models.HitoModel;
-import com.example.administrator.essim.models.HitokotoType;
+import com.example.administrator.essim.response.HitoModel;
+import com.example.administrator.essim.response.HitokotoType;
 import com.example.administrator.essim.utils.Common;
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,7 +39,7 @@ public class FragmentHitikoto extends BaseFragment {
 
     public static boolean need_to_refresh = false;
     private final String url_head = "https://v1.hitokoto.cn/?c=";
-    private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6;
+    private TextView mTextView1, mTextView2, mTextView3, mTextView4, mTextView5;
     private Button mButton, mButton2;
     private Toolbar mToolbar;
     private CardView mCardView;
@@ -60,8 +61,6 @@ public class FragmentHitikoto extends BaseFragment {
         mTextView3 = view.findViewById(R.id.hitokoto_date);
         mTextView4 = view.findViewById(R.id.hitokoto_catname);
         mTextView5 = view.findViewById(R.id.hitokoto_resouce);
-        mTextView6 = view.findViewById(R.id.toolbar_title_two);
-        mTextView6.setOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
         mButton = view.findViewById(R.id.refresh);
         mButton2 = view.findViewById(R.id.collect_it);
         mButton.setOnClickListener(v -> getData(url_head + catname));
@@ -110,9 +109,9 @@ public class FragmentHitikoto extends BaseFragment {
             }
         });
         mToolbar = view.findViewById(R.id.toolbar_hitokoto);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
+        ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(mToolbar);
+        mToolbar.setNavigationOnClickListener(v -> ((MainActivity) Objects.requireNonNull(getActivity()))
+                .getDrawer().openDrawer(Gravity.START, true));
     }
 
     private void getData(String address) {

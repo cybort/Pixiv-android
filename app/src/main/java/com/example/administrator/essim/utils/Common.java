@@ -3,18 +3,32 @@ package com.example.administrator.essim.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
-
-import com.example.administrator.essim.models.Reference;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.BookmarkAddResponse;
+import com.example.administrator.essim.response.IllustsBean;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by Administrator on 2017/10/28 0028.
@@ -62,6 +76,20 @@ import okhttp3.Request;
 
 public class Common {
 
+    private static AlphaAnimation alphaAnimationShowIcon;
+
+    public static AlphaAnimation getAnimation() {
+        alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
+        alphaAnimationShowIcon.setDuration(500);
+        return alphaAnimationShowIcon;
+    }
+
+    public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(address).build();
+        client.newCall(request).enqueue(callback);
+    }
+
     public static final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
             "10"};
     public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
@@ -80,14 +108,7 @@ public class Common {
     public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
             "mode=female&per_page=30&date=" + Common.getLastDay();
     public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
-    public static final String illust_item = "https://api.imjad.cn/pixiv/v1/?type=illust&id=";
 
-    //创建网络连接并且设置回调
-    public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(address).build();
-        client.newCall(request).enqueue(callback);
-    }
 
     public static boolean isNumeric(String str) {
         for (int i = str.length(); --i >= 0; ) {
@@ -96,6 +117,82 @@ public class Common {
             }
         }
         return true;
+    }
+
+    public static void postStarIllust(int position, List<IllustsBean> illustsBeans, String token, View view) {
+        List<String> illustTag = new ArrayList();
+        Iterator localIterator = illustsBeans.get(position).getTags().iterator();
+        while (localIterator.hasNext()) {
+            illustTag.add(((IllustsBean.TagsBean) localIterator.next()).getName());
+        }
+        Call<BookmarkAddResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .postLikeIllust(token, illustsBeans.get(position).getId(), "public", illustTag);
+        call.enqueue(new Callback<BookmarkAddResponse>() {
+            @Override
+            public void onResponse(Call<BookmarkAddResponse> call, retrofit2.Response<BookmarkAddResponse> response) {
+                illustsBeans.get(position).setIs_bookmarked(true);
+                Snackbar.make(view, "成功添加到收藏~", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<BookmarkAddResponse> call, Throwable throwable) {
+            }
+        });
+    }
+
+    public static void postUnstarIllust(int position, List<IllustsBean> illustsBeans, String token, View v) {
+        Call<ResponseBody> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .postUnlikeIllust(token, illustsBeans.get(position).getId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                illustsBeans.get(position).setIs_bookmarked(false);
+                Snackbar.make(v, "取消收藏~", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    public static void postFollowUser(String auth, int userID, View view) {
+        Call<BookmarkAddResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .postFollowUser(auth, userID, "public");
+        call.enqueue(new Callback<BookmarkAddResponse>() {
+            @Override
+            public void onResponse(Call<BookmarkAddResponse> call, retrofit2.Response<BookmarkAddResponse> response) {
+                Snackbar.make(view, "关注成功~", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<BookmarkAddResponse> call, Throwable throwable) {
+            }
+        });
+    }
+
+    public static void postUnFollowUser(String auth, int userID, View view) {
+        Call<ResponseBody> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .postUnfollowUser(auth, userID);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                Snackbar.make(view, "取消关注~", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            }
+        });
     }
 
     //接收时间戳，格式化时间并返回
@@ -135,27 +232,16 @@ public class Common {
         }
     }
 
-    public static String getRankType() {
-        switch (Reference.sFragmentPixivLeft.currentDataType) {
-            case 0:
-                return "日榜";
-            case 1:
-                return "周榜";
-            case 2:
-                return "月榜";
-            case 3:
-                return "新人";
-            case 4:
-                return "原创";
-            case 5:
-                return "男性向";
-            default:
-                return "女性向";
-        }
+    public static void clearLocalData(Context context) {
+        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
-    public static void refreshAlbum(Context context, File file) {
-        context.sendBroadcast(new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE", Uri.fromFile(file)));
+    //通知相册更新图片
+    public static void sendBroadcast(Context context, File file) {
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(file)));
     }
-
 }

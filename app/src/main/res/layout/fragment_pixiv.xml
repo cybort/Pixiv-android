@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -12,31 +11,24 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_pixiv"
             android:layout_width="match_parent"
+            app:title="Pixiv"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="@drawable/ic_menu_black_24dp"
+            app:navigationIcon="@drawable/ic_menu_black_24dp_two"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="#fff">
-
-            <TextView
-                android:id="@+id/toolbar_title_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tool_bar_title_one"
-                android:textColor="@color/white"
-                android:textSize="@dimen/tweenty_six_sp" />
-
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:tag="tab_indicator_accent_color,bg_primary_color"
             app:tabIndicatorHeight="3dp"
+            app:tabIndicatorColor="@color/light_pink"
             app:tabSelectedTextColor="#FFFFFF"
             app:tabTextColor="#FFFFFF" />
 
@@ -50,16 +42,5 @@
 
     </android.support.v4.view.ViewPager>
 
-    <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/eight_dip"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:bmb_buttonEnum="textInsideCircle"
-        app:bmb_piecePlaceEnum="piecePlace_dot_7_1"
-        app:bmb_buttonPlaceEnum="buttonPlace_sc_7_1" />
 
 </android.support.design.widget.CoordinatorLayout>

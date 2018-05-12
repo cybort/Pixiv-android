@@ -23,7 +23,7 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="hahah" />
         <item
-            android:id="@+id/nav_go_r_18"
+            android:id="@+id/nav_share"
             android:icon="@drawable/ic_directions_car_black_24dp"
             android:title="通往新世界的大门" />
         <item

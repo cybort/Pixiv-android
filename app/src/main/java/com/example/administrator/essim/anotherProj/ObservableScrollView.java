@@ -1,4 +1,4 @@
-package com.example.administrator.essim.anotherProj;
+package com.example.administrator.essim.anotherproj;
 
 import android.content.Context;
 import android.util.AttributeSet;

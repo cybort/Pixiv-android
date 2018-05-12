@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:fitsSystemWindows="true"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title=" " />
 

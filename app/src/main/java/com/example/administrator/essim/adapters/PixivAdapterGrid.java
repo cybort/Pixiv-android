@@ -10,25 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.interfaces.OnItemClickListener;
-import com.example.administrator.essim.models.PixivRankItem;
-import com.example.administrator.essim.utils.Common;
+import com.example.administrator.essim.activities.OnItemClickListener;
+import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.utils.GlideUtil;
 
 /**
  * Created by Administrator on 2018/3/23 0023.
  */
 public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final int ITEM_TYPE_CONTENT = 1;
     private final int ITEM_TYPE_BOTTOM = 2;
-    private PixivRankItem mPixivRankItem;
-    private LayoutInflater mLayoutInflater;
+    private final int ITEM_TYPE_CONTENT = 1;
     private Context mContext;
     private int mBottomCount = 1;
+    private LayoutInflater mLayoutInflater;
+    private List<IllustsBean> mPixivRankItem;
     private OnItemClickListener mOnItemClickListener;
 
-    public PixivAdapterGrid(PixivRankItem item, Context context) {
+    public PixivAdapterGrid(List<IllustsBean> item, Context context) {
         mPixivRankItem = item;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
@@ -46,27 +49,30 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotoHolder) {
-            Glide.with(mContext).load(mPixivRankItem.response.get(0).works.get(position).work.image_urls.getPx_480mw())
+            Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(mPixivRankItem.get(position)))
                     .into(((PhotoHolder) holder).mImageView);
-            if (mPixivRankItem.response.get(0).works.get(position).work.getPage_count() > 1) {
-                Common.showLog(mPixivRankItem.response.get(0).works.get(position).work.getPage_count());
-                ((PhotoHolder) holder).mTextView.setVisibility(View.VISIBLE);
-                ((PhotoHolder) holder).mTextView.setText(String.format("%sP", String.valueOf(mPixivRankItem.response.get(0).works.get(position).work.getPage_count())));
+            if (mPixivRankItem.get(position).isIs_bookmarked()) {
+                ((PhotoHolder) holder).mImageView2.setImageResource(R.drawable.ic_favorite_white_24dp);
+            } else {
+                ((PhotoHolder) holder).mImageView2.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+            if (mPixivRankItem.get(position).getPage_count() > 1) {
+                ((PhotoHolder) holder).mTextView.setText(String.format("%sP", String.valueOf(mPixivRankItem.get(position).getPage_count())));
             } else {
                 ((PhotoHolder) holder).mTextView.setVisibility(View.INVISIBLE);
             }
             if (mOnItemClickListener != null) {
-                ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
+                ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
+                ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
             }
         } else {
-            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1));
+            ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1, 0));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        int dataItemCount = getContentItemCount();
-        if (mBottomCount != 0 && position >= dataItemCount) {
+        if (mBottomCount != 0 && position >= mPixivRankItem.size()) {
             return ITEM_TYPE_BOTTOM;
         } else {
             return ITEM_TYPE_CONTENT;
@@ -74,7 +80,7 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private int getContentItemCount() {
-        return mPixivRankItem.response.get(0).works.size();
+        return mPixivRankItem.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
@@ -96,12 +102,13 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private class PhotoHolder extends RecyclerView.ViewHolder {
-        private ImageView mImageView;
+        private ImageView mImageView, mImageView2;
         private TextView mTextView;
 
         private PhotoHolder(final View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.pixiv_image);
+            mImageView2 = itemView.findViewById(R.id.post_like);
             mTextView = itemView.findViewById(R.id.pixiv_item_size);
         }
     }

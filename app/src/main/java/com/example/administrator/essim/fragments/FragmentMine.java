@@ -16,18 +16,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.adapters.ListHitokotoAdapter;
-import com.example.administrator.essim.interfaces.OnListHitokotoClickListener;
-import com.example.administrator.essim.models.HitoModel;
+import com.example.administrator.essim.adapters.OnListHitokotoClickListener;
+import com.example.administrator.essim.response.HitoModel;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Administrator on 2018/1/15 0015.
@@ -36,7 +36,6 @@ import java.util.List;
 public class FragmentMine extends BaseFragment {
 
     private Toolbar mToolbar;
-    private TextView mTextView;
     private RecyclerView mRecyclerView;
     private List<HitoModel> mHitoModels;
     private ListHitokotoAdapter mAdapter;
@@ -50,10 +49,8 @@ public class FragmentMine extends BaseFragment {
     private void initView(View view) {
         mToolbar = view.findViewById(R.id.toolbar_mine);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
-        mTextView = view.findViewById(R.id.toolbar_title_three);
-        mTextView.setOnClickListener(v -> MainActivity.sDrawerLayout.openDrawer(Gravity.START, true));
+        mToolbar.setNavigationOnClickListener(v -> ((MainActivity) Objects.requireNonNull(getActivity()))
+                .getDrawer().openDrawer(Gravity.START, true));
         mRecyclerView = view.findViewById(R.id.mine_recy);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

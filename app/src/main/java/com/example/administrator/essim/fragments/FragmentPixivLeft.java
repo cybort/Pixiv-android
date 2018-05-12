@@ -1,85 +1,65 @@
 package com.example.administrator.essim.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.adapters.PixivAdapterGrid;
-import com.example.administrator.essim.models.PixivRankItem;
-import com.example.administrator.essim.models.Reference;
-import com.example.administrator.essim.utils.Common;
-import com.google.gson.Gson;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.sdsmdg.tastytoast.TastyToast;
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Objects;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-import static com.example.administrator.essim.utils.Common.url_rank_daily;
-import static com.example.administrator.essim.utils.Common.url_rank_female;
-import static com.example.administrator.essim.utils.Common.url_rank_male;
-import static com.example.administrator.essim.utils.Common.url_rank_monthly;
-import static com.example.administrator.essim.utils.Common.url_rank_original;
-import static com.example.administrator.essim.utils.Common.url_rank_rookie;
-import static com.example.administrator.essim.utils.Common.url_rank_weekly;
-
-/**
- * Created by Administrator on 2018/1/15 0015.
- */
+import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.MainActivity;
+import com.example.administrator.essim.activities.ViewPagerActivity;
+import com.example.administrator.essim.adapters.PixivAdapterGrid;
+import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.api.OAuthSecureService;
+import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.PixivOAuthResponse;
+import com.example.administrator.essim.response.RecommendResponse;
+import com.example.administrator.essim.response.Reference;
+import com.example.administrator.essim.utils.Common;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class FragmentPixivLeft extends BaseFragment {
 
-    private static final int PER_PAGE_SIZE = Common.arrayOfString.length;
-    public int now_page = 1;
-    public int currentDataType;
-    public String now_link_address;
-    private PixivAdapterGrid mPixivAdapter;
-    private String responseData = "";
-    private RecyclerView mRecyclerView;
-    private BoomMenuButton bmb;
-    private Gson gson = new Gson();
-    private PullToRefreshView mPullToRefreshView;
+    private String next_url;
     private ProgressBar mProgressBar;
+    private RecyclerView mRecyclerView;
+    private PixivAdapterGrid mPixivAdapter;
+    private SharedPreferences mSharedPreferences;
+    private PullToRefreshView mPullToRefreshView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pixiv_left, container, false);
-        Reference.sFragmentPixivLeft = this;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_pixiv_left, container, false);
+        initView(v);
+        getData();
+        return v;
+    }
 
-        mRecyclerView = view.findViewById(R.id.pixiv_recy);
-        bmb = getActivity().findViewById(R.id.bmb);
-        mProgressBar = view.findViewById(R.id.loading);
-        mPullToRefreshView = view.findViewById(R.id.pull_wo_refresh);
-        mPullToRefreshView.setOnRefreshListener(() -> {
-            if (now_page <= PER_PAGE_SIZE) {
-                getData(now_link_address + "&page=" + String.valueOf(now_page), true);
-            } else {
-                TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                mPullToRefreshView.setRefreshing(false);
-            }
-        });
-
-        /*
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mContext);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));*/
+    private void initView(View v) {
+        mProgressBar = v.findViewById(R.id.try_login);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mRecyclerView = v.findViewById(R.id.pixiv_recy);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (mPixivAdapter.getItemViewType(position) == 2 || mPixivAdapter.getItemViewType(position) == 3) {
+                if (mPixivAdapter.getItemViewType(position) == 2) {
                     return gridLayoutManager.getSpanCount();
                 } else {
                     return 1;
@@ -88,122 +68,132 @@ public class FragmentPixivLeft extends BaseFragment {
         });
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-
-                } else {
-                }
-            }
-        });
-        now_link_address = url_rank_daily;
-        getData(url_rank_daily, false);
-        currentDataType = 0;
-        ((FragmentPixiv) getParentFragment()).setChangeDataSet(dataType -> {
-            switch (dataType) {
-                case 0:
-                    if (currentDataType != 0) {
-                        now_page = 1;
-                        now_link_address = url_rank_daily;
-                        getData(url_rank_daily, false);
-                        currentDataType = 0;
-                    }
-                    break;
-                case 1:
-                    if (currentDataType != 1) {
-                        now_page = 1;
-                        now_link_address = url_rank_weekly;
-                        getData(url_rank_weekly, false);
-                        currentDataType = 1;
-                    }
-                    break;
-                case 2:
-                    if (currentDataType != 2) {
-                        now_page = 1;
-                        now_link_address = url_rank_monthly;
-                        getData(url_rank_monthly, false);
-                        currentDataType = 2;
-                    }
-                    break;
-                case 3:
-                    if (currentDataType != 3) {
-                        now_page = 1;
-                        now_link_address = url_rank_rookie;
-                        getData(url_rank_rookie, false);
-                        currentDataType = 3;
-                    }
-                    break;
-                case 4:
-                    if (currentDataType != 4) {
-                        now_page = 1;
-                        now_link_address = url_rank_original;
-                        getData(url_rank_original, false);
-                        currentDataType = 4;
-                    }
-                    break;
-                case 5:
-                    if (currentDataType != 5) {
-                        now_page = 1;
-                        now_link_address = url_rank_male;
-                        getData(url_rank_male, false);
-                        currentDataType = 5;
-                    }
-                    break;
-                case 6:
-                    if (currentDataType != 6) {
-                        now_page = 1;
-                        now_link_address = url_rank_female;
-                        getData(url_rank_female, false);
-                        currentDataType = 6;
-                    }
-                    break;
-            }
-        });
-        return view;
+        mPullToRefreshView = v.findViewById(R.id.pull_wo_refresh);
+        mPullToRefreshView.setOnRefreshListener(this::getNextData);
+        mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
     }
 
-    public void getData(String address, boolean stopRefresh) {
+    private void getData() {
         mProgressBar.setVisibility(View.VISIBLE);
-        Common.sendOkhttpRequest(address, new Callback() {
+        Call<RecommendResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getRecommend(mSharedPreferences.getString("Authorization", ""));
+        call.enqueue(new Callback<RecommendResponse>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                mProgressBar.setVisibility(View.GONE);
-                getActivity().runOnUiThread(() -> TastyToast.makeText(mContext, "数据加载失败", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
+                Reference.sRecommendResponse = response.body();
+                try {
+                    mPixivAdapter = new PixivAdapterGrid(Reference.sRecommendResponse.getIllusts(), mContext);
+                    next_url = Reference.sRecommendResponse.getNext_url();
+                    Reference.sFragmentPixivRight.getData();
+                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
+                        if (position == -1) {
+                            getNextData();
+                        } else if (viewType == 0) {
+                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                            intent.putExtra("which one is selected", position);
+                            intent.putExtra("all illust", (Serializable) Reference.sRecommendResponse.getIllusts());
+                            mContext.startActivity(intent);
+                        } else if (viewType == 1) {
+                            if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
+                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
+                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                            } else {
+                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
+                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                            }
+                        }
+                    });
+                    mRecyclerView.setAdapter(mPixivAdapter);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                } catch (Exception e) {
+                    reLogin();
+                }
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                responseData = response.body().string();
-                Reference.sPixivRankItem = gson.fromJson(responseData, PixivRankItem.class);
-                mPixivAdapter = new PixivAdapterGrid(Reference.sPixivRankItem, mContext);
-                mPixivAdapter.setOnItemClickListener((view, position) -> {
+            public void onFailure(Call<RecommendResponse> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    private void getNextData() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        Call<RecommendResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getNext(mSharedPreferences.getString("Authorization", ""), next_url);
+        call.enqueue(new Callback<RecommendResponse>() {
+            @Override
+            public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
+                Reference.sRecommendResponse = response.body();
+                mPixivAdapter = new PixivAdapterGrid(Reference.sRecommendResponse.getIllusts(), mContext);
+                next_url = Reference.sRecommendResponse.getNext_url();
+                mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
                     if (position == -1) {
-                        if (now_page <= PER_PAGE_SIZE) {
-                            getData(now_link_address + "&page=" + String.valueOf(now_page), true);
-                        } else {
-                            TastyToast.makeText(mContext, "没有更多数据啦~", TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
-                        }
-                    } else {
+                        getNextData();
+                    } else if (viewType == 0) {
                         Intent intent = new Intent(mContext, ViewPagerActivity.class);
                         intent.putExtra("which one is selected", position);
-                        intent.putExtra("where is from", "FragmentLeft");
+                        intent.putExtra("all illust", (Serializable) Reference.sRecommendResponse.getIllusts());
                         mContext.startActivity(intent);
+                    } else if (viewType == 1) {
+                        if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
+                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                            ((ImageView) view).startAnimation(Common.getAnimation());
+                            Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
+                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                        } else {
+                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            ((ImageView) view).startAnimation(Common.getAnimation());
+                            Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
+                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                        }
                     }
                 });
-                getActivity().runOnUiThread(() -> {
-                    mRecyclerView.setAdapter(mPixivAdapter);
-                    mPixivAdapter.notifyDataSetChanged();
-                    if (stopRefresh) {
-                        mPullToRefreshView.setRefreshing(false);
-                    }
-                    mProgressBar.setVisibility(View.GONE);
-                });
-                ((FragmentPixiv) getParentFragment()).gotoPage = now_page;
-                now_page++;
-                Common.showLog(now_link_address);
+                mRecyclerView.setAdapter(mPixivAdapter);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mPullToRefreshView.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<RecommendResponse> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    private void reLogin() {
+        Snackbar.make(mRecyclerView, "获取登录信息, 请稍候", Snackbar.LENGTH_SHORT).show();
+        HashMap localHashMap = new HashMap();
+        localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
+        localHashMap.put("client_secret", "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP");
+        localHashMap.put("grant_type", "password");
+        localHashMap.put("username", mSharedPreferences.getString("username", ""));
+        localHashMap.put("password", mSharedPreferences.getString("password", ""));
+        Call<PixivOAuthResponse> call = new RestClient().getretrofit_OAuthSecure().create(OAuthSecureService.class).postAuthToken(localHashMap);
+        call.enqueue(new Callback<PixivOAuthResponse>() {
+            @Override
+            public void onResponse(Call<PixivOAuthResponse> call, retrofit2.Response<PixivOAuthResponse> response) {
+                PixivOAuthResponse pixivOAuthResponse = response.body();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                StringBuilder localStringBuilder = new StringBuilder();
+                localStringBuilder.append("Bearer ");
+                localStringBuilder.append(pixivOAuthResponse.getResponse().getAccess_token());
+                editor.putString("Authorization", localStringBuilder.toString());
+                editor.apply();
+                getData();
+            }
+
+            @Override
+            public void onFailure(Call<PixivOAuthResponse> call, Throwable throwable) {
             }
         });
     }

@@ -5,6 +5,6 @@
     <version value="1"></version>
 
     <list>
-        <mapping class="com.example.administrator.essim.models.HitoModel"></mapping>
+        <mapping class="com.example.administrator.essim.response.HitoModel" />
     </list>
 </litepal>

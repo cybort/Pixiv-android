@@ -23,16 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".activities.ViewPagerActivity" />
-        <activity android:name=".anotherProj.CloudMainActivity" />
-        <activity android:name=".activities.TagResultActivity" />
-        <activity
-            android:name=".activities.MyWelcomeActivity"
-            android:theme="@style/WelcomeScreenTheme" />
+        <activity android:name=".activities.FollowShowActivity" />
         <activity android:name=".activities.ImageDetailActivity" />
+        <activity android:name=".activities.NewUserActivity" />
+        <activity android:name=".activities.SearchTagActivity" />
+        <activity android:name=".activities.ViewPagerActivity" />
+        <activity android:name=".anotherproj.CloudMainActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.SearchIDActivity"></activity>
+        <activity android:name=".activities.SearchActivity" />
+        <activity android:name=".activities.AboutActivity" />
     </application>
 
 </manifest>

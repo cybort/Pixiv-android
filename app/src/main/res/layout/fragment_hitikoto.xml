@@ -12,17 +12,10 @@
         android:elevation="@dimen/three_dip"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_menu_black_24dp"
+        app:navigationIcon="@drawable/ic_menu_black_24dp_two"
+        app:title="Hitokoto"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextColor="#fff">
-
-        <TextView
-            android:id="@+id/toolbar_title_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tool_bar_title_two"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tweenty_six_sp" />
 
     </android.support.v7.widget.Toolbar>
 
