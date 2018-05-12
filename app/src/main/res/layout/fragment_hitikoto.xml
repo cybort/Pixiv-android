@@ -13,8 +13,8 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_scrollFlags="scroll|enterAlways"
         app:navigationIcon="@drawable/ic_menu_black_24dp_two"
-        app:title="Hitokoto"
         app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:title="Hitokoto"
         app:titleTextColor="#fff">
 
     </android.support.v7.widget.Toolbar>

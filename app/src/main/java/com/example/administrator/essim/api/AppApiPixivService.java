@@ -1,8 +1,6 @@
 package com.example.administrator.essim.api;
 
 
-import java.util.List;
-
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustRankingResponse;
 import com.example.administrator.essim.response.PixivResponse;
@@ -12,6 +10,9 @@ import com.example.administrator.essim.response.SearchUserResponse;
 import com.example.administrator.essim.response.TrendingtagResponse;
 import com.example.administrator.essim.response.UserDetailResponse;
 import com.example.administrator.essim.response.UserIllustsResponse;
+
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -31,6 +32,7 @@ public interface AppApiPixivService {
                                                @Query("bookmark_num") Integer paramInteger,
                                                @Query("duration") String paramString4,
                                                @Header("Authorization") String paramString5);
+
     @FormUrlEncoded
     @POST("/v2/illust/bookmark/add")
     Call<BookmarkAddResponse> postLikeIllust(@Header("Authorization") String paramString1,
@@ -77,6 +79,7 @@ public interface AppApiPixivService {
     @GET
     Call<SearchUserResponse> getNextUser(@Header("Authorization") String paramString1,
                                          @Url String paramString2);
+
     @FormUrlEncoded
     @POST("/v1/illust/bookmark/delete")
     Call<ResponseBody> postUnlikeIllust(@Header("Authorization") String paramString,

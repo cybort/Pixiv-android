@@ -16,12 +16,12 @@
         android:layout_centerInParent="true" />
 
     <TextView
+        android:id="@+id/post_like_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/post_like_user"
+        android:layout_centerInParent="true"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
-        android:layout_centerInParent="true"/>
+        android:textSize="16sp" />
 
 </RelativeLayout>
 

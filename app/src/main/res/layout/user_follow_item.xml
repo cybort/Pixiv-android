@@ -25,29 +25,29 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/user_show_one"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="1"
-                android:id="@+id/user_show_one"
                 android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/user_show_two"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="2dp"
-                android:id="@+id/user_show_two"
                 android:layout_marginStart="2dp"
                 android:layout_weight="1"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/user_show_three"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="2dp"
                 android:layout_weight="1"
-                android:id="@+id/user_show_three"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
         </LinearLayout>
 
@@ -66,16 +66,16 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:layout_alignTop="@+id/user_head"
             android:layout_marginStart="@dimen/eight_dip"
             android:layout_marginTop="35dp"
-            android:layout_toEndOf="@+id/user_head"/>
+            android:layout_toEndOf="@+id/user_head"
+            android:textColor="@color/colorPrimary" />
 
         <Button
+            android:id="@+id/post_like_user"
             android:layout_width="60dp"
             android:layout_height="30dp"
-            android:id="@+id/post_like_user"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/user_follow_linear"
             android:layout_margin="11dp"

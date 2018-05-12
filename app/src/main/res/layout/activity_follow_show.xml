@@ -8,18 +8,18 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@color/white"
-        android:elevation="4dp"
         android:background="@color/colorPrimary"
+        android:elevation="4dp"
         app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:title=" " />
+        app:title=" "
+        app:titleTextColor="@color/white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pixiv_recy"
         android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
     </android.support.v7.widget.RecyclerView>
 

@@ -4,8 +4,8 @@
     android:id="@+id/card_pixiv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:layout_margin="6dp"
+    android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:stateListAnimator="@animator/touch_raise"
     app:cardCornerRadius="@dimen/card_recycler_elevation">
@@ -24,9 +24,9 @@
         <TextView
             android:id="@+id/pixiv_item_size"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/pixiv_image"
             android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
             android:padding="3dp"
             android:textColor="@color/white"
             android:textSize="14sp" />

@@ -34,6 +34,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public SharedPreferences mSharedPreferences;
     private long mExitTime;
     private boolean isLogin;
     private Context mContext;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int lastShowFragment;
     private Fragment[] mFragments;
     private TextView mTextView, mTextView2;
-    public SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

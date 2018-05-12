@@ -16,10 +16,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
@@ -29,6 +25,11 @@ import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserIllustsResponse;
 import com.example.administrator.essim.utils.Common;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 
 
@@ -103,12 +104,10 @@ public class HomeProfileFragment extends ScrollObservableFragment {
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
-                if(response.body().getIllusts().size() == 0)
-                {
+                if (response.body().getIllusts().size() == 0) {
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mTextView.setText("这里空空的，什么也没有~");
-                }
-                else {
+                } else {
                     Reference.sUserWorksResponse = response.body();
                     mIllustsBeanList.addAll(Reference.sUserWorksResponse.getIllusts());
                     mPixivAdapterGrid = new AuthorWorksAdapter(mIllustsBeanList, mContext);

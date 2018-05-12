@@ -19,12 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sdsmdg.tastytoast.TastyToast;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
@@ -32,6 +26,12 @@ import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
+import com.sdsmdg.tastytoast.TastyToast;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.gujun.android.taggroup.TagGroup;
 

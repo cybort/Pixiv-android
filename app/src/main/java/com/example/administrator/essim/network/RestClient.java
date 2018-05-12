@@ -55,8 +55,7 @@ public class RestClient {
         return retrofit_AppAPI;
     }
 
-    public Retrofit getRetrofit_Account()
-    {
+    public Retrofit getRetrofit_Account() {
         Gson localGson = new GsonBuilder().create();
         retrofit_AppAPI = new Retrofit.Builder().baseUrl("https://accounts.pixiv.net/")
                 .client(getOkHttpClient())

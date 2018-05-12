@@ -11,13 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.List;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.OnItemClickListener;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.GlideUtil;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/3/23 0023.

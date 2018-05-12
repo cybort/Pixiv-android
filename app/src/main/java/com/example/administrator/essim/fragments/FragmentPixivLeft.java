@@ -14,12 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.yalantis.phoenix.PullToRefreshView;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Objects;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
@@ -31,6 +25,12 @@ import com.example.administrator.essim.response.PixivOAuthResponse;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
+import com.yalantis.phoenix.PullToRefreshView;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 

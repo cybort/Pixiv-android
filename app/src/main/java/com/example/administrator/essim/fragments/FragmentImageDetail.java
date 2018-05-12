@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.Objects;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.GlideUtil;
+
+import java.util.Objects;
 
 public class FragmentImageDetail extends BaseFragment {
 

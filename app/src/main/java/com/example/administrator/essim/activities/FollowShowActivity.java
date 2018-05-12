@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.UserFollowAdapter;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
@@ -22,6 +21,7 @@ import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchUserResponse;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 

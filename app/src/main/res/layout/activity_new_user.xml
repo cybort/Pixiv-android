@@ -15,7 +15,7 @@
         android:fitsSystemWindows="true"
         app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:title=" "/>
+        app:title=" " />
 
     <ImageView
         android:id="@+id/login_logo"
@@ -50,24 +50,24 @@
             <EditText
                 android:id="@+id/login_username"
                 android:layout_width="match_parent"
-                android:singleLine="true"
-                android:maxLines="1"
                 android:layout_height="wrap_content"
-                android:hint="@string/input_your_nico" />
+                android:hint="@string/input_your_nico"
+                android:maxLines="1"
+                android:singleLine="true" />
 
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_login"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/card_pixiv"
-        android:clickable="true"
-        android:id="@+id/card_login"
+        android:layout_marginEnd="45dp"
         android:layout_marginStart="45dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="45dp"
+        android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:stateListAnimator="@animator/touch_raise"
         app:cardCornerRadius="@dimen/card_recycler_elevation"
@@ -75,20 +75,20 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:text="创建"
-            android:textSize="17sp"
-            android:textColor="#2196f3"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_height="wrap_content" />
+            android:text="创建"
+            android:textColor="#2196f3"
+            android:textSize="17sp" />
 
     </android.support.v7.widget.CardView>
 
     <ProgressBar
-        android:layout_width="wrap_content"
         android:id="@+id/try_login"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp" />
 
 </RelativeLayout>

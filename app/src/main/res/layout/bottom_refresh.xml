@@ -15,10 +15,10 @@
     app:cardCornerRadius="@dimen/card_recycler_elevation">
 
     <TextView
+        android:id="@+id/get_more_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/get_more_data"
         android:text="刷新"
         android:textColor="@color/white"
         android:textSize="@dimen/nineteen_sp" />

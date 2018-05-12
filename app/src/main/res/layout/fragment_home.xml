@@ -67,10 +67,10 @@
                     android:id="@+id/center_one"
                     android:layout_width="2dp"
                     android:layout_height="15dp"
-                    android:layout_marginTop="4dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginEnd="@dimen/twelve_dip"
                     android:layout_marginStart="@dimen/twelve_dip"
+                    android:layout_marginTop="4dp"
                     android:background="@color/white" />
 
                 <TextView
@@ -82,16 +82,16 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="70dp"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
                     android:id="@+id/post_like_user"
-                    android:padding="2dp"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
+                    android:layout_toEndOf="@+id/author_follow"
                     android:background="@drawable/btn_bg_white"
+                    android:gravity="center"
+                    android:padding="2dp"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:layout_toEndOf="@+id/author_follow"/>
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 

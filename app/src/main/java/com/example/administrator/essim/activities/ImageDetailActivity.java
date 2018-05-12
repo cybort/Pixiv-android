@@ -12,20 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sdsmdg.tastytoast.TastyToast;
-
-import java.io.File;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentImageDetail;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.DownloadTask;
+import com.sdsmdg.tastytoast.TastyToast;
+
+import java.io.File;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
-    private Context mContext;
     public ViewPager mViewPager;
     public IllustsBean mIllustsBean;
+    private Context mContext;
     private File parentFile, realFile;
     private DownloadTask mDownloadTask;
     private TextView mTextView, mTextView2;

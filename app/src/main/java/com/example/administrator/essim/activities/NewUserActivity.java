@@ -15,14 +15,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import java.util.HashMap;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.api.AccountPixivService;
 import com.example.administrator.essim.api.OAuthSecureService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.PixivAccountsResponse;
 import com.example.administrator.essim.response.PixivOAuthResponse;
+
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -93,8 +94,7 @@ public class NewUserActivity extends AppCompatActivity {
         });
     }
 
-    private void loginIn(HashMap localHashMap)
-    {
+    private void loginIn(HashMap localHashMap) {
         Call<PixivOAuthResponse> call = new RestClient().getretrofit_OAuthSecure().create(OAuthSecureService.class).postAuthToken(localHashMap);
         call.enqueue(new Callback<PixivOAuthResponse>() {
             @Override

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.example.administrator.essim.response.IllustsBean;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -16,16 +17,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.example.administrator.essim.response.IllustsBean;
-
 public class DownloadTask extends AsyncTask<String, Integer, Bitmap> {
 
     private ProgressDialog progressDialog;
     private File realFile;
     private Context mContext;
     private IllustsBean mIllustsBeans;
-    public DownloadTask(File file, Context context, IllustsBean illustsBean)
-    {
+
+    public DownloadTask(File file, Context context, IllustsBean illustsBean) {
         realFile = file;
         mContext = context;
         mIllustsBeans = illustsBean;
@@ -36,6 +35,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Bitmap> {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCancelable(true);
     }
+
     @Override
     protected void onPreExecute() {
         progressDialog.show();
@@ -91,7 +91,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         progressDialog.dismiss();
-        ((Activity)mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
+        ((Activity) mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
                 TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
     }
 }

@@ -15,7 +15,7 @@
         app:navigationIcon="@drawable/ic_menu_black_24dp_two"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="Mine"
-        app:titleTextColor="#fff"/>
+        app:titleTextColor="#fff" />
 
 
     <android.support.v7.widget.RecyclerView

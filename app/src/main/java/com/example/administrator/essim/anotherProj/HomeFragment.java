@@ -23,12 +23,6 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.FollowShowActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
@@ -37,6 +31,12 @@ import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserDetailResponse;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 
@@ -173,8 +173,7 @@ public class HomeFragment extends Fragment {
             mTextView3.setVisibility(View.VISIBLE);
             if (userDetailResponse.getUser().isIs_followed()) {
                 mTextView3.setText("取消关注");
-            }
-            else {
+            } else {
                 mTextView3.setText("+关注");
             }
             mTextView3.setOnClickListener(view -> {

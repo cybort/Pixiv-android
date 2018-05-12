@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.List;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.Common;
+
+import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity {
 

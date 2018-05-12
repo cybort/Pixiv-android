@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -11,15 +11,14 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_pixiv"
             android:layout_width="match_parent"
-            app:title="Pixiv"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_menu_black_24dp_two"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="#fff">
-        </android.support.v7.widget.Toolbar>
+            app:title="Pixiv"
+            app:titleTextColor="#fff"></android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -27,8 +26,8 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:tag="tab_indicator_accent_color,bg_primary_color"
-            app:tabIndicatorHeight="3dp"
             app:tabIndicatorColor="@color/light_pink"
+            app:tabIndicatorHeight="3dp"
             app:tabSelectedTextColor="#FFFFFF"
             app:tabTextColor="#FFFFFF" />
 

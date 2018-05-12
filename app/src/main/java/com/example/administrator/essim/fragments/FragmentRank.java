@@ -20,14 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.Util;
-
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.LoginActivity;
 import com.example.administrator.essim.activities.MainActivity;
@@ -40,6 +32,14 @@ import com.example.administrator.essim.response.IllustRankingResponse;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.Util;
+
+import java.io.Serializable;
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -50,6 +50,8 @@ import retrofit2.Callback;
 
 public class FragmentRank extends BaseFragment {
 
+    private static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
+    private static final String[] modelist = {"day", "week", "month", "week_rookie", "week_original", "day_male", "day_female"};
     public int currentDataType = 0;
     private String next_url;
     private SharedPreferences mSharedPreferences;
@@ -58,8 +60,54 @@ public class FragmentRank extends BaseFragment {
     private BoomMenuButton bmb;
     private ProgressBar mProgressBar;
     private Toolbar toolbar;
-    private static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
-    private static final String[] modelist = {"day", "week", "month", "week_rookie", "week_original", "day_male", "day_female"};
+    private OnBMClickListener clickListener = index -> {
+        switch (index) {
+            case 0:
+                if (currentDataType != 0) {
+                    currentDataType = 0;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 1:
+                if (currentDataType != 1) {
+                    currentDataType = 1;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 2:
+                if (currentDataType != 2) {
+                    currentDataType = 2;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 3:
+                if (currentDataType != 3) {
+                    currentDataType = 3;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 4:
+                if (currentDataType != 4) {
+                    currentDataType = 4;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 5:
+                if (currentDataType != 5) {
+                    currentDataType = 5;
+                    getRankList(currentDataType);
+                }
+                break;
+            case 6:
+                if (currentDataType != 6) {
+                    currentDataType = 6;
+                    getRankList(currentDataType);
+                }
+                break;
+            default:
+                break;
+        }
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -210,55 +258,6 @@ public class FragmentRank extends BaseFragment {
             Snackbar.make(mProgressBar, "再怎么找也找不到了~", Snackbar.LENGTH_SHORT).show();
         }
     }
-
-    private OnBMClickListener clickListener = index -> {
-        switch (index) {
-            case 0:
-                if (currentDataType != 0) {
-                    currentDataType = 0;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 1:
-                if (currentDataType != 1) {
-                    currentDataType = 1;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 2:
-                if (currentDataType != 2) {
-                    currentDataType = 2;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 3:
-                if (currentDataType != 3) {
-                    currentDataType = 3;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 4:
-                if (currentDataType != 4) {
-                    currentDataType = 4;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 5:
-                if (currentDataType != 5) {
-                    currentDataType = 5;
-                    getRankList(currentDataType);
-                }
-                break;
-            case 6:
-                if (currentDataType != 6) {
-                    currentDataType = 6;
-                    getRankList(currentDataType);
-                }
-                break;
-            default:
-                break;
-        }
-    };
 
     @Override
     public void onCreate(Bundle b) {

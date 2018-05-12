@@ -33,10 +33,10 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
+                android:layout_marginBottom="4dp"
                 android:layout_marginLeft="@dimen/eight_dip"
                 android:layout_marginRight="@dimen/eight_dip"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
                 android:background="@drawable/round"
                 android:backgroundTint="@color/colorPrimary"
                 android:transitionName="shareView">
@@ -110,11 +110,11 @@
             <ImageView
                 android:id="@+id/img_liked"
                 android:layout_width="24dp"
-                android:layout_marginTop="1dp"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/liked"
                 android:layout_marginEnd="@dimen/twelve_dip"
+                android:layout_marginTop="1dp"
                 android:padding="1dp"
                 android:src="@drawable/ic_favorite_white_24dp" />
 

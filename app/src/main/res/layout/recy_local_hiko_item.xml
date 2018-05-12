@@ -24,10 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginTop="6dp"
-            android:layout_marginStart="@dimen/twelve_dip"
             android:layout_marginBottom="6dp"
             android:layout_marginEnd="@dimen/twelve_dip"
+            android:layout_marginStart="@dimen/twelve_dip"
+            android:layout_marginTop="6dp"
             android:background="@drawable/round"
             android:backgroundTint="@color/colorPrimary"
             android:transitionName="shareView">

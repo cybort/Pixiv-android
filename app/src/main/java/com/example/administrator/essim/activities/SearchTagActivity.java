@@ -18,8 +18,6 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import java.io.Serializable;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.api.AppApiPixivService;
@@ -28,11 +26,17 @@ import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchIllustResponse;
 import com.example.administrator.essim.utils.Common;
+
+import java.io.Serializable;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class SearchTagActivity extends AppCompatActivity {
 
+    private static final String[] sort = {"popular_desc", "date_desc"};
+    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
+            " 5000users入り", " 10000users入り"};
     public String ketWords;
     private String next_url;
     private Toolbar mToolbar;
@@ -45,9 +49,6 @@ public class SearchTagActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     private AlphaAnimation alphaAnimationShowIcon;
     private String temp;
-    private static final String[] sort = {"popular_desc", "date_desc"};
-    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
-            " 5000users入り", " 10000users入り"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,8 +203,8 @@ public class SearchTagActivity extends AppCompatActivity {
                 getData(sort[1], arrayOfSearchType[nowSearchType]);
             }
         })
-        .setNegativeButton("取消", (dialogInterface, i) -> {
-        });
+                .setNegativeButton("取消", (dialogInterface, i) -> {
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }

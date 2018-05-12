@@ -2,13 +2,12 @@ package com.example.administrator.essim.utils;
 
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.Headers;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.SearchUserResponse;
 import com.example.administrator.essim.response.UserDetailResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GlideUtil {
 

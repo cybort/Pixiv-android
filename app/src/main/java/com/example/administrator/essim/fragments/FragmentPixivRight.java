@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import java.util.Objects;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
@@ -21,6 +19,9 @@ import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.TrendingtagResponse;
+
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -38,8 +39,7 @@ public class FragmentPixivRight extends BaseFragment {
         return v;
     }
 
-    private void initView(View v)
-    {
+    private void initView(View v) {
         Reference.sFragmentPixivRight = this;
         mProgressBar = v.findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -50,8 +50,7 @@ public class FragmentPixivRight extends BaseFragment {
         mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
     }
 
-    public void getData()
-    {
+    public void getData() {
         mProgressBar.setVisibility(View.VISIBLE);
         Call<TrendingtagResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
@@ -66,7 +65,7 @@ public class FragmentPixivRight extends BaseFragment {
                     mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
                         Intent intent = new Intent(mContext, SearchTagActivity.class);
                         intent.putExtra("what is the keyword", Reference.sTrendingtagResponse.getTrend_tags()
-                        .get(position).getTag());
+                                .get(position).getTag());
                         mContext.startActivity(intent);
                     });
                     mRecyclerView.setAdapter(mPixivAdapter);

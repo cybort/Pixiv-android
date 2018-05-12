@@ -11,6 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
+import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.BookmarkAddResponse;
+import com.example.administrator.essim.response.IllustsBean;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,11 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import com.example.administrator.essim.api.AppApiPixivService;
-import com.example.administrator.essim.network.RestClient;
-import com.example.administrator.essim.response.BookmarkAddResponse;
-import com.example.administrator.essim.response.IllustsBean;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -76,20 +76,6 @@ import retrofit2.Callback;
 
 public class Common {
 
-    private static AlphaAnimation alphaAnimationShowIcon;
-
-    public static AlphaAnimation getAnimation() {
-        alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
-        alphaAnimationShowIcon.setDuration(500);
-        return alphaAnimationShowIcon;
-    }
-
-    public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(address).build();
-        client.newCall(request).enqueue(callback);
-    }
-
     public static final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
             "10"};
     public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
@@ -108,7 +94,19 @@ public class Common {
     public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
             "mode=female&per_page=30&date=" + Common.getLastDay();
     public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
+    private static AlphaAnimation alphaAnimationShowIcon;
 
+    public static AlphaAnimation getAnimation() {
+        alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
+        alphaAnimationShowIcon.setDuration(500);
+        return alphaAnimationShowIcon;
+    }
+
+    public static void sendOkhttpRequest(String address, okhttp3.Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(address).build();
+        client.newCall(request).enqueue(callback);
+    }
 
     public static boolean isNumeric(String str) {
         for (int i = str.length(); --i >= 0; ) {

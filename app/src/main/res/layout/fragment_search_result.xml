@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_result"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:id="@+id/card_result"
         android:layout_marginBottom="@dimen/eight_dip"
         android:layout_marginEnd="@dimen/sixteen_dip"
         android:layout_marginStart="@dimen/sixteen_dip"
@@ -23,10 +23,10 @@
 
 
             <RelativeLayout
-                android:layout_width="@dimen/author_item_width"
                 android:id="@+id/rela_left"
-                android:background="#F4F4F4"
-                android:layout_height="wrap_content">
+                android:layout_width="@dimen/author_item_width"
+                android:layout_height="wrap_content"
+                android:background="#F4F4F4">
 
                 <ImageView
                     android:id="@+id/author_item_img"

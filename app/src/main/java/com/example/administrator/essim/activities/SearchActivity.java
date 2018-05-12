@@ -15,14 +15,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mancj.materialsearchbar.MaterialSearchBar;
-
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.AutoFieldAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.PixivResponse;
 import com.example.administrator.essim.response.Reference;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
