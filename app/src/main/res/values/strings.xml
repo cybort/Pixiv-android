@@ -245,4 +245,5 @@
     <string name="search_for_hot">热度排序</string>
     <string name="download_oringin">下载原图</string>
     <string name="login_out">退出登录</string>
+    <string name="go_to_select">这里空空的，快去搜集一言吧</string>
 </resources>

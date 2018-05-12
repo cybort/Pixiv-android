@@ -32,7 +32,7 @@ public class FragmentImageDetail extends BaseFragment {
         ImageView imageView = view.findViewById(R.id.image);
         IllustsBean illustsBean = ((ImageDetailActivity) Objects.requireNonNull(getActivity())).mIllustsBean;
         Glide.get(mContext).clearMemory();
-        Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(illustsBean, index)).into(imageView);
+        Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(illustsBean, index)).into(imageView);
         return view;
     }
 }

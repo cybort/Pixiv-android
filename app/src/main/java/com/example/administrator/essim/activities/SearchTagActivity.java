@@ -189,7 +189,7 @@ public class SearchTagActivity extends AppCompatActivity {
 
     private void createSearchTypeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setIcon(R.mipmap.login_logo);
+        builder.setIcon(R.mipmap.logo);
         builder.setTitle("筛选结果：");
         builder.setCancelable(true);
         builder.setSingleChoiceItems(arrayOfSearchType, nowSearchType,

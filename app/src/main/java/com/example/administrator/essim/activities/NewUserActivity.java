@@ -77,15 +77,19 @@ public class NewUserActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PixivAccountsResponse> call, retrofit2.Response<PixivAccountsResponse> response) {
                 PixivAccountsResponse pixivOAuthResponse = response.body();
-                HashMap localHashMap = new HashMap();
-                localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
-                localHashMap.put("client_secret", "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP");
-                localHashMap.put("grant_type", "password");
-                localHashMap.put("username", pixivOAuthResponse.getBody().getUser_account());
-                localHashMap.put("password", pixivOAuthResponse.getBody().getPassword());
-                localHashMap.put("device_token", pixivOAuthResponse.getBody().getDevice_token());
-                Snackbar.make(mProgressBar, "创建成功，正在登陆~", Snackbar.LENGTH_SHORT).show();
-                loginIn(localHashMap);
+                assert pixivOAuthResponse != null;
+                if (!pixivOAuthResponse.isError()) {
+                    HashMap localHashMap = new HashMap();
+                    localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
+                    localHashMap.put("client_secret", "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP");
+                    localHashMap.put("grant_type", "password");
+                    localHashMap.put("username", pixivOAuthResponse.getBody().getUser_account());
+                    localHashMap.put("password", pixivOAuthResponse.getBody().getPassword());
+                    Snackbar.make(mProgressBar, "创建成功，正在登陆~", Snackbar.LENGTH_SHORT).show();
+                    loginIn(localHashMap);
+                } else {
+                    Snackbar.make(mProgressBar, "出了点小错误~", Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             @Override

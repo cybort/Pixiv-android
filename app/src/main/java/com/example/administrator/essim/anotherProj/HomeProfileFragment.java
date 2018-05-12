@@ -22,7 +22,6 @@ import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserIllustsResponse;
 import com.example.administrator.essim.utils.Common;
 
@@ -108,10 +107,10 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mTextView.setText("这里空空的，什么也没有~");
                 } else {
-                    Reference.sUserWorksResponse = response.body();
-                    mIllustsBeanList.addAll(Reference.sUserWorksResponse.getIllusts());
+                    UserIllustsResponse userWorksResponse = response.body();
+                    mIllustsBeanList.addAll(userWorksResponse.getIllusts());
                     mPixivAdapterGrid = new AuthorWorksAdapter(mIllustsBeanList, mContext);
-                    next_url = Reference.sUserWorksResponse.getNext_url();
+                    next_url = userWorksResponse.getNext_url();
                     mPixivAdapterGrid.setOnItemClickListener((view, position, viewType) -> {
                         if (position == -1) {
                             if (next_url != null) {
@@ -122,18 +121,18 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                         } else if (viewType == 0) {
                             Intent intent = new Intent(mContext, ViewPagerActivity.class);
                             intent.putExtra("which one is selected", position);
-                            intent.putExtra("all illust", (Serializable) Reference.sUserWorksResponse.getIllusts());
+                            intent.putExtra("all illust", (Serializable) mIllustsBeanList);
                             mContext.startActivity(intent);
                         } else if (viewType == 1) {
-                            if (!Reference.sUserWorksResponse.getIllusts().get(position).isIs_bookmarked()) {
+                            if (!mIllustsBeanList.get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                                 ((ImageView) view).startAnimation(Common.getAnimation());
-                                Common.postStarIllust(position, Reference.sUserWorksResponse.getIllusts(),
+                                Common.postStarIllust(position, mIllustsBeanList,
                                         mSharedPreferences.getString("Authorization", ""), rcvGoodsList);
                             } else {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                 ((ImageView) view).startAnimation(Common.getAnimation());
-                                Common.postUnstarIllust(position, Reference.sUserWorksResponse.getIllusts(),
+                                Common.postUnstarIllust(position, mIllustsBeanList,
                                         mSharedPreferences.getString("Authorization", ""), rcvGoodsList);
                             }
                         }
@@ -159,9 +158,9 @@ public class HomeProfileFragment extends ScrollObservableFragment {
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
-                Reference.sUserWorksResponse = response.body();
-                next_url = Reference.sUserWorksResponse.getNext_url();
-                mIllustsBeanList.addAll(Reference.sUserWorksResponse.getIllusts());
+                UserIllustsResponse userWorksResponse = response.body();
+                next_url = userWorksResponse.getNext_url();
+                mIllustsBeanList.addAll(userWorksResponse.getIllusts());
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mPixivAdapterGrid.notifyDataSetChanged();
             }
@@ -183,13 +182,5 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                 rcvGoodsList.scrollBy(0, scrolledY);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Reference.sUserWorksResponse = null;
-        mIllustsBeanList = null;
-        mPixivAdapterGrid = null;
     }
 }

@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mTextView.setText(String.format("%s (%s)", mSharedPreferences.getString("username", ""),
                         mSharedPreferences.getString("useraccount", "")));
             }
+
+            /*{"error":false,"message":"","body":{"user_account":"user_mpds2732","password":"0py0bbAW9b","device_token":"9a5acef19b5d535d75a1f224bda66292"}}*/
             mTextView2.setText(String.format("密码：%s", mSharedPreferences.getString("password", "")));
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -166,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("店长推荐：");
-        builder.setMessage("你是萝莉控吗？");
+        builder.setMessage("请确认你的账号已开启R-18");
         builder.setCancelable(true);
-        builder.setPositiveButton("我是", (dialogInterface, i) -> {
+        builder.setPositiveButton("别BB，老子早就开好了", (dialogInterface, i) -> {
             Intent intent = new Intent(mContext, SearchTagActivity.class);
             intent.putExtra("what is the keyword", "R-18");
             mContext.startActivity(intent);
         });
-        builder.setNegativeButton("我不是", (dialogInterface, i) -> runOnUiThread(() ->
+        builder.setNegativeButton("没开", (dialogInterface, i) -> runOnUiThread(() ->
                 TastyToast.makeText(MainActivity.this, "你是个好人",
                         TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show()));
         AlertDialog dialog = builder.create();
@@ -195,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-            Snackbar.make(bottomBar, "别想了，有个锤子的新世界", Snackbar.LENGTH_SHORT).show();
+            createDialog();
         } else if (id == R.id.nav_send) {
             Intent intent = new Intent(mContext, AboutActivity.class);
             startActivity(intent);

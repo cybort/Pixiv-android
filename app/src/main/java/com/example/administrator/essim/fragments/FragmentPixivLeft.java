@@ -170,30 +170,38 @@ public class FragmentPixivLeft extends BaseFragment {
     }
 
     private void reLogin() {
+        Common.showLog("执行了一次");
         Snackbar.make(mRecyclerView, "获取登录信息, 请稍候", Snackbar.LENGTH_SHORT).show();
         HashMap localHashMap = new HashMap();
         localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
         localHashMap.put("client_secret", "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP");
         localHashMap.put("grant_type", "password");
-        localHashMap.put("username", mSharedPreferences.getString("username", ""));
+        localHashMap.put("username", mSharedPreferences.getString("useraccount", ""));
         localHashMap.put("password", mSharedPreferences.getString("password", ""));
         Call<PixivOAuthResponse> call = new RestClient().getretrofit_OAuthSecure().create(OAuthSecureService.class).postAuthToken(localHashMap);
         call.enqueue(new Callback<PixivOAuthResponse>() {
             @Override
-            public void onResponse(Call<PixivOAuthResponse> call, retrofit2.Response<PixivOAuthResponse> response) {
+            public void onResponse(@NonNull Call<PixivOAuthResponse> call, retrofit2.Response<PixivOAuthResponse> response) {
                 PixivOAuthResponse pixivOAuthResponse = response.body();
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                StringBuilder localStringBuilder = new StringBuilder();
-                localStringBuilder.append("Bearer ");
-                localStringBuilder.append(pixivOAuthResponse.getResponse().getAccess_token());
-                editor.putString("Authorization", localStringBuilder.toString());
-                editor.apply();
-                getData();
+                try {
+                    assert pixivOAuthResponse != null;
+                    String localStringBuilder = "Bearer " +
+                            pixivOAuthResponse.getResponse().getAccess_token();
+                    editor.putString("Authorization", localStringBuilder);
+                    editor.apply();
+                    getData();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Snackbar.make(mRecyclerView, "出了点小问题", Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<PixivOAuthResponse> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<PixivOAuthResponse> call, @NonNull Throwable throwable) {
             }
         });
     }

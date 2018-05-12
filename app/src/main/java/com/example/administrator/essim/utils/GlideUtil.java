@@ -35,7 +35,7 @@ public class GlideUtil {
         }
     }
 
-    public GlideUrl getLargeImageUrl(IllustsBean illustsBean) {
+    public GlideUrl getLargeImageUrl(IllustsBean illustsBean, int index) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
             header.put("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
@@ -43,7 +43,7 @@ public class GlideUtil {
             return header;
         };
         if (illustsBean.getPage_count() > 1) {
-            return new GlideUrl(illustsBean.getMeta_pages().get(0).getImage_urlsX().getOriginal());
+            return new GlideUrl(illustsBean.getMeta_pages().get(index).getImage_urlsX().getOriginal(), headers);
         } else {
             return new GlideUrl(illustsBean.getMeta_single_page().getOriginal_image_url(), headers);
         }

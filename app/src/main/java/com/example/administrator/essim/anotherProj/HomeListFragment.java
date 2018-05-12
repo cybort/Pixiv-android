@@ -22,7 +22,6 @@ import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserIllustsResponse;
 import com.example.administrator.essim.utils.Common;
 
@@ -107,10 +106,10 @@ public class HomeListFragment extends ScrollObservableFragment {
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mTextView.setText("这里空空的，什么也没有~");
                 } else {
-                    Reference.sUserIllustsResponse = response.body();
-                    mIllustsBeanList.addAll(Reference.sUserIllustsResponse.getIllusts());
+                    UserIllustsResponse userIllustsResponse = response.body();
+                    mIllustsBeanList.addAll(userIllustsResponse.getIllusts());
                     mPixivAdapterGrid = new AuthorWorksAdapter(mIllustsBeanList, mContext);
-                    next_url = Reference.sUserIllustsResponse.getNext_url();
+                    next_url = userIllustsResponse.getNext_url();
                     mPixivAdapterGrid.setOnItemClickListener((view, position, viewType) -> {
                         if (position == -1) {
                             if (next_url != null) {
@@ -159,9 +158,9 @@ public class HomeListFragment extends ScrollObservableFragment {
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
-                Reference.sUserIllustsResponse = response.body();
-                next_url = Reference.sUserIllustsResponse.getNext_url();
-                mIllustsBeanList.addAll(Reference.sUserIllustsResponse.getIllusts());
+                UserIllustsResponse userIllustsResponse = response.body();
+                next_url = userIllustsResponse.getNext_url();
+                mIllustsBeanList.addAll(userIllustsResponse.getIllusts());
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mPixivAdapterGrid.notifyDataSetChanged();
             }
@@ -183,13 +182,5 @@ public class HomeListFragment extends ScrollObservableFragment {
                 rcvGoodsList.scrollBy(0, scrolledY);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Reference.sUserIllustsResponse = null;
-        mIllustsBeanList = null;
-        mPixivAdapterGrid = null;
     }
 }
