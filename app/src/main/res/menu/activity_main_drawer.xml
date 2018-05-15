@@ -21,14 +21,14 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="hahah" />
+            android:title="@string/about_account" />
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_directions_car_black_24dp"
-            android:title="通往新世界的大门" />
+            android:title="@string/go_to_R18" />
         <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_mood_black_24dp"
-            android:title="关于" />
+            android:title="@string/about_app" />
     </group>
 </menu>

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -64,17 +63,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         isLogin = mSharedPreferences.getBoolean("islogin", false);
         if (isLogin) {
             mTextView = navigationView.getHeaderView(0).findViewById(R.id.username);
-            mTextView2 = navigationView.getHeaderView(0).findViewById(R.id.useremail);
-            if (mSharedPreferences.getString("username", "")
-                    .equals(mSharedPreferences.getString("useraccount", ""))) {
-                mTextView.setText(mSharedPreferences.getString("username", ""));
-            } else {
-                mTextView.setText(String.format("%s (%s)", mSharedPreferences.getString("username", ""),
-                        mSharedPreferences.getString("useraccount", "")));
-            }
+            mTextView.setText(mSharedPreferences.getString("username", "")
+                    .equals(mSharedPreferences.getString("useraccount", "")) ?
+                        mSharedPreferences.getString("username", "") : String.format("%s (%s)",
+                            mSharedPreferences.getString("username", ""),
+                                mSharedPreferences.getString("useraccount", "")));
 
             /*{"error":false,"message":"","body":{"user_account":"user_mpds2732","password":"0py0bbAW9b","device_token":"9a5acef19b5d535d75a1f224bda66292"}}*/
-            mTextView2.setText(String.format("密码：%s", mSharedPreferences.getString("password", "")));
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);

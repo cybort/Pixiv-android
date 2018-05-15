@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
+import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.response.IllustsBean;
@@ -31,6 +32,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.gujun.android.taggroup.TagGroup;
@@ -42,13 +44,9 @@ import me.gujun.android.taggroup.TagGroup;
 
 public class FragmentPixivItem extends BaseFragment {
 
-    private int index;
     private DownloadTask asyncTask;
     private IllustsBean mIllustsBeans;
     private File parentFile, realFile;
-    private ImageView mImageView, mImageView2;
-    private CardView mCardView, mCardView2, mCardView3, mCardView4;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8;
 
     public static FragmentPixivItem newInstance(IllustsBean illustsBean, int index) {
         Bundle args = new Bundle();
@@ -62,9 +60,10 @@ public class FragmentPixivItem extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pixiv_item, container, false);
-        index = (int) getArguments().getSerializable("index");
+        assert getArguments() != null;
+        int index = (int) getArguments().getSerializable("index");
         mIllustsBeans = (IllustsBean) getArguments().getSerializable("illust item");
-        if (index == ((ViewPagerActivity) getActivity()).getIndexNow()) {
+        if (index == ((ViewPagerActivity) Objects.requireNonNull(getActivity())).getIndexNow()) {
             setUserVisibleHint(true);
         }
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
@@ -77,13 +76,13 @@ public class FragmentPixivItem extends BaseFragment {
     }
 
     private void reFreshLayout(View view) {
-        mImageView = view.findViewById(R.id.item_background_img);
-        mImageView2 = view.findViewById(R.id.detail_img);
-        ViewGroup.LayoutParams params = mImageView2.getLayoutParams();
+        ImageView imageView = view.findViewById(R.id.item_background_img);
+        ImageView imageView2 = view.findViewById(R.id.detail_img);
+        ViewGroup.LayoutParams params = imageView2.getLayoutParams();
         params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
                 mIllustsBeans.getHeight()) / mIllustsBeans.getWidth());
-        mImageView2.setLayoutParams(params);
-        mImageView2.setOnClickListener(view12 -> {
+        imageView2.setLayoutParams(params);
+        imageView2.setOnClickListener(view12 -> {
             Intent intent = new Intent(mContext, ImageDetailActivity.class);
             intent.putExtra("illust", mIllustsBeans);
             mContext.startActivity(intent);
@@ -91,21 +90,21 @@ public class FragmentPixivItem extends BaseFragment {
         Glide.get(mContext).clearMemory();
         Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(mIllustsBeans))
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
-                .into(mImageView);
+                .into(imageView);
         Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(mIllustsBeans))
-                .into(mImageView2);
-        mTextView = view.findViewById(R.id.detail_author);
-        mTextView2 = view.findViewById(R.id.detail_img_size);
-        mTextView3 = view.findViewById(R.id.detail_create_time);
-        mTextView4 = view.findViewById(R.id.viewed);
-        mTextView5 = view.findViewById(R.id.liked);
-        mTextView6 = view.findViewById(R.id.illust_id);
-        mTextView7 = view.findViewById(R.id.author_id);
-        mTextView8 = view.findViewById(R.id.all_item_size);
-        mCardView = view.findViewById(R.id.card_first);
-        mCardView2 = view.findViewById(R.id.card_second);
-        mCardView3 = view.findViewById(R.id.card_left);
-        mCardView3.setOnClickListener(v -> {
+                .into(imageView2);
+        TextView textView = view.findViewById(R.id.detail_author);
+        TextView textView2 = view.findViewById(R.id.detail_img_size);
+        TextView textView3 = view.findViewById(R.id.detail_create_time);
+        TextView textView4 = view.findViewById(R.id.viewed);
+        TextView textView5 = view.findViewById(R.id.liked);
+        TextView textView6 = view.findViewById(R.id.illust_id);
+        TextView textView7 = view.findViewById(R.id.author_id);
+        TextView textView8 = view.findViewById(R.id.all_item_size);
+        CardView cardView = view.findViewById(R.id.card_first);
+        CardView cardView2 = view.findViewById(R.id.card_second);
+        CardView cardView3 = view.findViewById(R.id.card_left);
+        cardView3.setOnClickListener(v -> {
             parentFile = new File(Environment.getExternalStorageDirectory().getPath(), "PixivPictures");
             if (!parentFile.exists()) {
                 parentFile.mkdir();
@@ -128,8 +127,8 @@ public class FragmentPixivItem extends BaseFragment {
                 asyncTask = null;
             }
         });
-        mCardView4 = view.findViewById(R.id.card_right);
-        mCardView4.setOnClickListener(view1 -> {
+        CardView cardView4 = view.findViewById(R.id.card_right);
+        cardView4.setOnClickListener(view1 -> {
             Intent intent = new Intent(mContext, CloudMainActivity.class);
             intent.putExtra("user id", mIllustsBeans.getUser().getId());
             mContext.startActivity(intent);
@@ -143,34 +142,25 @@ public class FragmentPixivItem extends BaseFragment {
         }
         mTagGroup.setTags(tagTemp);
         mTagGroup.setOnTagClickListener(tag -> {
-            ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData mClipData = ClipData.newPlainText("Label", tag);
-            cm.setPrimaryClip(mClipData);
-            TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+            Intent intent = new Intent(mContext, SearchTagActivity.class);
+            intent.putExtra("what is the keyword", tag);
+            mContext.startActivity(intent);
         });
-        mTextView.setText(getString(R.string.string_author,
+        textView.setText(getString(R.string.string_author,
                 mIllustsBeans.getUser().getName()));
-        mTextView2.setText(getString(R.string.string_full_size, mIllustsBeans.getWidth(), mIllustsBeans.getHeight()));
-        mTextView3.setText(getString(R.string.string_create_time, mIllustsBeans.getCreate_date()));
-        if (mIllustsBeans.getTotal_view() >= 1000) {
-            mTextView4.setText(getString(R.string.string_viewd,
-                    String.valueOf(mIllustsBeans.getTotal_view() / 1000)));
-        } else {
-            mTextView4.setText(String.valueOf(mIllustsBeans.getTotal_view()));
-        }
-        if (mIllustsBeans.getTotal_bookmarks() >= 1000) {
-            mTextView5.setText(getString(R.string.string_viewd,
-                    String.valueOf(mIllustsBeans.getTotal_bookmarks() / 1000)));
-
-        } else {
-            mTextView5.setText(String.valueOf(mIllustsBeans.getTotal_bookmarks()));
-        }
-        mTextView6.setText(getString(R.string.illust_id, String.valueOf(mIllustsBeans.getId())));
-        mTextView7.setText(getString(R.string.author_id, String.valueOf(mIllustsBeans.getUser().getId())));
+        textView2.setText(getString(R.string.string_full_size, mIllustsBeans.getWidth(), mIllustsBeans.getHeight()));
+        textView3.setText(getString(R.string.string_create_time, mIllustsBeans.getCreate_date().substring(0,
+                mIllustsBeans.getCreate_date().length()-9)));
+        textView4.setText(mIllustsBeans.getTotal_view() >= 1000 ? getString(R.string.string_viewd,
+                String.valueOf(mIllustsBeans.getTotal_view() / 1000)) : String.valueOf(mIllustsBeans.getTotal_view()));
+        textView5.setText(mIllustsBeans.getTotal_bookmarks() >= 1000 ? getString(R.string.string_viewd,
+                String.valueOf(mIllustsBeans.getTotal_bookmarks() / 1000)) : String.valueOf(mIllustsBeans.getTotal_bookmarks()));
+        textView6.setText(getString(R.string.illust_id, String.valueOf(mIllustsBeans.getId())));
+        textView7.setText(getString(R.string.author_id, String.valueOf(mIllustsBeans.getUser().getId())));
         if (mIllustsBeans.getPage_count() > 1) {
-            mTextView8.setText(String.format("%sP", String.valueOf(mIllustsBeans.getPage_count())));
+            textView8.setText(String.format("%sP", String.valueOf(mIllustsBeans.getPage_count())));
         } else {
-            mTextView8.setVisibility(View.INVISIBLE);
+            textView8.setVisibility(View.INVISIBLE);
         }
     }
 
