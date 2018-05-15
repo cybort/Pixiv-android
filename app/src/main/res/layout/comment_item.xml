@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
 
-</android.support.constraint.ConstraintLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/comment_head"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_margin="@dimen/twelve_dip"
+        android:src="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/twelve_dip"
+        android:layout_toEndOf="@+id/comment_head"
+        android:text="lenivaya10001"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/comment_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/twelve_dip"
+        android:layout_marginStart="@dimen/eight_dip"
+        android:layout_marginTop="@dimen/twelve_dip"
+        android:text="2018-04-24 06:39"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment_name"
+        android:layout_marginBottom="@dimen/eight_dip"
+        android:layout_marginTop="@dimen/eight_dip"
+        android:layout_toEndOf="@+id/comment_head"
+        android:paddingEnd="@dimen/twelve_dip"
+        android:text="2018-04-24 06:39"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/rela_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment_content"
+        android:layout_marginBottom="@dimen/twelve_dip"
+        android:layout_marginEnd="@dimen/twelve_dip"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/comment_head"
+        android:background="#f2f4f5"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/parent_comment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="q@qwre"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/parent_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/parent_comment_name"
+            android:text="哈哈阿凡达阿飞阿飞大师傅"
+            android:textColor="#808080"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

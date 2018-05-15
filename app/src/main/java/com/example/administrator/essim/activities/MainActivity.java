@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mTextView = navigationView.getHeaderView(0).findViewById(R.id.username);
             mTextView.setText(mSharedPreferences.getString("username", "")
                     .equals(mSharedPreferences.getString("useraccount", "")) ?
-                        mSharedPreferences.getString("username", "") : String.format("%s (%s)",
-                            mSharedPreferences.getString("username", ""),
-                                mSharedPreferences.getString("useraccount", "")));
+                    mSharedPreferences.getString("username", "") : String.format("%s (%s)",
+                    mSharedPreferences.getString("username", ""),
+                    mSharedPreferences.getString("useraccount", "")));
 
             /*{"error":false,"message":"","body":{"user_account":"user_mpds2732","password":"0py0bbAW9b","device_token":"9a5acef19b5d535d75a1f224bda66292"}}*/
         } else {

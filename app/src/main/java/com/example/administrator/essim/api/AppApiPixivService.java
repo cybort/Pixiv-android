@@ -2,6 +2,7 @@ package com.example.administrator.essim.api;
 
 
 import com.example.administrator.essim.response.BookmarkAddResponse;
+import com.example.administrator.essim.response.IllustCommentsResponse;
 import com.example.administrator.essim.response.IllustRankingResponse;
 import com.example.administrator.essim.response.PixivResponse;
 import com.example.administrator.essim.response.RecommendResponse;
@@ -45,6 +46,12 @@ public interface AppApiPixivService {
                                             @Query("user_id") long paramLong,
                                             @Query("restrict") String paramString2,
                                             @Query("tag") String paramString3);
+    @FormUrlEncoded
+    @POST("v1/illust/comment/add")
+    Call<ResponseBody> postIllustComment(@Header("Authorization") String paramString1,
+                                         @Field("illust_id") long paramLong,
+                                         @Field("comment") String paramString2,
+                                         @Field("parent_comment_id") Integer paramInteger);
 
     @GET("/v1/user/following?filter=for_ios")
     Call<SearchUserResponse> getUserFollowing(@Header("Authorization") String paramString1,
@@ -84,6 +91,10 @@ public interface AppApiPixivService {
     @POST("/v1/illust/bookmark/delete")
     Call<ResponseBody> postUnlikeIllust(@Header("Authorization") String paramString,
                                         @Field("illust_id") long paramLong);
+
+    @GET("/v1/illust/comments")
+    Call<IllustCommentsResponse> getIllustComments(@Header("Authorization") String paramString,
+                                                   @Query("illust_id") long paramLong);
 
     @GET("/v1/user/detail?filter=for_ios")
     Call<UserDetailResponse> getUserDetail(@Header("Authorization") String paramString,

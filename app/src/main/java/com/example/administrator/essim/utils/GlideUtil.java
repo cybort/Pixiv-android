@@ -71,11 +71,11 @@ public class GlideUtil {
         return new GlideUrl(userPreviewsBean.getProfile_image_urls().getMedium(), headers);
     }
 
-    public GlideUrl getHead(String userID, String url) {
+    public GlideUrl getHead(long userID, String url) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
             header.put("Referer", " https://www.pixiv.net/member.php?id=" +
-                    userID);
+                    String.valueOf(userID));
             return header;
         };
 

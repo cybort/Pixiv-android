@@ -192,9 +192,7 @@ public class FragmentPixivLeft extends BaseFragment {
                     editor.putString("Authorization", localStringBuilder);
                     editor.apply();
                     getData();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(mRecyclerView, "出了点小问题", Snackbar.LENGTH_SHORT).show();
                 }
