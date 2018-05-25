@@ -93,5 +93,6 @@ public class DownloadTask extends AsyncTask<String, Integer, Bitmap> {
         progressDialog.dismiss();
         ((Activity) mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
                 TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
+        mContext = null;
     }
 }

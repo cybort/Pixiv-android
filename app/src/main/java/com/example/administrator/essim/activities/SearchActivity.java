@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -41,7 +42,6 @@ import retrofit2.Callback;
 
 public class SearchActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
-    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
     private Context mContext;
     private CardView mCardView;
     private ProgressBar mProgressBar;
@@ -51,12 +51,12 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
     private NestedScrollView mNestedScrollView;
     private SharedPreferences mSharedPreferences;
     private AutoFieldAdapter customSuggestionsAdapter;
+    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         initView();
     }
 
@@ -173,7 +173,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
                         searchBar.getText());
         call.enqueue(new Callback<PixivResponse>() {
             @Override
-            public void onResponse(Call<PixivResponse> call, retrofit2.Response<PixivResponse> response) {
+            public void onResponse(@NonNull Call<PixivResponse> call, @NonNull retrofit2.Response<PixivResponse> response) {
                 Reference.sPixivResponse = response.body();
                 customSuggestionsAdapter = new AutoFieldAdapter(Reference.sPixivResponse, mContext);
                 customSuggestionsAdapter.setOnItemClickListener((view, position, viewType) -> {
@@ -188,7 +188,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
             }
 
             @Override
-            public void onFailure(Call<PixivResponse> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<PixivResponse> call, @NonNull Throwable throwable) {
 
             }
         });

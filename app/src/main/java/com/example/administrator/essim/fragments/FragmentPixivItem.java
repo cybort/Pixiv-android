@@ -1,47 +1,46 @@
 package com.example.administrator.essim.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.adapters.IllustCommentAdapter;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustCommentsResponse;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.utils.DividerItemDecoration;
+import com.example.administrator.essim.utils.Common;
+import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -50,13 +49,10 @@ import retrofit2.Callback;
  * Created by Administrator on 2018/1/18 0018.
  */
 
-public class FragmentPixivItem extends BaseFragment {
+public class FragmentPixivItem extends BaseFragment implements View.OnClickListener {
 
     private IllustsBean mIllustsBeans;
-    private RecyclerView mRecyclerView;
-    private EditText mEditText;
     private SharedPreferences mSharedPreferences;
-    private int parentCommentID;
 
     public static FragmentPixivItem newInstance(IllustsBean illustsBean, int index) {
         Bundle args = new Bundle();
@@ -68,7 +64,7 @@ public class FragmentPixivItem extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pixiv_item, container, false);
         assert getArguments() != null;
         int index = (int) getArguments().getSerializable("index");
@@ -83,29 +79,17 @@ public class FragmentPixivItem extends BaseFragment {
         }
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         reFreshLayout(view);
-        getIllustComment();
         return view;
     }
 
     private void reFreshLayout(View view) {
         ImageView imageView = view.findViewById(R.id.item_background_img);
         ImageView imageView2 = view.findViewById(R.id.detail_img);
-        mRecyclerView = view.findViewById(R.id.recy_comment);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext,
-                DividerItemDecoration.VERTICAL_LIST));
         ViewGroup.LayoutParams params = imageView2.getLayoutParams();
         params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
                 mIllustsBeans.getHeight()) / mIllustsBeans.getWidth());
         imageView2.setLayoutParams(params);
-        imageView2.setOnClickListener(view12 -> {
-            Intent intent = new Intent(mContext, ImageDetailActivity.class);
-            intent.putExtra("illust", mIllustsBeans);
-            mContext.startActivity(intent);
-        });
+        imageView2.setOnClickListener(this);
         Glide.get(mContext).clearMemory();
         Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(mIllustsBeans))
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
@@ -142,11 +126,7 @@ public class FragmentPixivItem extends BaseFragment {
         });
         textView.setText(getString(R.string.string_author,
                 mIllustsBeans.getUser().getName()));
-        textView.setOnClickListener(view1 -> {
-            Intent intent = new Intent(mContext, CloudMainActivity.class);
-            intent.putExtra("user id", mIllustsBeans.getUser().getId());
-            mContext.startActivity(intent);
-        });
+        textView.setOnClickListener(this);
         textView2.setText(getString(R.string.string_full_size, mIllustsBeans.getWidth(), mIllustsBeans.getHeight()));
         textView3.setText(getString(R.string.string_create_time, mIllustsBeans.getCreate_date().substring(0,
                 mIllustsBeans.getCreate_date().length() - 9)));
@@ -161,103 +141,50 @@ public class FragmentPixivItem extends BaseFragment {
         } else {
             textView8.setVisibility(View.INVISIBLE);
         }
-        mEditText = view.findViewById(R.id.comment_edit);
-        ImageView imageView1 = view.findViewById(R.id.img_comment);
-        imageView1.setOnClickListener(view13 -> postComment());
-        ImageView imageView3 = view.findViewById(R.id.clear_hint);
-        imageView3.setOnClickListener(view14 -> {
-            if (mEditText.getText().toString().length() == 0) {
-                mEditText.setHint("留下你的评论吧~");
-                parentCommentID = 0;
-            } else {
-                mEditText.setText("");
-            }
-        });
+        CardView cardView = view.findViewById(R.id.card_left);
+        cardView.setOnClickListener(this);
+        CardView cardView2 = view.findViewById(R.id.card_right);
+        cardView2.setOnClickListener(this);
     }
 
-    private void getIllustComment() {
-        Call<IllustCommentsResponse> call = new RestClient()
-                .getRetrofit_AppAPI()
-                .create(AppApiPixivService.class)
-                .getIllustComments(mSharedPreferences.getString("Authorization", ""), mIllustsBeans.getId());
-        call.enqueue(new Callback<IllustCommentsResponse>() {
-            @Override
-            public void onResponse(Call<IllustCommentsResponse> call, retrofit2.Response<IllustCommentsResponse> response) {
-                IllustCommentsResponse illustCommentsResponse = response.body();
-                IllustCommentAdapter adapter = new IllustCommentAdapter(illustCommentsResponse, mContext);
-                adapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (viewType == 0) {
-                        parentCommentID = illustCommentsResponse.getComments().get(position).getId();
-                        mEditText.setHint(String.format("回复@%s", illustCommentsResponse.getComments().get(position).getUser().getName()));
-                    } else if (viewType == 1) {
-                        Intent intent = new Intent(mContext, CloudMainActivity.class);
-                        intent.putExtra("user id", illustCommentsResponse.getComments().get(position).getUser().getId());
-                        startActivity(intent);
-                    }
-                });
-                mRecyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailure(Call<IllustCommentsResponse> call, Throwable throwable) {
-
-            }
-        });
-    }
-
-    private void postComment() {
-        if (mEditText.getText().toString().trim().length() != 0) {
-            if (parentCommentID == 0) {
-                Call<ResponseBody> call = new RestClient()
-                        .getRetrofit_AppAPI()
-                        .create(AppApiPixivService.class)
-                        .postIllustComment(mSharedPreferences.getString("Authorization", ""), mIllustsBeans.getId(),
-                                mEditText.getText().toString().trim(), null);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
-                        Snackbar.make(mEditText, "评论成功~", Snackbar.LENGTH_SHORT).show();
-                        mEditText.setText("");
-                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        // 隐藏软键盘
-                        assert imm != null;
-                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getActivity())
-                                .getWindow().getDecorView().getWindowToken(), 0);
-                        getIllustComment();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
-                    }
-                });
-            } else {
-                Call<ResponseBody> call = new RestClient()
-                        .getRetrofit_AppAPI()
-                        .create(AppApiPixivService.class)
-                        .postIllustComment(mSharedPreferences.getString("Authorization", ""), mIllustsBeans.getId(),
-                                mEditText.getText().toString().trim(), parentCommentID);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
-                        Snackbar.make(mEditText, "评论成功~", Snackbar.LENGTH_SHORT).show();
-                        mEditText.setText("");
-                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        // 隐藏软键盘
-                        assert imm != null;
-                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getActivity())
-                                .getWindow().getDecorView().getWindowToken(), 0);
-                        getIllustComment();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
-                    }
-                });
-            }
-        } else {
-            Snackbar.make(mEditText, "能打几个字再评论不？！", Snackbar.LENGTH_SHORT).show();
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()) {
+            case R.id.detail_img:
+                intent = new Intent(mContext, ImageDetailActivity.class);
+                intent.putExtra("illust", mIllustsBeans);
+                mContext.startActivity(intent);
+                break;
+            case R.id.detail_author:
+                intent = new Intent(mContext, CloudMainActivity.class);
+                intent.putExtra("user id", mIllustsBeans.getUser().getId());
+                mContext.startActivity(intent);
+                break;
+            case R.id.card_left:
+                File parentFile = new File(Environment.getExternalStorageDirectory().getPath(), "PixivPictures");
+                if (!parentFile.exists()) {
+                    parentFile.mkdir();
+                    TastyToast.makeText(mContext, "文件夹创建成功~",
+                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                }
+                File realFile = new File(parentFile.getPath(), mIllustsBeans.getTitle() + "_" +
+                        mIllustsBeans.getId() + "_" + String.valueOf(0) + ".jpeg");
+                if (realFile.exists()) {
+                    TastyToast.makeText(mContext, "该文件已存在~",
+                            TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+                } else {
+                    new DownloadTask(realFile, mContext, mIllustsBeans).execute(mIllustsBeans.getMeta_single_page().getOriginal_image_url());
+                }
+                break;
+            case R.id.card_right:
+                intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("title", mIllustsBeans.getTitle());
+                intent.putExtra("id", mIllustsBeans.getId());
+                mContext.startActivity(intent);
+                break;
+            default:
+                break;
         }
     }
 

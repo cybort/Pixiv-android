@@ -1,5 +1,7 @@
 package com.example.administrator.essim.activities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -177,6 +179,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
+    private void createAccountDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("账户信息：");
+        builder.setMessage("用户名：(用于pixiv登录)" + "\r\n" + "\r\n" +  mSharedPreferences.getString("useraccount", ""));
+        builder.setCancelable(true);
+        builder.setPositiveButton("复制密码", (dialogInterface, i) -> {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("Label", mSharedPreferences.getString("password", ""));
+            cm.setPrimaryClip(mClipData);
+            TastyToast.makeText(mContext, mSharedPreferences.getString("password", "") +
+                    " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+        });
+        builder.setNegativeButton("复制用户名", (dialogInterface, i) -> {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("Label", mSharedPreferences.getString("useraccount", ""));
+            cm.setPrimaryClip(mClipData);
+            TastyToast.makeText(mContext, mSharedPreferences.getString("useraccount", "") + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -190,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            createAccountDialog();
         } else if (id == R.id.nav_share) {
             createDialog();
         } else if (id == R.id.nav_send) {

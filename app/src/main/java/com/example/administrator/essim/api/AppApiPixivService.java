@@ -79,6 +79,9 @@ public interface AppApiPixivService {
     Call<ResponseBody> postUnfollowUser(@Header("Authorization") String paramString,
                                         @Field("user_id") long paramLong);
 
+    @GET
+    Call<IllustCommentsResponse> getNextComment(@Header("Authorization") String paramString1, @Url String paramString2);
+
     @GET("/v1/search/autocomplete")
     Call<PixivResponse> getSearchAutoCompleteKeywords(@Header("Authorization") String paramString1,
                                                       @Query("word") String paramString2);

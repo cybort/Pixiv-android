@@ -32,7 +32,7 @@ public class IllustCommentsResponse implements Serializable {
         this.total_comments = paramInt;
     }
 
-    public static class CommentsBean {
+    public static class CommentsBean implements Serializable {
         private String comment;
         private String date;
         private int id;
@@ -79,7 +79,7 @@ public class IllustCommentsResponse implements Serializable {
             this.user = paramUserBean;
         }
 
-        public static class ParentCommentBean {
+        public static class ParentCommentBean implements Serializable{
             private String comment;
             private String date;
             private int id;
@@ -117,7 +117,7 @@ public class IllustCommentsResponse implements Serializable {
                 this.user = paramUserBeanX;
             }
 
-            public static class UserBeanX {
+            public static class UserBeanX implements Serializable{
                 private String account;
                 private int id;
                 private String name;
@@ -155,7 +155,7 @@ public class IllustCommentsResponse implements Serializable {
                     this.profile_image_urls = paramProfileImageUrlsBeanX;
                 }
 
-                public static class ProfileImageUrlsBeanX {
+                public static class ProfileImageUrlsBeanX implements Serializable{
                     private String medium;
 
                     public String getMedium() {
@@ -169,7 +169,7 @@ public class IllustCommentsResponse implements Serializable {
             }
         }
 
-        public static class UserBean {
+        public static class UserBean implements Serializable{
             private String account;
             private int id;
             private String name;
@@ -207,7 +207,7 @@ public class IllustCommentsResponse implements Serializable {
                 this.profile_image_urls = paramProfileImageUrlsBean;
             }
 
-            public static class ProfileImageUrlsBean {
+            public static class ProfileImageUrlsBean implements Serializable {
                 private String medium;
 
                 public String getMedium() {

@@ -249,4 +249,7 @@
     <string name="about_account">账户信息</string>
     <string name="go_to_R18">通往新世界的大门</string>
     <string name="about_app">关于</string>
+    <string name="check_comment">查看评论(%d)</string>
+    <string name="check_more_comment">查看评论(%d+)</string>
+    <string name="read_comment">查看评论</string>
 </resources>
