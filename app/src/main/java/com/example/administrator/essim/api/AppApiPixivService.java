@@ -3,6 +3,7 @@ package com.example.administrator.essim.api;
 
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustCommentsResponse;
+import com.example.administrator.essim.response.IllustDetailResponse;
 import com.example.administrator.essim.response.IllustRankingResponse;
 import com.example.administrator.essim.response.PixivResponse;
 import com.example.administrator.essim.response.RecommendResponse;
@@ -80,7 +81,16 @@ public interface AppApiPixivService {
                                         @Field("user_id") long paramLong);
 
     @GET
-    Call<IllustCommentsResponse> getNextComment(@Header("Authorization") String paramString1, @Url String paramString2);
+    Call<IllustCommentsResponse> getNextComment(@Header("Authorization") String paramString1,
+                                                @Url String paramString2);
+
+    @GET("/v1/search/user?filter=for_ios")
+    Call<SearchUserResponse> getSearchUser(@Header("Authorization") String paramString1,
+                                           @Query("word") String paramString2);
+
+    @GET("/v1/illust/detail?filter=for_ios")
+    Call<IllustDetailResponse> getIllust(@Header("Authorization") String paramString, @Query("illust_id") long paramLong);
+
 
     @GET("/v1/search/autocomplete")
     Call<PixivResponse> getSearchAutoCompleteKeywords(@Header("Authorization") String paramString1,

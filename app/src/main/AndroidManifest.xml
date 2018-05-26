@@ -32,7 +32,8 @@
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".activities.CommentActivity"></activity>
+        <activity android:name=".activities.CommentActivity" />
+        <activity android:name=".activities.SingleIllustActivity"></activity>
     </application>
 
 </manifest>

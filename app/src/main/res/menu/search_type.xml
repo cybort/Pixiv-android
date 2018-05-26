@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/search_type_one"
+        android:id="@+id/type_one"/>
+    <item android:title="@string/search_type_two"
+        android:id="@+id/type_two"/>
+    <item android:title="@string/search_type_three"
+        android:id="@+id/type_three"/>
+    <item android:title="@string/search_type_four"
+        android:id="@+id/type_four"/>
+</menu>

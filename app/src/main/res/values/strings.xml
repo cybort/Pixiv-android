@@ -252,4 +252,8 @@
     <string name="check_comment">查看评论(%d)</string>
     <string name="check_more_comment">查看评论(%d+)</string>
     <string name="read_comment">查看评论</string>
+    <string name="search_type_one">关键词搜作品</string>
+    <string name="search_type_two">ID搜作品</string>
+    <string name="search_type_three">关键词搜画师</string>
+    <string name="search_type_four">ID搜画师</string>
 </resources>

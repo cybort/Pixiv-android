@@ -6,8 +6,8 @@ android {
         applicationId "com.example.administrator.essim"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 15
-        versionName "2.4"
+        versionCode 16
+        versionName "2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,7 +48,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.hyman:flowlayout-lib:1.1.2'
-
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

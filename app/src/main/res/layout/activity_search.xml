@@ -36,8 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            app:mt_maxSuggestionsCount="10"
-            app:mt_placeholder="search in pixiv" />
+            app:mt_maxSuggestionsCount="10"/>
 
     </RelativeLayout>
 

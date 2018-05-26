@@ -42,6 +42,7 @@ import retrofit2.Callback;
 
 public class SearchActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
+    private int searchType;
     private Context mContext;
     private CardView mCardView;
     private ProgressBar mProgressBar;
@@ -71,6 +72,39 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
         mProgressBar = findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
         searchBar = findViewById(R.id.searchBar);
+        searchBar.setPlaceHolder(getResources().getString(R.string.search_type_one));
+        searchBar.inflateMenu(R.menu.search_type);
+        searchBar.getMenu().setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.type_one:
+                    if (searchType != 0) {
+                        searchBar.setPlaceHolder(getResources().getString(R.string.search_type_one));
+                        searchType = 0;
+                    }
+                    break;
+                case R.id.type_two:
+                    if (searchType != 1) {
+                        searchBar.setPlaceHolder(getResources().getString(R.string.search_type_two));
+                        searchType = 1;
+                    }
+                    break;
+                case R.id.type_three:
+                    if (searchType != 2) {
+                        searchBar.setPlaceHolder(getResources().getString(R.string.search_type_three));
+                        searchType = 2;
+                    }
+                    break;
+                case R.id.type_four:
+                    if (searchType != 3) {
+                        searchBar.setPlaceHolder(getResources().getString(R.string.search_type_four));
+                        searchType = 3;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
         searchBar.setOnSearchActionListener(this);
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
@@ -85,9 +119,10 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
             @Override
             public void afterTextChanged(Editable editable) {
                 if (searchBar.getText().length() != 0) {
-                    getAutoCompleteWords();
-                    mNestedScrollView.setVisibility(View.INVISIBLE);
-
+                    if(searchType == 0) {
+                        getAutoCompleteWords();
+                        mNestedScrollView.setVisibility(View.INVISIBLE);
+                    }
                 } else {
                     mCardView.setVisibility(View.INVISIBLE);
                     mNestedScrollView.setVisibility(View.VISIBLE);
@@ -128,12 +163,12 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
 
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 // 注：该回调是子线程，非主线程.
                 assert response.body() != null;
                 String responseData = response.body().string();
