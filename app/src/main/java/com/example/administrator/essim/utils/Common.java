@@ -76,9 +76,7 @@ import retrofit2.Callback;
  */
 
 public class Common {
-
-    public static final String[] arrayOfString = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "10"};
+    
     public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
     public static final String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
             "mode=daily&per_page=30&date=" + Common.getLastDay();
