@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.adapters.ListHitokotoAdapter;
-import com.example.administrator.essim.adapters.OnListHitokotoClickListener;
+import com.example.administrator.essim.interf.OnListHitokotoClickListener;
 import com.example.administrator.essim.response.HitoModel;
 import com.sdsmdg.tastytoast.TastyToast;
 
