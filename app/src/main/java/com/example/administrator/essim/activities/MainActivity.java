@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void createAccountDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("账户信息：");
-        builder.setMessage("用户名：(用于pixiv登录)" + "\r\n" + "\r\n" +  mSharedPreferences.getString("useraccount", ""));
+        builder.setMessage("用户名：(用于pixiv登录)" + "\r\n" + "\r\n" + mSharedPreferences.getString("useraccount", ""));
         builder.setCancelable(true);
         builder.setPositiveButton("复制密码", (dialogInterface, i) -> {
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

@@ -37,7 +37,6 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.Util;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -176,21 +175,21 @@ public class FragmentRank extends BaseFragment {
                     if (position == -1) {
                         getNextData();
                     } else if (viewType == 0) {
+                        Reference.sIllustsBeans = response.body().getIllusts();
                         Intent intent = new Intent(mContext, ViewPagerActivity.class);
                         intent.putExtra("which one is selected", position);
-                        intent.putExtra("all illust", (Serializable) Reference.sIllustRankingResponse.getIllusts());
                         mContext.startActivity(intent);
                     } else if (viewType == 1) {
                         if (!Reference.sIllustRankingResponse.getIllusts().get(position).isIs_bookmarked()) {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                             view.startAnimation(Common.getAnimation());
                             Common.postStarIllust(position, Reference.sIllustRankingResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         } else {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
                             view.startAnimation(Common.getAnimation());
                             Common.postUnstarIllust(position, Reference.sIllustRankingResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         }
                     }
                 });
@@ -227,21 +226,21 @@ public class FragmentRank extends BaseFragment {
                         if (position == -1) {
                             getNextData();
                         } else if (viewType == 0) {
+                            Reference.sIllustsBeans = response.body().getIllusts();
                             Intent intent = new Intent(mContext, ViewPagerActivity.class);
                             intent.putExtra("which one is selected", position);
-                            intent.putExtra("all illust", (Serializable) Reference.sRankList.getIllusts());
                             mContext.startActivity(intent);
                         } else if (viewType == 1) {
                             if (!Reference.sRankList.getIllusts().get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                                 view.startAnimation(Common.getAnimation());
                                 Common.postStarIllust(position, Reference.sRankList.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             } else {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                 view.startAnimation(Common.getAnimation());
                                 Common.postUnstarIllust(position, Reference.sRankList.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             }
                         }
                     });
@@ -286,6 +285,14 @@ public class FragmentRank extends BaseFragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPixivAdapter != null) {
+            mPixivAdapter.notifyDataSetChanged();
         }
     }
 }

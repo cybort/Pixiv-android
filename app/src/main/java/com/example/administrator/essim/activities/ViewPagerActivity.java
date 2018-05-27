@@ -14,17 +14,13 @@ import android.view.WindowManager;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
-import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.utils.Common;
-
-import java.util.List;
+import com.example.administrator.essim.response.Reference;
 
 public class ViewPagerActivity extends AppCompatActivity {
 
     public int index;
     public Toolbar mToolbar;
     public ViewPager mViewPager;
-    private List<IllustsBean> mIllustsBeans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +33,6 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         index = intent.getIntExtra("which one is selected", 0);
-        Common.showLog(index);
-        mIllustsBeans = (List<IllustsBean>) intent.getSerializableExtra("all illust");
 
         mToolbar = findViewById(R.id.view_pager_toolbar);
         setSupportActionBar(mToolbar);
@@ -48,28 +42,18 @@ public class ViewPagerActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                return FragmentPixivItem.newInstance(mIllustsBeans.get(position), position);
+                return FragmentPixivItem.newInstance(position);
             }
 
             @Override
             public int getCount() {
-                return mIllustsBeans.size();
+                return Reference.sIllustsBeans.size();
             }
         });
         mViewPager.setCurrentItem(index);
     }
 
-    public int getIndexNow() {
-        return mViewPager.getCurrentItem();
-    }
-
     public void changeTitle() {
-        mToolbar.setTitle(mIllustsBeans.get(mViewPager.getCurrentItem()).getTitle());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mIllustsBeans = null;
+        mToolbar.setTitle(Reference.sIllustsBeans.get(mViewPager.getCurrentItem()).getTitle());
     }
 }

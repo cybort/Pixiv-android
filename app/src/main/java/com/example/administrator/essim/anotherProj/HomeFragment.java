@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -149,8 +150,12 @@ public class HomeFragment extends Fragment {
         call.enqueue(new retrofit2.Callback<UserDetailResponse>() {
             @Override
             public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-                Reference.sUserDetailResponse = response.body();
-                setData(Reference.sUserDetailResponse);
+                try {
+                    Reference.sUserDetailResponse = response.body();
+                    setData(Reference.sUserDetailResponse);
+                } catch (Exception e) {
+                    Snackbar.make(mTextView, "不存在这个用户", Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -180,13 +185,13 @@ public class HomeFragment extends Fragment {
                 if (userDetailResponse.getUser().isIs_followed()) {
                     mTextView3.setText("取消关注");
                     Common.postUnFollowUser(mSharedPreferences.getString("Authorization", ""),
-                            Reference.sUserDetailResponse.getUser().getId(), mTextView3);
+                            userDetailResponse.getUser().getId(), mTextView3);
                     mTextView3.setText("+关注");
                     userDetailResponse.getUser().setIs_followed(false);
                 } else {
                     mTextView3.setText("+关注");
                     Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
-                            Reference.sUserDetailResponse.getUser().getId(), mTextView3);
+                            userDetailResponse.getUser().getId(), mTextView3);
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
                 }

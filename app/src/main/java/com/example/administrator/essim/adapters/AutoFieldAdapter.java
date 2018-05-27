@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.OnItemClickListener;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.response.PixivResponse;
 
 public class AutoFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

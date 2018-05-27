@@ -15,6 +15,7 @@ import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustsBean;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -117,7 +118,7 @@ public class Common {
         return true;
     }
 
-    public static void postStarIllust(int position, List<IllustsBean> illustsBeans, String token, View view) {
+    public static void postStarIllust(int position, List<IllustsBean> illustsBeans, String token, Context context) {
         List<String> illustTag = new ArrayList();
         Iterator localIterator = illustsBeans.get(position).getTags().iterator();
         while (localIterator.hasNext()) {
@@ -131,7 +132,8 @@ public class Common {
             @Override
             public void onResponse(Call<BookmarkAddResponse> call, retrofit2.Response<BookmarkAddResponse> response) {
                 illustsBeans.get(position).setIs_bookmarked(true);
-                Snackbar.make(view, "成功添加到收藏~", Snackbar.LENGTH_SHORT).show();
+                TastyToast.makeText(context, "成功添加到收藏~",
+                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
             }
 
             @Override
@@ -140,7 +142,7 @@ public class Common {
         });
     }
 
-    public static void postUnstarIllust(int position, List<IllustsBean> illustsBeans, String token, View v) {
+    public static void postUnstarIllust(int position, List<IllustsBean> illustsBeans, String token,  Context context) {
         Call<ResponseBody> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
@@ -149,7 +151,8 @@ public class Common {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 illustsBeans.get(position).setIs_bookmarked(false);
-                Snackbar.make(v, "取消收藏~", Snackbar.LENGTH_SHORT).show();
+                TastyToast.makeText(context, "取消收藏~",
+                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
             }
 
             @Override

@@ -27,7 +27,6 @@ import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -91,21 +90,21 @@ public class FragmentPixivLeft extends BaseFragment {
                         if (position == -1) {
                             getNextData();
                         } else if (viewType == 0) {
+                            Reference.sIllustsBeans = response.body().getIllusts();
                             Intent intent = new Intent(mContext, ViewPagerActivity.class);
                             intent.putExtra("which one is selected", position);
-                            intent.putExtra("all illust", (Serializable) Reference.sRecommendResponse.getIllusts());
                             mContext.startActivity(intent);
                         } else if (viewType == 1) {
                             if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                view.startAnimation(Common.getAnimation());
                                 Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             } else {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                view.startAnimation(Common.getAnimation());
                                 Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             }
                         }
                     });
@@ -139,21 +138,21 @@ public class FragmentPixivLeft extends BaseFragment {
                     if (position == -1) {
                         getNextData();
                     } else if (viewType == 0) {
+                        Reference.sIllustsBeans = response.body().getIllusts();
                         Intent intent = new Intent(mContext, ViewPagerActivity.class);
                         intent.putExtra("which one is selected", position);
-                        intent.putExtra("all illust", (Serializable) Reference.sRecommendResponse.getIllusts());
                         mContext.startActivity(intent);
                     } else if (viewType == 1) {
                         if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                            ((ImageView) view).startAnimation(Common.getAnimation());
+                            view.startAnimation(Common.getAnimation());
                             Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         } else {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            ((ImageView) view).startAnimation(Common.getAnimation());
+                            view.startAnimation(Common.getAnimation());
                             Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         }
                     }
                 });
@@ -170,7 +169,6 @@ public class FragmentPixivLeft extends BaseFragment {
     }
 
     private void reLogin() {
-        Common.showLog("执行了一次");
         Snackbar.make(mRecyclerView, "获取登录信息, 请稍候", Snackbar.LENGTH_SHORT).show();
         HashMap localHashMap = new HashMap();
         localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
@@ -202,5 +200,13 @@ public class FragmentPixivLeft extends BaseFragment {
             public void onFailure(@NonNull Call<PixivOAuthResponse> call, @NonNull Throwable throwable) {
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPixivAdapter != null) {
+            mPixivAdapter.notifyDataSetChanged();
+        }
     }
 }

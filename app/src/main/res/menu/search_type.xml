@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/search_type_one"
+    <item android:title="@string/word_get_illust"
         android:id="@+id/type_one"/>
-    <item android:title="@string/search_type_two"
+    <item android:title="@string/id_get_illust"
         android:id="@+id/type_two"/>
-    <item android:title="@string/search_type_three"
+    <item android:title="@string/word_get_user"
         android:id="@+id/type_three"/>
-    <item android:title="@string/search_type_four"
+    <item android:title="@string/id_get_user"
         android:id="@+id/type_four"/>
 </menu>

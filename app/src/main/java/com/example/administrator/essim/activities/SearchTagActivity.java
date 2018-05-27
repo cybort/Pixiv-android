@@ -23,10 +23,9 @@ import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.RecommendResponse;
+import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchIllustResponse;
 import com.example.administrator.essim.utils.Common;
-
-import java.io.Serializable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,21 +106,21 @@ public class SearchTagActivity extends AppCompatActivity {
                     if (position == -1) {
                         getNextData();
                     } else if (viewType == 0) {
+                        Reference.sIllustsBeans = mSearchIllustResponse.getIllusts();
                         Intent intent = new Intent(mContext, ViewPagerActivity.class);
                         intent.putExtra("which one is selected", position);
-                        intent.putExtra("all illust", (Serializable) mSearchIllustResponse.getIllusts());
                         mContext.startActivity(intent);
                     } else if (viewType == 1) {
                         if (!mSearchIllustResponse.getIllusts().get(position).isIs_bookmarked()) {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                             view.startAnimation(alphaAnimationShowIcon);
                             Common.postStarIllust(position, mSearchIllustResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         } else {
                             ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
                             view.startAnimation(alphaAnimationShowIcon);
                             Common.postUnstarIllust(position, mSearchIllustResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                    mSharedPreferences.getString("Authorization", ""), mContext);
                         }
                     }
                 });
@@ -156,21 +155,21 @@ public class SearchTagActivity extends AppCompatActivity {
                         if (position == -1) {
                             getNextData();
                         } else if (viewType == 0) {
+                            Reference.sIllustsBeans = moreData.getIllusts();
                             Intent intent = new Intent(mContext, ViewPagerActivity.class);
                             intent.putExtra("which one is selected", position);
-                            intent.putExtra("all illust", (Serializable) moreData.getIllusts());
                             mContext.startActivity(intent);
                         } else if (viewType == 1) {
                             if (!moreData.getIllusts().get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                                 view.startAnimation(alphaAnimationShowIcon);
                                 Common.postStarIllust(position, moreData.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             } else {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                 view.startAnimation(alphaAnimationShowIcon);
                                 Common.postUnstarIllust(position, moreData.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mRecyclerView);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             }
                         }
                     });
@@ -238,7 +237,14 @@ public class SearchTagActivity extends AppCompatActivity {
             }
 
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPixivAdapter != null) {
+            mPixivAdapter.notifyDataSetChanged();
+        }
     }
 }

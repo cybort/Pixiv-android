@@ -47,6 +47,7 @@ public interface AppApiPixivService {
                                             @Query("user_id") long paramLong,
                                             @Query("restrict") String paramString2,
                                             @Query("tag") String paramString3);
+
     @FormUrlEncoded
     @POST("v1/illust/comment/add")
     Call<ResponseBody> postIllustComment(@Header("Authorization") String paramString1,

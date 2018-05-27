@@ -5,8 +5,10 @@ package com.example.administrator.essim.response;
  * Created by Administrator on 2018/1/20 0020.
  */
 
-public class TagResponse
-{
+public class TagResponse {
+    public String name;
+    public String count;
+
     public String getName() {
         return name;
     }
@@ -22,7 +24,4 @@ public class TagResponse
     public void setCount(String count) {
         this.count = count;
     }
-
-    public String name;
-    public String count;
 }

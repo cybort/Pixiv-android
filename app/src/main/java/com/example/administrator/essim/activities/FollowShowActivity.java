@@ -29,6 +29,7 @@ public class FollowShowActivity extends AppCompatActivity {
 
     private int userID;
     private String next_url;
+    private String searchKey;
     private Toolbar mToolbar;
     private Context mContext;
     private ProgressBar mProgressBar;
@@ -45,7 +46,12 @@ public class FollowShowActivity extends AppCompatActivity {
         userID = intent.getIntExtra("user id", 0);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         initView();
-        getUserFollowing();
+        if (userID == 0) {  //这是不传入用户id的启动方式，userID被默认置0，是从搜索页面（SearchActivity）跳转过来的
+            searchKey = intent.getStringExtra("search_key");    //获取搜索页的关键词开始搜索
+            getUserByName();
+        } else {
+            getUserFollowing();
+        }
     }
 
     private void initView() {
@@ -74,6 +80,48 @@ public class FollowShowActivity extends AppCompatActivity {
                 next_url = Reference.sSearchUserResponse.getNext_url();
                 mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
                 mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
+                mUserFollowAdapter.setOnItemClickListener((view, position, viewType) -> {
+                    if (position == -1) {
+                        if (next_url != null) {
+                            getNextData();
+                        } else {
+                            Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        try {
+                            Intent intent = new Intent(mContext, CloudMainActivity.class);
+                            intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                    .getUser().getId());
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mRecyclerView.setAdapter(mUserFollowAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<SearchUserResponse> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    private void getUserByName() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        Call<SearchUserResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getSearchUser(mSharedPreferences.getString("Authorization", ""), searchKey);
+        call.enqueue(new Callback<SearchUserResponse>() {
+            @Override
+            public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
+                Reference.sSearchUserResponse = response.body();
+                next_url = Reference.sSearchUserResponse.getNext_url();
+                mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
+                mToolbar.setTitle("搜索结果");
                 mUserFollowAdapter.setOnItemClickListener((view, position, viewType) -> {
                     if (position == -1) {
                         if (next_url != null) {

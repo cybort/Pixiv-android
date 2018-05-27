@@ -199,7 +199,7 @@ public class CommentActivity extends AppCompatActivity {
                 illustCommentAdapter = new IllustCommentAdapter(mCommentsBeanList, mContext);
                 illustCommentAdapter.setOnItemClickListener((view, position, viewType) -> {
                     if (viewType == 0) {
-                        if(mEditText.getText().toString().trim().length() == 0) {
+                        if (mEditText.getText().toString().trim().length() == 0) {
                             parentCommentID = mCommentsBeanList.get(position).getId();
                             mEditText.setHint(String.format("回复@%s", mCommentsBeanList.get(position).getUser().getName()));
                         }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.OnItemClickListener;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.GlideUtil;
 

@@ -22,10 +22,10 @@ import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserIllustsResponse;
 import com.example.administrator.essim.utils.Common;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,21 +119,21 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                                 Snackbar.make(rcvGoodsList, "没有更多数据了", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                             }
                         } else if (viewType == 0) {
+                            Reference.sIllustsBeans = mIllustsBeanList;
                             Intent intent = new Intent(mContext, ViewPagerActivity.class);
                             intent.putExtra("which one is selected", position);
-                            intent.putExtra("all illust", (Serializable) mIllustsBeanList);
                             mContext.startActivity(intent);
                         } else if (viewType == 1) {
                             if (!mIllustsBeanList.get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                view.startAnimation(Common.getAnimation());
                                 Common.postStarIllust(position, mIllustsBeanList,
-                                        mSharedPreferences.getString("Authorization", ""), rcvGoodsList);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             } else {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                ((ImageView) view).startAnimation(Common.getAnimation());
+                                view.startAnimation(Common.getAnimation());
                                 Common.postUnstarIllust(position, mIllustsBeanList,
-                                        mSharedPreferences.getString("Authorization", ""), rcvGoodsList);
+                                        mSharedPreferences.getString("Authorization", ""), mContext);
                             }
                         }
                     });
@@ -181,6 +181,14 @@ public class HomeProfileFragment extends ScrollObservableFragment {
             } else {
                 rcvGoodsList.scrollBy(0, scrolledY);
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mPixivAdapterGrid != null) {
+            mPixivAdapterGrid.notifyDataSetChanged();
         }
     }
 }
