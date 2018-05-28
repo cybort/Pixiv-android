@@ -22,33 +22,36 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchIllustResponse;
 import com.example.administrator.essim.utils.Common;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class SearchTagActivity extends AppCompatActivity {
 
-    private static final String[] sort = {"popular_desc", "date_desc"};
-    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
-            " 5000users入り", " 10000users入り"};
+    private String temp;
     public String ketWords;
     private String next_url;
     private Toolbar mToolbar;
     private Context mContext;
     private boolean isBestSort;
-    private int nowSearchType = -1, togo = -1;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private RecommendResponse moreData;
     private PixivAdapterGrid mPixivAdapter;
+    private int nowSearchType = -1, togo = -1;
     private SharedPreferences mSharedPreferences;
     private AlphaAnimation alphaAnimationShowIcon;
     private SearchIllustResponse mSearchIllustResponse;
-    private RecommendResponse moreData;
-    private String temp;
+    private static final String[] sort = {"popular_desc", "date_desc"};
+    private static final String[] arrayOfSearchType = {" 500users入り", " 1000users入り",
+            " 5000users入り", " 10000users入り"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,30 +104,7 @@ public class SearchTagActivity extends AppCompatActivity {
             public void onResponse(Call<SearchIllustResponse> call, retrofit2.Response<SearchIllustResponse> response) {
                 mSearchIllustResponse = response.body();
                 next_url = mSearchIllustResponse.getNext_url();
-                mPixivAdapter = new PixivAdapterGrid(mSearchIllustResponse.getIllusts(), mContext);
-                mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        getNextData();
-                    } else if (viewType == 0) {
-                        Reference.sIllustsBeans = mSearchIllustResponse.getIllusts();
-                        Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        mContext.startActivity(intent);
-                    } else if (viewType == 1) {
-                        if (!mSearchIllustResponse.getIllusts().get(position).isIs_bookmarked()) {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                            view.startAnimation(alphaAnimationShowIcon);
-                            Common.postStarIllust(position, mSearchIllustResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        } else {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            view.startAnimation(alphaAnimationShowIcon);
-                            Common.postUnstarIllust(position, mSearchIllustResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        }
-                    }
-                });
-                mRecyclerView.setAdapter(mPixivAdapter);
+                initAdapter(mSearchIllustResponse.getIllusts());
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
 
@@ -149,31 +129,8 @@ public class SearchTagActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
                     moreData = response.body();
-                    mPixivAdapter = new PixivAdapterGrid(moreData.getIllusts(), mContext);
                     next_url = moreData.getNext_url();
-                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                        if (position == -1) {
-                            getNextData();
-                        } else if (viewType == 0) {
-                            Reference.sIllustsBeans = moreData.getIllusts();
-                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                            intent.putExtra("which one is selected", position);
-                            mContext.startActivity(intent);
-                        } else if (viewType == 1) {
-                            if (!moreData.getIllusts().get(position).isIs_bookmarked()) {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                view.startAnimation(alphaAnimationShowIcon);
-                                Common.postStarIllust(position, moreData.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            } else {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                view.startAnimation(alphaAnimationShowIcon);
-                                Common.postUnstarIllust(position, moreData.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            }
-                        }
-                    });
-                    mRecyclerView.setAdapter(mPixivAdapter);
+                    initAdapter(moreData.getIllusts());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 }
 
@@ -185,6 +142,34 @@ public class SearchTagActivity extends AppCompatActivity {
         } else {
             Snackbar.make(mProgressBar, "再怎么找也找不到了~", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private void initAdapter(List<IllustsBean> illustsBeans)
+    {
+        mPixivAdapter = new PixivAdapterGrid(illustsBeans, mContext);
+        mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
+            if (position == -1) {
+                getNextData();
+            } else if (viewType == 0) {
+                Reference.sIllustsBeans = illustsBeans;
+                Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                intent.putExtra("which one is selected", position);
+                mContext.startActivity(intent);
+            } else if (viewType == 1) {
+                if (!illustsBeans.get(position).isIs_bookmarked()) {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                    view.startAnimation(alphaAnimationShowIcon);
+                    Common.postStarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                } else {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    view.startAnimation(alphaAnimationShowIcon);
+                    Common.postUnstarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                }
+            }
+        });
+        mRecyclerView.setAdapter(mPixivAdapter);
     }
 
     private void createSearchTypeDialog() {

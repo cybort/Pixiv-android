@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:elevation="@dimen/eight_dip"
+        android:elevation="@dimen/three_dip"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_scrollFlags="scroll|enterAlways"
         app:navigationIcon="@drawable/ic_menu_black_24dp_two"
@@ -41,7 +41,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/eight_dip"
         app:bmb_buttonEnum="textInsideCircle"
-        app:bmb_buttonPlaceEnum="buttonPlace_sc_7_1"
-        app:bmb_piecePlaceEnum="piecePlace_dot_7_1" />
+        app:bmb_buttonPlaceEnum="buttonPlace_sc_8_6"
+        app:bmb_piecePlaceEnum="piecePlace_dot_8_6" />
 
 </RelativeLayout>

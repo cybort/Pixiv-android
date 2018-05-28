@@ -214,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-            createAccountDialog();
+            Intent intent = new Intent(mContext, SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             createDialog();
         } else if (id == R.id.nav_send) {

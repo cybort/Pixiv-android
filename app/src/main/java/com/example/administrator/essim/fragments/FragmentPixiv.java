@@ -22,6 +22,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.LoginActivity;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchActivity;
+import com.example.administrator.essim.activities.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,10 +80,9 @@ public class FragmentPixiv extends BaseFragment {
                 intent = new Intent(mContext, SearchActivity.class);
                 mContext.startActivity(intent);
                 return true;
-            case R.id.action_login_out:
-                intent = new Intent(mContext, LoginActivity.class);
+            case R.id.action_settings:
+                intent = new Intent(mContext, SettingsActivity.class);
                 mContext.startActivity(intent);
-                Objects.requireNonNull(getActivity()).finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

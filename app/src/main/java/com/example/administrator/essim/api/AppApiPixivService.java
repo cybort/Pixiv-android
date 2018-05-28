@@ -5,6 +5,7 @@ import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustCommentsResponse;
 import com.example.administrator.essim.response.IllustDetailResponse;
 import com.example.administrator.essim.response.IllustRankingResponse;
+import com.example.administrator.essim.response.IllustfollowResponse;
 import com.example.administrator.essim.response.PixivResponse;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.SearchIllustResponse;
@@ -75,6 +76,9 @@ public interface AppApiPixivService {
     Call<BookmarkAddResponse> postFollowUser(@Header("Authorization") String paramString1,
                                              @Field("user_id") long paramLong,
                                              @Field("restrict") String paramString2);
+
+    @GET("/v2/illust/follow")
+    Call<IllustfollowResponse> getFollowIllusts(@Header("Authorization") String paramString1, @Query("restrict") String paramString2);
 
     @FormUrlEncoded
     @POST("/v1/user/follow/delete")

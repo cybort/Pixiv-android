@@ -10,7 +10,7 @@
     <tab
         id="@+id/tab_rank"
         icon="@drawable/ic_equalizer_black_24dp"
-        title="榜单"
+        title="动态"
         inActiveColor="@color/bottom_item_unselected"
         activeColor="@color/bottom_item_selected"
         barColorWhenSelected="@color/bottom_bg_white" />

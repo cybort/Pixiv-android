@@ -21,6 +21,7 @@ import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.api.OAuthSecureService;
 import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.PixivOAuthResponse;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
@@ -28,6 +29,7 @@ import com.example.administrator.essim.utils.Common;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -83,32 +85,9 @@ public class FragmentPixivLeft extends BaseFragment {
             public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
                 Reference.sRecommendResponse = response.body();
                 try {
-                    mPixivAdapter = new PixivAdapterGrid(Reference.sRecommendResponse.getIllusts(), mContext);
                     next_url = Reference.sRecommendResponse.getNext_url();
                     Reference.sFragmentPixivRight.getData();
-                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                        if (position == -1) {
-                            getNextData();
-                        } else if (viewType == 0) {
-                            Reference.sIllustsBeans = response.body().getIllusts();
-                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                            intent.putExtra("which one is selected", position);
-                            mContext.startActivity(intent);
-                        } else if (viewType == 1) {
-                            if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                view.startAnimation(Common.getAnimation());
-                                Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            } else {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                view.startAnimation(Common.getAnimation());
-                                Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            }
-                        }
-                    });
-                    mRecyclerView.setAdapter(mPixivAdapter);
+                    initAdapter(Reference.sRecommendResponse.getIllusts());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } catch (Exception e) {
                     reLogin();
@@ -132,31 +111,8 @@ public class FragmentPixivLeft extends BaseFragment {
             @Override
             public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
                 Reference.sRecommendResponse = response.body();
-                mPixivAdapter = new PixivAdapterGrid(Reference.sRecommendResponse.getIllusts(), mContext);
                 next_url = Reference.sRecommendResponse.getNext_url();
-                mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        getNextData();
-                    } else if (viewType == 0) {
-                        Reference.sIllustsBeans = response.body().getIllusts();
-                        Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        mContext.startActivity(intent);
-                    } else if (viewType == 1) {
-                        if (!Reference.sRecommendResponse.getIllusts().get(position).isIs_bookmarked()) {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                            view.startAnimation(Common.getAnimation());
-                            Common.postStarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        } else {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            view.startAnimation(Common.getAnimation());
-                            Common.postUnstarIllust(position, Reference.sRecommendResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        }
-                    }
-                });
-                mRecyclerView.setAdapter(mPixivAdapter);
+                initAdapter(Reference.sRecommendResponse .getIllusts());
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mPullToRefreshView.setRefreshing(false);
             }
@@ -166,6 +122,34 @@ public class FragmentPixivLeft extends BaseFragment {
 
             }
         });
+    }
+
+    private void initAdapter(List<IllustsBean> illustsBeans)
+    {
+        mPixivAdapter = new PixivAdapterGrid(illustsBeans, mContext);
+        mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
+            if (position == -1) {
+                getNextData();
+            } else if (viewType == 0) {
+                Reference.sIllustsBeans = illustsBeans;
+                Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                intent.putExtra("which one is selected", position);
+                mContext.startActivity(intent);
+            } else if (viewType == 1) {
+                if (!illustsBeans.get(position).isIs_bookmarked()) {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                    view.startAnimation(Common.getAnimation());
+                    Common.postStarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                } else {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    view.startAnimation(Common.getAnimation());
+                    Common.postUnstarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                }
+            }
+        });
+        mRecyclerView.setAdapter(mPixivAdapter);
     }
 
     private void reLogin() {

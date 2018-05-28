@@ -24,11 +24,14 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.LoginActivity;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchActivity;
+import com.example.administrator.essim.activities.SettingsActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.PixivAdapterGrid;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustRankingResponse;
+import com.example.administrator.essim.response.IllustfollowResponse;
+import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
@@ -37,6 +40,7 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.Util;
 
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -49,9 +53,9 @@ import retrofit2.Callback;
 
 public class FragmentRank extends BaseFragment {
 
-    private static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
+    private static final String[] arrayOfRankMode = {"动态", "日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
     private static final String[] modelist = {"day", "week", "month", "week_rookie", "week_original", "day_male", "day_female"};
-    public int currentDataType = 0;
+    public int currentDataType = -1;
     private String next_url;
     private SharedPreferences mSharedPreferences;
     private PixivAdapterGrid mPixivAdapter;
@@ -62,42 +66,48 @@ public class FragmentRank extends BaseFragment {
     private OnBMClickListener clickListener = index -> {
         switch (index) {
             case 0:
+                if (currentDataType != -1) {
+                    currentDataType = -1;
+                    getFollowUserNewIllust();
+                }
+                break;
+            case 1:
                 if (currentDataType != 0) {
                     currentDataType = 0;
                     getRankList(currentDataType);
                 }
                 break;
-            case 1:
+            case 2:
                 if (currentDataType != 1) {
                     currentDataType = 1;
                     getRankList(currentDataType);
                 }
                 break;
-            case 2:
+            case 3:
                 if (currentDataType != 2) {
                     currentDataType = 2;
                     getRankList(currentDataType);
                 }
                 break;
-            case 3:
+            case 4:
                 if (currentDataType != 3) {
                     currentDataType = 3;
                     getRankList(currentDataType);
                 }
                 break;
-            case 4:
+            case 5:
                 if (currentDataType != 4) {
                     currentDataType = 4;
                     getRankList(currentDataType);
                 }
                 break;
-            case 5:
+            case 6:
                 if (currentDataType != 5) {
                     currentDataType = 5;
                     getRankList(currentDataType);
                 }
                 break;
-            case 6:
+            case 7:
                 if (currentDataType != 6) {
                     currentDataType = 6;
                     getRankList(currentDataType);
@@ -112,7 +122,7 @@ public class FragmentRank extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rank, container, false);
         initView(view);
-        getRankList(currentDataType);
+        getFollowUserNewIllust();
         return view;
     }
 
@@ -135,7 +145,7 @@ public class FragmentRank extends BaseFragment {
         toolbar.setNavigationOnClickListener(view1 ->
                 ((MainActivity) Objects.requireNonNull(getActivity()))
                         .getDrawer().openDrawer(Gravity.START, true));
-        toolbar.setTitle(arrayOfRankMode[currentDataType]);
+        toolbar.setTitle("动态");
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mProgressBar = view.findViewById(R.id.try_login);
@@ -157,6 +167,30 @@ public class FragmentRank extends BaseFragment {
         }
     }
 
+    private void getFollowUserNewIllust() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        Call<IllustfollowResponse> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getFollowIllusts(mSharedPreferences.getString("Authorization", ""), "public");
+        call.enqueue(new Callback<IllustfollowResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<IllustfollowResponse> call,
+                                   @NonNull retrofit2.Response<IllustfollowResponse> response) {
+                IllustfollowResponse illustfollowResponse = response.body();
+                next_url = illustfollowResponse.getNext_url();
+                initAdapter(illustfollowResponse.getIllusts());
+                toolbar.setTitle("动态");
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<IllustfollowResponse> call, @NonNull Throwable throwable) {
+
+            }
+        });
+    }
+
     private void getRankList(int dataType) {
         mProgressBar.setVisibility(View.VISIBLE);
         Call<IllustRankingResponse> call = new RestClient()
@@ -169,31 +203,8 @@ public class FragmentRank extends BaseFragment {
             public void onResponse(@NonNull Call<IllustRankingResponse> call,
                                    @NonNull retrofit2.Response<IllustRankingResponse> response) {
                 Reference.sIllustRankingResponse = response.body();
-                mPixivAdapter = new PixivAdapterGrid(Reference.sIllustRankingResponse.getIllusts(), mContext);
                 next_url = Reference.sIllustRankingResponse.getNext_url();
-                mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        getNextData();
-                    } else if (viewType == 0) {
-                        Reference.sIllustsBeans = response.body().getIllusts();
-                        Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                        intent.putExtra("which one is selected", position);
-                        mContext.startActivity(intent);
-                    } else if (viewType == 1) {
-                        if (!Reference.sIllustRankingResponse.getIllusts().get(position).isIs_bookmarked()) {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                            view.startAnimation(Common.getAnimation());
-                            Common.postStarIllust(position, Reference.sIllustRankingResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        } else {
-                            ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            view.startAnimation(Common.getAnimation());
-                            Common.postUnstarIllust(position, Reference.sIllustRankingResponse.getIllusts(),
-                                    mSharedPreferences.getString("Authorization", ""), mContext);
-                        }
-                    }
-                });
-                mRecyclerView.setAdapter(mPixivAdapter);
+                initAdapter(Reference.sIllustRankingResponse.getIllusts());
                 toolbar.setTitle(arrayOfRankMode[currentDataType]);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
@@ -220,31 +231,8 @@ public class FragmentRank extends BaseFragment {
                 public void onResponse(@NonNull Call<RecommendResponse> call,
                                        @NonNull retrofit2.Response<RecommendResponse> response) {
                     Reference.sRankList = response.body();
-                    mPixivAdapter = new PixivAdapterGrid(Reference.sRankList.getIllusts(), mContext);
                     next_url = Reference.sRankList.getNext_url();
-                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                        if (position == -1) {
-                            getNextData();
-                        } else if (viewType == 0) {
-                            Reference.sIllustsBeans = response.body().getIllusts();
-                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                            intent.putExtra("which one is selected", position);
-                            mContext.startActivity(intent);
-                        } else if (viewType == 1) {
-                            if (!Reference.sRankList.getIllusts().get(position).isIs_bookmarked()) {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                view.startAnimation(Common.getAnimation());
-                                Common.postStarIllust(position, Reference.sRankList.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            } else {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                view.startAnimation(Common.getAnimation());
-                                Common.postUnstarIllust(position, Reference.sRankList.getIllusts(),
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            }
-                        }
-                    });
-                    mRecyclerView.setAdapter(mPixivAdapter);
+                    initAdapter(Reference.sRankList.getIllusts());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 }
 
@@ -256,6 +244,34 @@ public class FragmentRank extends BaseFragment {
         } else {
             Snackbar.make(mProgressBar, "再怎么找也找不到了~", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private void initAdapter(List<IllustsBean> illustsBeans)
+    {
+        mPixivAdapter = new PixivAdapterGrid(illustsBeans, mContext);
+        mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
+            if (position == -1) {
+                getNextData();
+            } else if (viewType == 0) {
+                Reference.sIllustsBeans = illustsBeans;
+                Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                intent.putExtra("which one is selected", position);
+                mContext.startActivity(intent);
+            } else if (viewType == 1) {
+                if (!illustsBeans.get(position).isIs_bookmarked()) {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                    view.startAnimation(Common.getAnimation());
+                    Common.postStarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                } else {
+                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    view.startAnimation(Common.getAnimation());
+                    Common.postUnstarIllust(position, illustsBeans,
+                            mSharedPreferences.getString("Authorization", ""), mContext);
+                }
+            }
+        });
+        mRecyclerView.setAdapter(mPixivAdapter);
     }
 
     @Override
@@ -278,10 +294,9 @@ public class FragmentRank extends BaseFragment {
                 intent = new Intent(mContext, SearchActivity.class);
                 mContext.startActivity(intent);
                 return true;
-            case R.id.action_login_out:
-                intent = new Intent(mContext, LoginActivity.class);
+            case R.id.action_settings:
+                intent = new Intent(mContext, SettingsActivity.class);
                 mContext.startActivity(intent);
-                Objects.requireNonNull(getActivity()).finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
