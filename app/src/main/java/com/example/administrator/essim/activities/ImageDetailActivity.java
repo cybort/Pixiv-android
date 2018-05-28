@@ -2,9 +2,11 @@ package com.example.administrator.essim.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -28,6 +30,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     private File parentFile, realFile;
     private DownloadTask mDownloadTask;
     private TextView mTextView, mTextView2;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +41,13 @@ public class ImageDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_detail);
 
         mContext = this;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Intent intent = getIntent();
         mIllustsBean = (IllustsBean) intent.getSerializableExtra("illust");
         mTextView = findViewById(R.id.image_order);
         mTextView2 = findViewById(R.id.download_origin);
         mTextView2.setOnClickListener(view -> {
-            parentFile = new File(Environment.getExternalStorageDirectory().getPath(), "PixivPictures");
+            parentFile = new File(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures"));
             if (!parentFile.exists()) {
                 parentFile.mkdir();
                 runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",

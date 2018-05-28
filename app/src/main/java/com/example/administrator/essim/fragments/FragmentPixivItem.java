@@ -29,6 +29,7 @@ import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
+import com.example.administrator.essim.utils.PermisionUtils;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -66,11 +67,12 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         if (index == ((ViewPagerActivity) Objects.requireNonNull(getActivity())).mViewPager.getCurrentItem()) {
             setUserVisibleHint(true);
         }
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        PermisionUtils.verifyStoragePermissions(mActivity);
+        /*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mActivity, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
+        }*/
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         reFreshLayout(view);
         return view;
@@ -88,8 +90,13 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(imageView);
-        Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
-                .into(imageView2);
+        if (mSharedPreferences.getBoolean("is_origin_pic", false)) {
+            Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
+                    .into(imageView2);
+        } else {
+            Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+                    .into(imageView2);
+        }
         TextView textView = view.findViewById(R.id.detail_author);
         TextView textView2 = view.findViewById(R.id.detail_img_size);
         TextView textView3 = view.findViewById(R.id.detail_create_time);
@@ -163,7 +170,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mContext.startActivity(intent);
                 break;
             case R.id.card_left:
-                File parentFile = new File(Environment.getExternalStorageDirectory().getPath(), "PixivPictures");
+                File parentFile = new File(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures"));
                 if (!parentFile.exists()) {
                     parentFile.mkdir();
                     TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -177,6 +184,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 } else {
                     new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
                             .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+
                 }
                 break;
             case R.id.card_right:

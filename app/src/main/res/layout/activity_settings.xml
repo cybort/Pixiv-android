@@ -6,6 +6,196 @@
     android:layout_height="match_parent"
     tools:context=".activities.SettingsActivity">
 
-    
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_pixiv"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="@dimen/eight_dip"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:title="基本设置"
+        app:titleTextColor="#fff" />
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_pixiv">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/logo"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/sixteen_dip"
+                android:src="@mipmap/logo" />
+
+            <TextView
+                android:id="@+id/app_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logo"
+                android:layout_centerHorizontal="true"
+                android:text="KujouKaren Ver.2.9/20"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <View
+                android:id="@+id/cut_line_one"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/app_detail"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/setting_text_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cut_line_one"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="@string/setting_string_one"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <Switch
+                android:id="@+id/setting_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/cut_line_one"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip" />
+
+            <TextView
+                android:id="@+id/setting_text_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_text_one"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="@string/download_path"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/real_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="@dimen/eight_dip"
+                android:layout_below="@+id/setting_text_path"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:textSize="14sp" />
+
+            <View
+                android:id="@+id/cut_line_two"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/real_path"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:id="@+id/setting_text_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cut_line_two"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="@string/setting_string_two"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_text_two"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="username (昵称)"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/setting_text_two"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="meppoi"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="useraccount (登录名)"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/user_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/username"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="meppoi"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_account"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="密码"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/user_account"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:password="true"
+                android:text="meppoi"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="@dimen/eight_dip"
+                android:clickable="true"
+                android:layout_margin="@dimen/sixteen_dip"
+                android:background="@drawable/btn_bg"
+                android:text="@string/quit"
+                android:id="@+id/quit"
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@animator/touch_raise"
+                android:textColor="@color/white"
+                android:layout_below="@+id/password"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

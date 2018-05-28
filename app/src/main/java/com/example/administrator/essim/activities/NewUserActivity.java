@@ -118,6 +118,8 @@ public class NewUserActivity extends AppCompatActivity {
                 editor.putString("hearurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
                 editor.putString("useremail", pixivOAuthResponse.getResponse().getUser().getMail_address());
                 editor.putBoolean("r18on", false);
+                editor.putBoolean("is_origin_pic", false);
+                editor.putString("download_path", "/storage/emulated/0/PixivPictures");
                 editor.apply();
                 mProgressBar.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(NewUserActivity.this, MainActivity.class);

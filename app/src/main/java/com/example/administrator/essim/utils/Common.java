@@ -1,6 +1,8 @@
 package com.example.administrator.essim.utils;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -242,5 +244,14 @@ public class Common {
     public static void sendBroadcast(Context context, File file) {
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.fromFile(file)));
+    }
+
+    public static void copyMessage(Context mContext, String tag)
+    {
+        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData mClipData = ClipData.newPlainText("Label", tag);
+        assert cm != null;
+        cm.setPrimaryClip(mClipData);
+        TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
     }
 }
