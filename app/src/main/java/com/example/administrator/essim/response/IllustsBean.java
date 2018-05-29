@@ -30,6 +30,16 @@ public class IllustsBean
     private boolean visible;
     private int width;
 
+    public String getTotal_comments() {
+        return total_comments;
+    }
+
+    public void setTotal_comments(String total_comments) {
+        this.total_comments = total_comments;
+    }
+
+    private String total_comments;
+
     public String getCaption() {
         return this.caption;
     }

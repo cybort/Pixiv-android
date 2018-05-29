@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,6 +17,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentImageDetail;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.utils.DownloadTask;
+import com.example.administrator.essim.utils.SDDownloadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -61,9 +61,21 @@ public class ImageDetailActivity extends AppCompatActivity {
             } else {
                 mDownloadTask = new DownloadTask(realFile, mContext, mIllustsBean);
                 if (mIllustsBean.getPage_count() == 1) {
-                    mDownloadTask.execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
+                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                        //下载至内置SD存储介质，使用传统文件模式;
+                        mDownloadTask.execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
+                    } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                        new SDDownloadTask(realFile, mContext, mIllustsBean, mSharedPreferences)
+                                .execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
+                    }
                 } else {
-                    mDownloadTask.execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
+                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                        //下载至内置SD存储介质，使用传统文件模式;
+                        mDownloadTask.execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
+                    } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                        new SDDownloadTask(realFile, mContext, mIllustsBean, mSharedPreferences)
+                                .execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
+                    }
                 }
                 mDownloadTask = null;
             }

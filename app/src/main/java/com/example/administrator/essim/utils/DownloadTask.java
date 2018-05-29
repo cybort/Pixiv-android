@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.example.administrator.essim.response.IllustsBean;
@@ -68,7 +69,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Bitmap> {
                 outputStream.write(data, 0, len);
             }
             outputStream.close();
-            Common.sendBroadcast(mContext, realFile);
+            Common.sendBroadcast(mContext, realFile);   //通知相册更新最新下载的图片
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

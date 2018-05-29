@@ -171,4 +171,8 @@
     <string name="setting_string_two">账号信息, 长按复制</string>
     <string name="quit">退出登录</string>
     <string name="download_path">下载路径</string>
+    <string name="get_permission">添加可插拔SD卡读写权限</string>
+    <string name="permission_state">权限状态:</string>
+    <string name="ceuilisa_detail">目前团队中只有一个人 CeuiLiSA 如果觉得这款软件不错的话，请开发者喝杯咖啡吧~</string>
+    <string name="pay_way">支付宝：13990845246</string>
 </resources>

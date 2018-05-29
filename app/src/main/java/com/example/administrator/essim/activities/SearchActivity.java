@@ -201,27 +201,33 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
                 assert response.body() != null;
                 String responseData = response.body().string();
                 Gson gson = new Gson();
-                final List<TagResponse> booksInfo = gson.fromJson(responseData, new TypeToken<List<TagResponse>>() {
-                }.getType());
-                String allTag[] = new String[90];
-                for (int i = 0; i < 90; i++) {
-                    allTag[i] = booksInfo.get(i).getName();
-                }
-                mTagFlowLayout.setOnTagClickListener((view, position, parent) -> {
-                    Intent intent = new Intent(mContext, SearchTagActivity.class);
-                    intent.putExtra("what is the keyword", allTag[position]);
-                    startActivity(intent);
-                    return true;
-                });
-                runOnUiThread(() -> mTagFlowLayout.setAdapter(new TagAdapter<String>(allTag) {
-                    @Override
-                    public View getView(FlowLayout parent, int position, String s) {
-                        TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.tag_textview_search,
-                                mTagFlowLayout, false);
-                        tv.setText(s);
-                        return tv;
+                try {
+                    final List<TagResponse> booksInfo = gson.fromJson(responseData, new TypeToken<List<TagResponse>>() {
+                    }.getType());
+                    String allTag[] = new String[90];
+                    for (int i = 0; i < 90; i++) {
+                        allTag[i] = booksInfo.get(i).getName();
                     }
-                }));
+                    mTagFlowLayout.setOnTagClickListener((view, position, parent) -> {
+                        Intent intent = new Intent(mContext, SearchTagActivity.class);
+                        intent.putExtra("what is the keyword", allTag[position]);
+                        startActivity(intent);
+                        return true;
+                    });
+                    runOnUiThread(() -> mTagFlowLayout.setAdapter(new TagAdapter<String>(allTag) {
+                        @Override
+                        public View getView(FlowLayout parent, int position, String s) {
+                            TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.tag_textview_search,
+                                    mTagFlowLayout, false);
+                            tv.setText(s);
+                            return tv;
+                        }
+                    }));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
     }

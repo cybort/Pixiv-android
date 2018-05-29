@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -20,6 +21,12 @@ import com.example.administrator.essim.response.IllustsBean;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -142,7 +149,7 @@ public class Common {
         });
     }
 
-    public static void postUnstarIllust(int position, List<IllustsBean> illustsBeans, String token,  Context context) {
+    public static void postUnstarIllust(int position, List<IllustsBean> illustsBeans, String token, Context context) {
         Call<ResponseBody> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
@@ -246,8 +253,7 @@ public class Common {
                 Uri.fromFile(file)));
     }
 
-    public static void copyMessage(Context mContext, String tag)
-    {
+    public static void copyMessage(Context mContext, String tag) {
         ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData = ClipData.newPlainText("Label", tag);
         assert cm != null;

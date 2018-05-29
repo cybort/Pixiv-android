@@ -1,16 +1,11 @@
 package com.example.administrator.essim.fragments;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +25,7 @@ import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
 import com.example.administrator.essim.utils.PermisionUtils;
+import com.example.administrator.essim.utils.SDDownloadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -91,11 +87,16 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(imageView);
         if (mSharedPreferences.getBoolean("is_origin_pic", false)) {
+
             Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
                     .into(imageView2);
         } else {
-            Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
-                    .into(imageView2);
+            if (Reference.sIllustsBeans.get(index).getType().equals("ugoira")) {
+                Common.showLog("这是个动图");
+            } else {
+                Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+                        .into(imageView2);
+            }
         }
         TextView textView = view.findViewById(R.id.detail_author);
         TextView textView2 = view.findViewById(R.id.detail_img_size);
@@ -182,9 +183,15 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
-                            .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
-
+                    if(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                        //下载至内置SD存储介质，使用传统文件模式;
+                        new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
+                                .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                    }
+                    else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                        new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), mSharedPreferences)
+                                .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                    }
                 }
                 break;
             case R.id.card_right:

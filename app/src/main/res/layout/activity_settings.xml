@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/logo"
                 android:layout_centerHorizontal="true"
-                android:text="KujouKaren Ver.2.9/20"
+                android:text="KujouKaren Ver. 3.0/22"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/sixteen_sp" />
 
@@ -74,10 +74,57 @@
                 android:layout_marginTop="@dimen/sixteen_dip" />
 
             <TextView
-                android:id="@+id/setting_text_path"
+                android:id="@+id/setting_text_has_sdCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/setting_text_one"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="@string/get_permission"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/sd_card_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_text_has_sdCard"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="@string/permission_state"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/setting_text_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sd_card_state"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/eight_dip"
+                android:text="如果你的设备有可插拔的SD卡，请配置此选项，以便于对可插拔SD卡进行读写操作。点击上方蓝色文字开始配置，然后请选择可插拔SD卡的根目录，点击确认，使用过ES管理器的朋友一定记得这个步骤
+
+（注：图片默认下载至可插拔SD卡的某个文件夹之后，部分机型的相册可能不会更新下载的图片，只可以在文件管理器中查看，所以还是推荐朋友们把图片默认下载至不可移动的机身存储介质中）"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/text_has_permission"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/setting_text_has_sdCard"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:text="无可插拔SD卡"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <TextView
+                android:id="@+id/setting_text_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/setting_text_details"
                 android:layout_marginStart="@dimen/sixteen_dip"
                 android:layout_marginTop="@dimen/sixteen_dip"
                 android:text="@string/download_path"
@@ -181,6 +228,45 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/sixteen_sp" />
 
+            <View
+                android:id="@+id/cut_line_three"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/password"
+                android:layout_marginTop="@dimen/twelve_dip"
+                android:background="#CDC5BF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/develop_team"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:layout_below="@+id/cut_line_three"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:textColor="@color/colorPrimary"
+                android:text="开发团队：Mercis Studio"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/team_member"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:layout_below="@+id/develop_team"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:text="@string/ceuilisa_detail"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pay_way"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="@dimen/sixteen_dip"
+                android:layout_below="@+id/team_member"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:text="@string/pay_way"/>
+
             <TextView
                 android:layout_width="120dp"
                 android:layout_centerHorizontal="true"
@@ -194,7 +280,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:stateListAnimator="@animator/touch_raise"
                 android:textColor="@color/white"
-                android:layout_below="@+id/password"
+                android:layout_below="@+id/pay_way"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
