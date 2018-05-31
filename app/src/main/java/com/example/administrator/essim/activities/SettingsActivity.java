@@ -8,13 +8,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String parentPath;
     private Context mContext;
     private Activity mActivity;
+    private NestedScrollView mNestedScrollView;
     private SharedPreferences mSharedPreferences;
     private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7;
     private StorageChooser.Builder builder = new StorageChooser.Builder();
@@ -40,9 +43,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         mContext = this;
         mActivity = this;
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_about_card_show);
+        mNestedScrollView = findViewById(R.id.nested_about);
+        mNestedScrollView.startAnimation(animation);
 
         //初始化view
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -88,11 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
             mActivity.startActivityForResult(i, 1);
             TastyToast.makeText(mContext, "请进入可插拔sd卡根目录，然后点击'确定'", Toast.LENGTH_LONG, TastyToast.DEFAULT).show();
         });
-        if (mSharedPreferences.getString("treeUri", "no sd card").equals("no sd card")) {
-            mTextView7.setText("无SD卡读写权限或无SD卡");
-        } else {
-            mTextView7.setText("已获取SD卡读写权限");
-        }
+        mTextView7.setText(mSharedPreferences.getString("treeUri", "no sd card").equals("no sd card") ?
+                "无SD卡读写权限或无SD卡" : "已获取SD卡读写权限");
 
         //初始化路径选择对话框
         Content c = new Content();
@@ -110,23 +113,20 @@ public class SettingsActivity extends AppCompatActivity {
         builder.allowCustomPath(true);
         builder.setType(StorageChooser.DIRECTORY_CHOOSER);
         chooser = builder.build();
-        //为路径选择Textview设置点击事件
-        mTextView5.setOnClickListener(view -> {
-                chooser.setOnSelectListener(path -> {
-                    //如果选出的路径不是机身自带路径，且未设置SD卡权限，则报错
-                    if(!path.contains("emulated") && mSharedPreferences.getString("treeUri", "no sd card").equals("no sd card")) {
-                        Snackbar.make(mTextView, "请先配置SD卡的读写权限!", Snackbar.LENGTH_SHORT).show();
-                    }
-                    else {
-                        editor.putString("download_path", path);
-                        editor.apply();
-                        mTextView5.setText(path);
-                    }
-                });
-                chooser.setOnCancelListener(() ->
-                        TastyToast.makeText(mContext, "取消选择", Toast.LENGTH_SHORT, TastyToast.CONFUSING).show());
-                chooser.show();
+        chooser.setOnSelectListener(path -> {
+            //如果选出的路径不是机身自带路径，且未设置SD卡权限，则报错
+            if (!path.contains("emulated") && mSharedPreferences.getString("treeUri", "no sd card").equals("no sd card")) {
+                Snackbar.make(mTextView, "请先配置SD卡的读写权限!", Snackbar.LENGTH_SHORT).show();
+            } else {
+                editor.putString("download_path", path);
+                editor.apply();
+                mTextView5.setText(path);
+            }
         });
+        chooser.setOnCancelListener(() ->
+                TastyToast.makeText(mContext, "取消选择", Toast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+        //为路径选择Textview设置点击事件
+        mTextView5.setOnClickListener(view -> chooser.show());
     }
 
     @Override
@@ -156,6 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
             editor.apply();
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

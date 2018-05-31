@@ -16,6 +16,7 @@ import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.adapters.TrendingtagAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.TrendingtagResponse;
@@ -62,11 +63,19 @@ public class FragmentPixivRight extends BaseFragment {
                 Reference.sTrendingtagResponse = response.body();
                 try {
                     mPixivAdapter = new TrendingtagAdapter(Reference.sTrendingtagResponse.getTrend_tags(), mContext);
-                    mPixivAdapter.setOnItemClickListener((view, position, viewType) -> {
-                        Intent intent = new Intent(mContext, SearchTagActivity.class);
-                        intent.putExtra("what is the keyword", Reference.sTrendingtagResponse.getTrend_tags()
-                                .get(position).getTag());
-                        mContext.startActivity(intent);
+                    mPixivAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position, int viewType) {
+                            Intent intent = new Intent(mContext, SearchTagActivity.class);
+                            intent.putExtra("what is the keyword", Reference.sTrendingtagResponse.getTrend_tags()
+                                    .get(position).getTag());
+                            mContext.startActivity(intent);
+                        }
+
+                        @Override
+                        public void onItemLongClick(View view, int position) {
+
+                        }
                     });
                     mRecyclerView.setAdapter(mPixivAdapter);
                     mProgressBar.setVisibility(View.INVISIBLE);

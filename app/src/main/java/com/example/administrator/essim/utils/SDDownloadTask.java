@@ -16,7 +16,6 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,7 +37,7 @@ import java.net.URL;
 └─────┴────┴────┴───────────────────────┴────┴────┴────┴────┘ └───┴───┴───┘ └───────┴───┴───┘
 */
 
-// 尽量多写了一些注释，主要是因为可能@Notsfsssf同学可能回来看
+// 尽量多写了一些注释，主要是因为可能@Notsfsssf同学会来看
 
 public class SDDownloadTask extends AsyncTask<String, Integer, Bitmap> {
 
@@ -70,25 +69,30 @@ public class SDDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
         //能够下载到可插拔SD卡的最重要一步，是生成目标文件的DocumentFile
-        DocumentFile document = DocumentFile.fromTreeUri(mContext, Uri.parse(mSharedPreferences.getString("treeUri", "")));
-        String picturePath = mSharedPreferences.getString("download_path", "") + "/" + realFile.getName();
-        Common.showLog(picturePath);
-        String[] parts = picturePath.split("/");
-        for (int i = 3; i < parts.length; i++) {
-            DocumentFile nextDocument = document.findFile(parts[i]);
-            if (nextDocument == null) {
-                if (i < parts.length - 1) {
-                    nextDocument = document.createDirectory(parts[i]);
-                } else {
-                    nextDocument = document.createFile(null, parts[i]);
+        try {
+            DocumentFile document = DocumentFile.fromTreeUri(mContext, Uri.parse(mSharedPreferences.getString("treeUri", "")));
+            String picturePath = mSharedPreferences.getString("download_path", "") + "/" + realFile.getName();
+            Common.showLog(picturePath);
+            String[] parts = picturePath.split("/");
+            for (int i = 3; i < parts.length; i++) {
+                DocumentFile nextDocument = document.findFile(parts[i]);
+                if (nextDocument == null) {
+                    if (i < parts.length - 1) {
+                        nextDocument = document.createDirectory(parts[i]);
+                    } else {
+                        nextDocument = document.createFile(null, parts[i]);
+                    }
                 }
+                document = nextDocument;
             }
-            document = nextDocument;
+            // 这一步，将会获取到目标文件的DocumentFile
+            finalDocument = document;
+        } catch (Exception e) {
+            ((Activity) mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "请先配置SD卡的读写权限!",
+                    TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            return null;
         }
-        // 这一步，将会获取到目标文件的DocumentFile
-        finalDocument = document;
         // 之后就好办了，直接输出流，到finalDocument
-        Bitmap bitmap = null;
         try {
             FileOutputStream outStream = (FileOutputStream) mContext.getContentResolver().openOutputStream(finalDocument.getUri());
             URL url = new URL(params[0]);
@@ -120,7 +124,9 @@ public class SDDownloadTask extends AsyncTask<String, Integer, Bitmap> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bitmap;
+        ((Activity) mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
+                TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
+        return null;
     }
 
     @Override
@@ -131,8 +137,6 @@ public class SDDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         progressDialog.dismiss();
-        ((Activity) mContext).runOnUiThread(() -> TastyToast.makeText(mContext, "下载完成~",
-                TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
         mContext = null;
     }
 }

@@ -22,6 +22,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.IllustCommentAdapter;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustCommentsResponse;
 import com.example.administrator.essim.utils.DividerItemDecoration;
@@ -197,16 +198,24 @@ public class CommentActivity extends AppCompatActivity {
                 mCommentsBeanList.clear();
                 mCommentsBeanList.addAll(mIllustCommentsResponse.getComments());
                 illustCommentAdapter = new IllustCommentAdapter(mCommentsBeanList, mContext);
-                illustCommentAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (viewType == 0) {
-                        if (mEditText.getText().toString().trim().length() == 0) {
-                            parentCommentID = mCommentsBeanList.get(position).getId();
-                            mEditText.setHint(String.format("回复@%s", mCommentsBeanList.get(position).getUser().getName()));
+                illustCommentAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int viewType) {
+                        if (viewType == 0) {
+                            if (mEditText.getText().toString().trim().length() == 0) {
+                                parentCommentID = mCommentsBeanList.get(position).getId();
+                                mEditText.setHint(String.format("回复@%s", mCommentsBeanList.get(position).getUser().getName()));
+                            }
+                        } else if (viewType == 1) {
+                            Intent intent = new Intent(mContext, CloudMainActivity.class);
+                            intent.putExtra("user id", mCommentsBeanList.get(position).getUser().getId());
+                            startActivity(intent);
                         }
-                    } else if (viewType == 1) {
-                        Intent intent = new Intent(mContext, CloudMainActivity.class);
-                        intent.putExtra("user id", mCommentsBeanList.get(position).getUser().getId());
-                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
                     }
                 });
                 mRecyclerView.setAdapter(illustCommentAdapter);

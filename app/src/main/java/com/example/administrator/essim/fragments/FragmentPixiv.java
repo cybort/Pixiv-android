@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.LoginActivity;
 import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchActivity;
 import com.example.administrator.essim.activities.SettingsActivity;

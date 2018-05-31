@@ -13,8 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -43,6 +45,7 @@ import retrofit2.Call;
 
 public class HomeFragment extends Fragment {
 
+    public static int scrollYset;
     private static float offset = 1f;
     private static float a;
     private static float b = 400.0f;
@@ -64,6 +67,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -90,7 +94,10 @@ public class HomeFragment extends Fragment {
         head = v.findViewById(R.id.people_head);
         mRelativeLayout = v.findViewById(R.id.follow_and_followers);
         bg = v.findViewById(R.id.people_bg);
-        rlNavBar.setNavigationOnClickListener(v1 -> getActivity().finish());
+        if (((CloudMainActivity) Objects.requireNonNull(getActivity())).userId == mSharedPreferences.getInt("userid", 0)) {
+            ((CloudMainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(rlNavBar);
+        }
+        rlNavBar.setNavigationOnClickListener(v1 -> Objects.requireNonNull(getActivity()).finish());
         displayFragments = new ArrayList<>();
         displayFragments.add(HomeProfileFragment.newInstance());
         displayFragments.add(HomeListFragment.newInstance());
@@ -208,7 +215,7 @@ public class HomeFragment extends Fragment {
         int navBarHeight = getResources().getDimensionPixelOffset(R.dimen.tabstrip_height2);
         int tabStripHeight = getResources().getDimensionPixelOffset(R.dimen.tabstrip_height);
         slidingDistance = headerSize - navBarHeight - tabStripHeight;
-        Log.d("HomeFragment", "slidingDistance" + slidingDistance);
+        scrollYset = slidingDistance;
     }
 
     /**
@@ -217,6 +224,7 @@ public class HomeFragment extends Fragment {
     private void scrollChangeHeader(int scrolledY) {
         if (scrolledY < 0) {
             scrolledY = 0;
+            scrollYset = scrolledY;
         }
         if (scrolledY < slidingDistance) {
             rlNavBar.setBackgroundColor(Color.argb(scrolledY * 192 / slidingDistance, 0x00, 0x00, 0x00));
@@ -225,11 +233,40 @@ public class HomeFragment extends Fragment {
             mRelativeLayout.setAlpha(offset - a / b);
             llHeader.setPadding(0, -scrolledY, 0, 0);
             currScrollY = scrolledY;
+            Common.showLog(scrolledY);
+            scrollYset = scrolledY;
         } else {
-
             rlNavBar.setBackgroundColor(Color.argb(192, 0x00, 0x00, 0x00));
             llHeader.setPadding(0, -slidingDistance, 0, 0);
             currScrollY = slidingDistance;
+            scrollYset = slidingDistance;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.user_star, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (viewPager.getCurrentItem() == 1) {
+            switch (item.getItemId()) {
+                case R.id.action_get_public:
+                    if (HomeListFragment.dataType != 0) {
+                        HomeListFragment.sRefreshLayout.refreData("public");
+                    }
+                    return true;
+                case R.id.action_get_private:
+                    if (HomeListFragment.dataType != 1) {
+                        HomeListFragment.sRefreshLayout.refreData("private");
+                    }
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,14 +1,20 @@
 package com.example.administrator.essim.fragments;
 
+import android.Manifest;
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +30,6 @@ import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
-import com.example.administrator.essim.utils.PermisionUtils;
 import com.example.administrator.essim.utils.SDDownloadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -63,12 +68,11 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         if (index == ((ViewPagerActivity) Objects.requireNonNull(getActivity())).mViewPager.getCurrentItem()) {
             setUserVisibleHint(true);
         }
-        PermisionUtils.verifyStoragePermissions(mActivity);
-        /*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mActivity, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }*/
+        }
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         reFreshLayout(view);
         return view;
@@ -150,10 +154,27 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         mFloatingActionButton.setImageResource(Reference.sIllustsBeans.get(index).isIs_bookmarked() ?
                 R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_black_24dp);
         mFloatingActionButton.setOnClickListener(this);
+        mFloatingActionButton.setOnLongClickListener(view1 -> {
+            if (!Reference.sIllustsBeans.get(index).isIs_bookmarked()) {
+                mFloatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                mFloatingActionButton.startAnimation(Common.getAnimation());
+                Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
+                Common.postStarIllust(index, Reference.sIllustsBeans,
+                        mSharedPreferences.getString("Authorization", ""), mContext, "private");
+
+                Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
+                        (int) mFloatingActionButton.getY(),
+                        0, (float) Math.hypot(getView().getWidth(), getView().getHeight()));
+                anim.setDuration(600);
+                anim.start();
+            }
+            return true;
+        });
         CardView cardView = view.findViewById(R.id.card_left);
         cardView.setOnClickListener(this);
         CardView cardView2 = view.findViewById(R.id.card_right);
         cardView2.setOnClickListener(this);
+        Common.showLog(Reference.sIllustsBeans.get(index).getMeta_pages().size());
     }
 
     @Override
@@ -183,12 +204,11 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    if(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                         //下载至内置SD存储介质，使用传统文件模式;
                         new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
                                 .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
-                    }
-                    else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                    } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
                         new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), mSharedPreferences)
                                 .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
                     }
@@ -207,13 +227,20 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
                     Common.postUnstarIllust(index, Reference.sIllustsBeans,
                             mSharedPreferences.getString("Authorization", ""), mContext);
+
                 } else {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
                     Common.postStarIllust(index, Reference.sIllustsBeans,
-                            mSharedPreferences.getString("Authorization", ""), mContext);
+                            mSharedPreferences.getString("Authorization", ""), mContext, "public");
                 }
+                Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
+                        (int) mFloatingActionButton.getY(),
+                        0, (float) Math.hypot(getView().getWidth(), getView().getHeight()));
+                anim.setDuration(600);
+                anim.start();
+                break;
             default:
                 break;
         }

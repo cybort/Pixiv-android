@@ -18,6 +18,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.UserFollowAdapter;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchUserResponse;
@@ -80,22 +81,30 @@ public class FollowShowActivity extends AppCompatActivity {
                 next_url = Reference.sSearchUserResponse.getNext_url();
                 mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
                 mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
-                mUserFollowAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        if (next_url != null) {
-                            getNextData();
+                mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int viewType) {
+                        if (position == -1) {
+                            if (next_url != null) {
+                                getNextData();
+                            } else {
+                                Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            try {
+                                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                        .getUser().getId());
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } else {
-                        try {
-                            Intent intent = new Intent(mContext, CloudMainActivity.class);
-                            intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
-                                    .getUser().getId());
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
                     }
                 });
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -122,22 +131,30 @@ public class FollowShowActivity extends AppCompatActivity {
                 next_url = Reference.sSearchUserResponse.getNext_url();
                 mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
                 mToolbar.setTitle("搜索结果");
-                mUserFollowAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        if (next_url != null) {
-                            getNextData();
+                mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int viewType) {
+                        if (position == -1) {
+                            if (next_url != null) {
+                                getNextData();
+                            } else {
+                                Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            try {
+                                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                        .getUser().getId());
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } else {
-                        try {
-                            Intent intent = new Intent(mContext, CloudMainActivity.class);
-                            intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
-                                    .getUser().getId());
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
                     }
                 });
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -163,22 +180,30 @@ public class FollowShowActivity extends AppCompatActivity {
                 Reference.sSearchUserResponse = response.body();
                 mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
                 next_url = Reference.sSearchUserResponse.getNext_url();
-                mUserFollowAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    if (position == -1) {
-                        if (next_url != null) {
-                            getNextData();
+                mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int viewType) {
+                        if (position == -1) {
+                            if (next_url != null) {
+                                getNextData();
+                            } else {
+                                Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                            try {
+                                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                        .getUser().getId());
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } else {
-                        try {
-                            Intent intent = new Intent(mContext, CloudMainActivity.class);
-                            intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
-                                    .getUser().getId());
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
                     }
                 });
                 mRecyclerView.setAdapter(mUserFollowAdapter);

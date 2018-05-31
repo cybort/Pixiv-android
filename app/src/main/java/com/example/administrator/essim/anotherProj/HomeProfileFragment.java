@@ -20,6 +20,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.Reference;
@@ -111,29 +112,41 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                     mIllustsBeanList.addAll(userWorksResponse.getIllusts());
                     mPixivAdapterGrid = new AuthorWorksAdapter(mIllustsBeanList, mContext);
                     next_url = userWorksResponse.getNext_url();
-                    mPixivAdapterGrid.setOnItemClickListener((view, position, viewType) -> {
-                        if (position == -1) {
-                            if (next_url != null) {
-                                getNextUserIllust();
-                            } else {
-                                Snackbar.make(rcvGoodsList, "没有更多数据了", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    mPixivAdapterGrid.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position, int viewType) {
+                            if (position == -1) {
+                                if (next_url != null) {
+                                    getNextUserIllust();
+                                } else {
+                                    Snackbar.make(rcvGoodsList, "没有更多数据了", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                }
+                            } else if (viewType == 0) {
+                                Reference.sIllustsBeans = mIllustsBeanList;
+                                Intent intent = new Intent(mContext, ViewPagerActivity.class);
+                                intent.putExtra("which one is selected", position);
+                                mContext.startActivity(intent);
+                            } else if (viewType == 1) {
+                                if (!mIllustsBeanList.get(position).isIs_bookmarked()) {
+                                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
+                                    view.startAnimation(Common.getAnimation());
+                                    Common.postStarIllust(position, mIllustsBeanList,
+                                            mSharedPreferences.getString("Authorization", ""), mContext, "public");
+                                } else {
+                                    ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                    view.startAnimation(Common.getAnimation());
+                                    Common.postUnstarIllust(position, mIllustsBeanList,
+                                            mSharedPreferences.getString("Authorization", ""), mContext);
+                                }
                             }
-                        } else if (viewType == 0) {
-                            Reference.sIllustsBeans = mIllustsBeanList;
-                            Intent intent = new Intent(mContext, ViewPagerActivity.class);
-                            intent.putExtra("which one is selected", position);
-                            mContext.startActivity(intent);
-                        } else if (viewType == 1) {
+                        }
+
+                        @Override
+                        public void onItemLongClick(View view, int position) {
                             if (!mIllustsBeanList.get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
-                                view.startAnimation(Common.getAnimation());
                                 Common.postStarIllust(position, mIllustsBeanList,
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
-                            } else {
-                                ((ImageView) view).setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                view.startAnimation(Common.getAnimation());
-                                Common.postUnstarIllust(position, mIllustsBeanList,
-                                        mSharedPreferences.getString("Authorization", ""), mContext);
+                                        mSharedPreferences.getString("Authorization", ""), mContext, "private");
                             }
                         }
                     });

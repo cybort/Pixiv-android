@@ -1,5 +1,6 @@
 package com.example.administrator.essim.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.AutoFieldAdapter;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustDetailResponse;
 import com.example.administrator.essim.response.IllustsBean;
@@ -38,7 +40,6 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,11 @@ import retrofit2.Callback;
 public class SearchActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
     public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
+    static final String EXTRA_SAMPLE = "sample";
+    static final String EXTRA_TYPE = "type";
+    static final int TYPE_XML = 1;
     private int searchType;
+    private Activity mActivity;
     private Context mContext;
     private CardView mCardView;
     private ProgressBar mProgressBar;
@@ -69,6 +74,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
     }
 
     private void initView() {
+        mActivity = this;
         mContext = this;
         mCardView = findViewById(R.id.card_search);
         mRecyclerView = findViewById(R.id.recy);
@@ -223,9 +229,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
                             return tv;
                         }
                     }));
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -245,10 +249,18 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
             public void onResponse(@NonNull Call<PixivResponse> call, @NonNull retrofit2.Response<PixivResponse> response) {
                 Reference.sPixivResponse = response.body();
                 customSuggestionsAdapter = new AutoFieldAdapter(Reference.sPixivResponse, mContext);
-                customSuggestionsAdapter.setOnItemClickListener((view, position, viewType) -> {
-                    Intent intent = new Intent(mContext, SearchTagActivity.class);
-                    intent.putExtra("what is the keyword", ((TextView) view).getText());
-                    startActivity(intent);
+                customSuggestionsAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int viewType) {
+                        Intent intent = new Intent(mContext, SearchTagActivity.class);
+                        intent.putExtra("what is the keyword", ((TextView) view).getText());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
+                    }
                 });
                 mRecyclerView.setAdapter(customSuggestionsAdapter);
                 mCardView.setVisibility(View.VISIBLE);

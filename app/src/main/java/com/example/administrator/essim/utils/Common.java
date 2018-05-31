@@ -1,6 +1,8 @@
 package com.example.administrator.essim.utils;
 
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -9,7 +11,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
-import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -21,12 +22,6 @@ import com.example.administrator.essim.response.IllustsBean;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -86,6 +81,8 @@ import retrofit2.Callback;
 
 public class Common {
 
+    public static final String EXTRA_TRANSITION = "EXTRA_TRANSITION";
+    public static final String TRANSITION_SLIDE_BOTTOM = "SLIDE_BOTTOM";
     public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
     public static final String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
             "mode=daily&per_page=30&date=" + Common.getLastDay();
@@ -125,7 +122,7 @@ public class Common {
         return true;
     }
 
-    public static void postStarIllust(int position, List<IllustsBean> illustsBeans, String token, Context context) {
+    public static void postStarIllust(int position, List<IllustsBean> illustsBeans, String token, Context context, String starType) {
         List<String> illustTag = new ArrayList();
         Iterator localIterator = illustsBeans.get(position).getTags().iterator();
         while (localIterator.hasNext()) {
@@ -134,13 +131,18 @@ public class Common {
         Call<BookmarkAddResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .postLikeIllust(token, illustsBeans.get(position).getId(), "public", illustTag);
+                .postLikeIllust(token, illustsBeans.get(position).getId(), starType, illustTag);
         call.enqueue(new Callback<BookmarkAddResponse>() {
             @Override
             public void onResponse(Call<BookmarkAddResponse> call, retrofit2.Response<BookmarkAddResponse> response) {
                 illustsBeans.get(position).setIs_bookmarked(true);
-                TastyToast.makeText(context, "成功添加到收藏~",
-                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                if (starType.equals("private")) {
+                    TastyToast.makeText(context, "成功添加到非公开收藏~",
+                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                } else {
+                    TastyToast.makeText(context, "成功添加到公开收藏~",
+                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+                }
             }
 
             @Override
@@ -253,11 +255,21 @@ public class Common {
                 Uri.fromFile(file)));
     }
 
+    public static void sendBroadcast(Context context, Uri uri) {
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+    }
+
     public static void copyMessage(Context mContext, String tag) {
         ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData = ClipData.newPlainText("Label", tag);
         assert cm != null;
         cm.setPrimaryClip(mClipData);
         TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+    }
+
+    public static void startActivityWithOptions(Intent intent, Activity mActivity) {
+        ActivityOptions transitionActivity =
+                ActivityOptions.makeSceneTransitionAnimation(mActivity);
+        mActivity.startActivity(intent, transitionActivity.toBundle());
     }
 }

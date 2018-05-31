@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
 
 import java.util.List;
@@ -63,6 +64,11 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (mOnItemClickListener != null) {
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
                 ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
+                ((PhotoHolder) holder).mImageView2.setOnLongClickListener(v -> {
+                    Common.showLog("开始长按了");
+                    mOnItemClickListener.onItemLongClick(((PhotoHolder) holder).mImageView2, position);
+                    return true;
+                });
             }
         } else {
             ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1, 0));

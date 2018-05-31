@@ -175,4 +175,7 @@
     <string name="permission_state">权限状态:</string>
     <string name="ceuilisa_detail">目前团队中只有一个人 CeuiLiSA 如果觉得这款软件不错的话，请开发者喝杯咖啡吧~</string>
     <string name="pay_way">支付宝：13990845246</string>
+    <string name="public_item">显示公开项目</string>
+    <string name="private_item">显示非公开项目</string>
+
 </resources>
