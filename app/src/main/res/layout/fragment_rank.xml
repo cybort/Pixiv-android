@@ -11,9 +11,8 @@
         android:background="@color/colorPrimary"
         android:elevation="@dimen/three_dip"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_menu_black_24dp_two"
         app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:navigationIcon="@drawable/ic_menu_black_24dp_two"
         app:title=" "
         app:titleTextColor="#fff" />
 

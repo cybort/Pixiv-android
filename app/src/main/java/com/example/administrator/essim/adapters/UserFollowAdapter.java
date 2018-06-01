@@ -76,6 +76,7 @@ public class UserFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (!mBooksInfo.get(position).getUser().isIs_followed()) {
                 ((ContentViewHolder) holder).mButton.setText("+关注");
             }
+
             ((ContentViewHolder) holder).mButton.setOnClickListener(view -> {
                 if (mBooksInfo.get(position).getUser().isIs_followed()) {
                     ((ContentViewHolder) holder).mButton.setText("+关注");
@@ -85,14 +86,22 @@ public class UserFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     ((ContentViewHolder) holder).mButton.setText("取消关注");
                     Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
-                            mBooksInfo.get(position).getUser().getId(), ((ContentViewHolder) holder).mButton);
+                            mBooksInfo.get(position).getUser().getId(), ((ContentViewHolder) holder).mButton, "public");
                     mBooksInfo.get(position).getUser().setIs_followed(true);
                 }
             });
+            ((ContentViewHolder) holder).mButton.setOnLongClickListener(view -> {
+                if (!mBooksInfo.get(position).getUser().isIs_followed()) {
+                    ((ContentViewHolder) holder).mButton.setText("取消关注");
+                    Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
+                            mBooksInfo.get(position).getUser().getId(), ((ContentViewHolder) holder).mButton, "private");
+                    mBooksInfo.get(position).getUser().setIs_followed(true);
+                }
+                return true;
+            });
             ((ContentViewHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
-        } else
-
-        {
+        }
+        else {
             ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1, 0));
         }
     }

@@ -65,7 +65,6 @@ public class PixivAdapterGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
                 ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
                 ((PhotoHolder) holder).mImageView2.setOnLongClickListener(v -> {
-                    Common.showLog("开始长按了");
                     mOnItemClickListener.onItemLongClick(((PhotoHolder) holder).mImageView2, position);
                     return true;
                 });

@@ -10,8 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
@@ -28,11 +31,13 @@ import retrofit2.Callback;
 
 public class FollowShowActivity extends AppCompatActivity {
 
+    private int dataType;
     private int userID;
     private String next_url;
     private String searchKey;
     private Toolbar mToolbar;
     private Context mContext;
+    private TextView mTextView;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private UserFollowAdapter mUserFollowAdapter;
@@ -51,7 +56,7 @@ public class FollowShowActivity extends AppCompatActivity {
             searchKey = intent.getStringExtra("search_key");    //获取搜索页的关键词开始搜索
             getUserByName();
         } else {
-            getUserFollowing();
+            getUserFollowing("public");
         }
     }
 
@@ -61,54 +66,70 @@ public class FollowShowActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.INVISIBLE);
         mRecyclerView = findViewById(R.id.pixiv_recy);
         mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(view -> finish());
         LinearLayoutManager linearLayout = new LinearLayoutManager(mContext);
         linearLayout.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayout);
         mRecyclerView.setHasFixedSize(true);
+        mTextView = findViewById(R.id.show_nothing);
     }
 
-    private void getUserFollowing() {
+    private void getUserFollowing(String followerType) {
         mProgressBar.setVisibility(View.VISIBLE);
+        dataType = followerType.equals("public") ? 0 : 1;
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserFollowing(mSharedPreferences.getString("Authorization", ""), userID, "public");
+                .getUserFollowing(mSharedPreferences.getString("Authorization", ""), userID, followerType);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
-                Reference.sSearchUserResponse = response.body();
-                next_url = Reference.sSearchUserResponse.getNext_url();
-                mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
-                mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
-                mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position, int viewType) {
-                        if (position == -1) {
-                            if (next_url != null) {
-                                getNextData();
+                if(response.body().getUser_previews().size() == 0)
+                {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mTextView.setText("这里空空的，什么也没有~");
+                    mTextView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    Reference.sSearchUserResponse = response.body();
+                    next_url = Reference.sSearchUserResponse.getNext_url();
+                    mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
+                    mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
+                    mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position, int viewType) {
+                            if (position == -1) {
+                                if (next_url != null) {
+                                    getNextData();
+                                } else {
+                                    Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Snackbar.make(mRecyclerView, "没有其他数据了", Snackbar.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            try {
-                                Intent intent = new Intent(mContext, CloudMainActivity.class);
-                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
-                                        .getUser().getId());
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                try {
+                                    Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                    intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                            .getUser().getId());
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onItemLongClick(View view, int position) {
+                        @Override
+                        public void onItemLongClick(View view, int position) {
 
+                        }
+                    });
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mRecyclerView.setAdapter(mUserFollowAdapter);
+                    if(mRecyclerView.getVisibility() == View.INVISIBLE) {
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mTextView.setVisibility(View.INVISIBLE);
                     }
-                });
-                mProgressBar.setVisibility(View.INVISIBLE);
-                mRecyclerView.setAdapter(mUserFollowAdapter);
+                }
             }
 
             @Override
@@ -222,5 +243,37 @@ public class FollowShowActivity extends AppCompatActivity {
         super.onDestroy();
         Reference.sSearchUserResponse = null;
         mUserFollowAdapter = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        if (mSharedPreferences.getInt("userid", 0) == userID) {
+            getMenuInflater().inflate(R.menu.user_star, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_get_public:
+                if (dataType != 0) {
+                    getUserFollowing("public");
+                }
+                break;
+            case R.id.action_get_private:
+                if (dataType != 1) {
+                    getUserFollowing("private");
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

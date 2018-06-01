@@ -69,6 +69,10 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (mOnItemClickListener != null) {
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
                 ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
+                ((PhotoHolder) holder).mImageView2.setOnLongClickListener(v -> {
+                    mOnItemClickListener.onItemLongClick(((PhotoHolder) holder).mImageView2, position);
+                    return true;
+                });
             }
         } else if (holder instanceof BottomViewHolder) {
             ((BottomViewHolder) holder).mTextView.setText("加载更多");

@@ -190,18 +190,26 @@ public class HomeFragment extends Fragment {
             }
             mTextView3.setOnClickListener(view -> {
                 if (userDetailResponse.getUser().isIs_followed()) {
-                    mTextView3.setText("取消关注");
                     Common.postUnFollowUser(mSharedPreferences.getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3);
                     mTextView3.setText("+关注");
                     userDetailResponse.getUser().setIs_followed(false);
                 } else {
-                    mTextView3.setText("+关注");
                     Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
-                            userDetailResponse.getUser().getId(), mTextView3);
+                            userDetailResponse.getUser().getId(), mTextView3, "public");
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
                 }
+            });
+            mTextView3.setOnLongClickListener(view -> {
+                if(!userDetailResponse.getUser().isIs_followed())
+                {
+                    Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
+                            userDetailResponse.getUser().getId(), mTextView3, "private");
+                    mTextView3.setText("取消关注");
+                    userDetailResponse.getUser().setIs_followed(true);
+                }
+                return true;
             });
         }
         Glide.with(mContext).load(new GlideUtil().getHead(userDetailResponse.getUser())).into(head);

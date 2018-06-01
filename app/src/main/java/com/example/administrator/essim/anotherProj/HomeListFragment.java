@@ -61,7 +61,6 @@ public class HomeListFragment extends ScrollObservableFragment {
         View v = inflater.inflate(R.layout.fragment_home_list, container, false);
         initView(v);
         getLikeIllust("public");
-        sRefreshLayout = this::getLikeIllust;
         return v;
     }
 
@@ -91,7 +90,6 @@ public class HomeListFragment extends ScrollObservableFragment {
                 if (HomeListFragment.this.isResumed()) {
                     doOnScrollChanged(0, scrolledY, dx, dy);
                 }
-                Common.showLog(scrolledY);
             }
         });
         mTextView = v.findViewById(R.id.post_like_user);
@@ -210,5 +208,6 @@ public class HomeListFragment extends ScrollObservableFragment {
         if (mPixivAdapterGrid != null) {
             mPixivAdapterGrid.notifyDataSetChanged();
         }
+        sRefreshLayout = this::getLikeIllust;
     }
 }

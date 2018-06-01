@@ -177,5 +177,6 @@
     <string name="pay_way">支付宝：13990845246</string>
     <string name="public_item">显示公开项目</string>
     <string name="private_item">显示非公开项目</string>
+    <string name="app_detail">KujouKaren Ver. %s/%d</string>
 
 </resources>

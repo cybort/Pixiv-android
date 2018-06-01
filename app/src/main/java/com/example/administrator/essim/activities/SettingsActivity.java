@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.icu.util.VersionInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -35,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Activity mActivity;
     private NestedScrollView mNestedScrollView;
     private SharedPreferences mSharedPreferences;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7;
+    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8;
     private StorageChooser.Builder builder = new StorageChooser.Builder();
     private StorageChooser chooser;
 
@@ -63,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
         mTextView5 = findViewById(R.id.real_path);
         mTextView6 = findViewById(R.id.setting_text_has_sdCard);
         mTextView7 = findViewById(R.id.text_has_permission);
+        mTextView8 = findViewById(R.id.app_detail);
         mSwitch.setChecked(mSharedPreferences.getBoolean("is_origin_pic", false));
         mSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             editor.putBoolean("is_origin_pic", b);
@@ -96,6 +100,14 @@ public class SettingsActivity extends AppCompatActivity {
         });
         mTextView7.setText(mSharedPreferences.getString("treeUri", "no sd card").equals("no sd card") ?
                 "无SD卡读写权限或无SD卡" : "已获取SD卡读写权限");
+        try {
+            PackageInfo pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+            mTextView8.setText(String.format(getString(R.string.app_detail), pi.versionName, pi.versionCode));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         //初始化路径选择对话框
         Content c = new Content();

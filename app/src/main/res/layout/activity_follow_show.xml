@@ -9,9 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title=" "
         app:titleTextColor="@color/white" />
 
@@ -29,5 +30,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="100dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/show_nothing"
+        android:textSize="@dimen/eighteen_sp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorPrimary"/>
 
 </RelativeLayout>

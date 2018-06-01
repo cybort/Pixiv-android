@@ -171,15 +171,19 @@ public class Common {
         });
     }
 
-    public static void postFollowUser(String auth, int userID, View view) {
+    public static void postFollowUser(String auth, int userID, View view, String followType) {
         Call<BookmarkAddResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .postFollowUser(auth, userID, "public");
+                .postFollowUser(auth, userID, followType);
         call.enqueue(new Callback<BookmarkAddResponse>() {
             @Override
             public void onResponse(Call<BookmarkAddResponse> call, retrofit2.Response<BookmarkAddResponse> response) {
-                Snackbar.make(view, "关注成功~", Snackbar.LENGTH_SHORT).show();
+                if (followType.equals("public")) {
+                    Snackbar.make(view, "关注成功~(公开的)", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(view, "关注成功~(非公开的)", Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             @Override
