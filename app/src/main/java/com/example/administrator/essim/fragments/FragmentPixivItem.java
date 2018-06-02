@@ -2,6 +2,7 @@ package com.example.administrator.essim.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,11 +28,15 @@ import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
+import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.download.DownloadTask;
+import com.example.administrator.essim.download.SDDownloadTask;
+import com.example.administrator.essim.download.ZIPDownloadTask;
+import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
+import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.utils.Common;
-import com.example.administrator.essim.utils.DownloadTask;
 import com.example.administrator.essim.utils.GlideUtil;
-import com.example.administrator.essim.utils.SDDownloadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -40,6 +46,8 @@ import java.io.File;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
@@ -48,8 +56,10 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class FragmentPixivItem extends BaseFragment implements View.OnClickListener {
 
+    private String zipUrl;
     private int index;
     private SharedPreferences mSharedPreferences;
+    private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
 
     public static FragmentPixivItem newInstance(int index) {
@@ -70,7 +80,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         }
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -102,6 +112,8 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                         .into(imageView2);
             }
         }
+        mProgressBar = view.findViewById(R.id.try_login);
+        mProgressBar.setVisibility(View.INVISIBLE);
         TextView textView = view.findViewById(R.id.detail_author);
         TextView textView2 = view.findViewById(R.id.detail_img_size);
         TextView textView3 = view.findViewById(R.id.detail_create_time);
@@ -221,7 +233,9 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mContext.startActivity(intent);
                 break;
             case R.id.fab_like:
-                if (Reference.sIllustsBeans.get(index).isIs_bookmarked()) {
+
+                loadGif();
+                /*if (Reference.sIllustsBeans.get(index).isIs_bookmarked()) {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
@@ -239,10 +253,50 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                         (int) mFloatingActionButton.getY(),
                         0, (float) Math.hypot(getView().getWidth(), getView().getHeight()));
                 anim.setDuration(600);
-                anim.start();
+                anim.start();*/
                 break;
             default:
                 break;
+        }
+    }
+
+    private void loadGif() {
+        if (Reference.sIllustsBeans.get(index).getType().equals("ugoira")) {
+            File gifParentFile = new File("/storage/emulated/0/PixivPictures/gifZipFile");
+            if (!gifParentFile.exists()) {
+                gifParentFile.mkdir();
+                TastyToast.makeText(mContext, "文件夹创建成功~",
+                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+            }
+            File gifRealFile = new File(gifParentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
+                    Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(0) + ".zip");
+            if (gifRealFile.exists()) {
+                TastyToast.makeText(mContext, "该文件已存在~",
+                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+            } else {
+                mProgressBar.setVisibility(View.VISIBLE);
+                Call<UgoiraMetadataResponse> call = new RestClient()
+                        .getRetrofit_AppAPI()
+                        .create(AppApiPixivService.class)
+                        .getUgoiraMetadata(mSharedPreferences.getString("Authorization", ""),
+                                (long) Reference.sIllustsBeans.get(index).getId());
+                call.enqueue(new Callback<UgoiraMetadataResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<UgoiraMetadataResponse> call,
+                                           @NonNull retrofit2.Response<UgoiraMetadataResponse> response) {
+                        UgoiraMetadataResponse illustfollowResponse = response.body();
+                        zipUrl = illustfollowResponse.getUgoira_metadata().getZip_urls().getMedium();
+                        new ZIPDownloadTask(gifRealFile, mContext, Reference.sIllustsBeans.get(index), mProgressBar).execute(zipUrl);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<UgoiraMetadataResponse> call, @NonNull Throwable throwable) {
+
+                    }
+                });
+            }
+        } else {
+            Common.showLog("不是动图");
         }
     }
 

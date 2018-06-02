@@ -9,6 +9,23 @@ import com.example.administrator.essim.response.UserDetailResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+//       \\           //
+//        \\         //
+//         \\       //
+//   ##DDDDDDDDDDDDDDDDDDDDDD##
+//   ## DDDDDDDDDDDDDDDDDDDD ##   ________   ___   ___        ___   ________   ___   ___        ___
+//   ## hh                hh ##   |\   __  \ |\  \ |\  \      |\  \ |\   __  \ |\  \ |\  \      |\  \
+//   ## hh    //    \\    hh ##   \ \  \|\ /_\ \  \\ \  \     \ \  \\ \  \|\ /_\ \  \\ \  \     \ \  \
+//   ## hh   //      \\   hh ##    \ \   __  \\ \  \\ \  \     \ \  \\ \   __  \\ \  \\ \  \     \ \  \
+//   ## hh                hh ##     \ \  \|\  \\ \  \\ \  \____ \ \  \\ \  \|\  \\ \  \\ \  \____ \ \  \
+//   ## hh      wwww      hh ##      \ \_______\\ \__\\ \_______\\ \__\\ \_______\\ \__\\ \_______\\ \__\
+//   ## hh                hh ##       \|_______| \|__| \|_______| \|__| \|_______| \|__| \|_______| \|__|
+//   ## MMMMMMMMMMMMMMMMMMMM ##
+//   ##MMMMMMMMMMMMMMMMMMMMMM##                                        Release 1.22.2. Powered by 主站前端.
+//        \/            \/
+ */
+
 
 public class GlideUtil {
 

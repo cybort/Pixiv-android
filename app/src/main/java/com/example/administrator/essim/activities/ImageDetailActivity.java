@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentImageDetail;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.utils.DownloadTask;
-import com.example.administrator.essim.utils.SDDownloadTask;
+import com.example.administrator.essim.download.DownloadTask;
+import com.example.administrator.essim.download.SDDownloadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;

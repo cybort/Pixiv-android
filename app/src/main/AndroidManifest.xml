@@ -35,6 +35,7 @@
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.CommentActivity" />
         <activity android:name=".activities.SettingsActivity"></activity>
+
     </application>
 
 </manifest>

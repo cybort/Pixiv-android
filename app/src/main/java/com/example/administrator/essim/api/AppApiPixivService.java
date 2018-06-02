@@ -11,6 +11,7 @@ import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.SearchIllustResponse;
 import com.example.administrator.essim.response.SearchUserResponse;
 import com.example.administrator.essim.response.TrendingtagResponse;
+import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.response.UserDetailResponse;
 import com.example.administrator.essim.response.UserIllustsResponse;
 
@@ -60,6 +61,8 @@ public interface AppApiPixivService {
     Call<SearchUserResponse> getUserFollowing(@Header("Authorization") String paramString1,
                                               @Query("user_id") long paramLong,
                                               @Query("restrict") String paramString2);
+    @GET("v1/ugoira/metadata")
+    Call<UgoiraMetadataResponse> getUgoiraMetadata(@Header("Authorization") String paramString, @Query("illust_id") long paramLong);
 
     @GET("/v1/user/illusts?filter=for_ios")
     Call<UserIllustsResponse> getUserIllusts(@Header("Authorization") String paramString1,

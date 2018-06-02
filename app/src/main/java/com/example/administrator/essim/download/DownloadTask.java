@@ -1,4 +1,4 @@
-package com.example.administrator.essim.utils;
+package com.example.administrator.essim.download;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
