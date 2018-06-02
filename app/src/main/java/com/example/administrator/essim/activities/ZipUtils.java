@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -67,12 +68,13 @@ public class ZipUtils {
      * @param folderPath 解压缩的目标目录
      * @throws IOException 当解压缩过程出错时抛出
      */
-    public static void upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
+    public static List<File> upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdirs();
         }
         ZipFile zf = new ZipFile(zipFile);
+        List<File> allPicOfGif = new ArrayList<>();
         for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements();) {
             ZipEntry entry = ((ZipEntry)entries.nextElement());
             if (entry.isDirectory()) {
@@ -98,7 +100,9 @@ public class ZipUtils {
             }
             in.close();
             out.close();
+			allPicOfGif.add(desFile);
         }
+        return allPicOfGif;
     }
  
     /**

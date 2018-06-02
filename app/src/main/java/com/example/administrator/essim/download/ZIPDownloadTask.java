@@ -3,13 +3,19 @@ package com.example.administrator.essim.download;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.essim.activities.DirTraversal;
 import com.example.administrator.essim.activities.ZipUtils;
 import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.utils.Common;
+import com.lchad.gifflen.Gifflen;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,20 +23,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipException;
 
 public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
 
     private File realFile;
+    private File realGifFile;
     private Context mContext;
+    private int picDelay;
+    private ImageView mImageView;
     private ProgressBar mProgressBar;
     private IllustsBean mIllustsBeans;
 
-    public ZIPDownloadTask(File file, Context context, IllustsBean illustsBean, ProgressBar progressBar) {
+    public ZIPDownloadTask(File file, Context context, IllustsBean illustsBean,
+                           int delay, ProgressBar progressBar, ImageView imageView) {
         realFile = file;
         mContext = context;
+        picDelay = delay;
         mProgressBar = progressBar;
         mIllustsBeans = illustsBean;
+        mImageView = imageView;
     }
 
     @Override
@@ -75,7 +89,20 @@ public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
                 File sencondParent = new File("/storage/emulated/0/PixivPictures/gifUnzipFile/" + mIllustsBeans.getId());
                 if (!sencondParent.exists()) {
                     sencondParent.mkdir();
-                    ZipUtils.upZipFile(file, sencondParent.getPath());
+                    List<File> allPicOfGif = ZipUtils.upZipFile(file, sencondParent.getPath());
+                    Gifflen gifflen = new Gifflen.Builder()
+                            .width(mIllustsBeans.getWidth())
+                            .height(mIllustsBeans.getHeight())
+                            .delay(picDelay)
+                            .listener(new Gifflen.OnEncodeFinishListener() {
+                                @Override
+                                public void onEncodeFinish(String path) {
+                                    Toast.makeText(mContext, "已保存gif到" + path, Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .build();
+                    realGifFile = new File(sencondParent.getPath(), mIllustsBeans.getTitle() + ".gif");
+                    gifflen.encode(realGifFile.getPath(), allPicOfGif);
                 } else {
                     Common.showLog("什么也不做");
                 }
@@ -106,6 +133,7 @@ public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         mProgressBar.setVisibility(View.INVISIBLE);
+        Glide.with(mContext).load(realGifFile).into(mImageView);
         mContext = null;
         mProgressBar = null;
     }

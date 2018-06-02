@@ -2,11 +2,15 @@ package com.example.administrator.essim.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.administrator.essim.R;
+import com.lchad.gifflen.Gifflen;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;

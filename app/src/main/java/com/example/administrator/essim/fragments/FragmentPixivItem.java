@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -61,6 +62,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private SharedPreferences mSharedPreferences;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
+    private ImageView imageView2;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -90,7 +92,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
 
     private void reFreshLayout(View view) {
         ImageView imageView = view.findViewById(R.id.item_background_img);
-        ImageView imageView2 = view.findViewById(R.id.detail_img);
+        imageView2 = view.findViewById(R.id.detail_img);
         ViewGroup.LayoutParams params = imageView2.getLayoutParams();
         params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
                 Reference.sIllustsBeans.get(index).getHeight()) / Reference.sIllustsBeans.get(index).getWidth());
@@ -101,7 +103,6 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(imageView);
         if (mSharedPreferences.getBoolean("is_origin_pic", false)) {
-
             Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
                     .into(imageView2);
         } else {
@@ -286,7 +287,9 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                                            @NonNull retrofit2.Response<UgoiraMetadataResponse> response) {
                         UgoiraMetadataResponse illustfollowResponse = response.body();
                         zipUrl = illustfollowResponse.getUgoira_metadata().getZip_urls().getMedium();
-                        new ZIPDownloadTask(gifRealFile, mContext, Reference.sIllustsBeans.get(index), mProgressBar).execute(zipUrl);
+                        new ZIPDownloadTask(gifRealFile, mContext, Reference.sIllustsBeans.get(index),
+                                illustfollowResponse.getUgoira_metadata().getFrames().get(0).getDelay(),
+                                    mProgressBar, imageView2).execute(zipUrl);
                     }
 
                     @Override
