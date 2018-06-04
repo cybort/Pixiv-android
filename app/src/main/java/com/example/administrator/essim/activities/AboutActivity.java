@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.administrator.essim.R;
-import com.lchad.gifflen.Gifflen;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;

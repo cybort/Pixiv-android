@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
@@ -44,9 +45,12 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -62,7 +66,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private SharedPreferences mSharedPreferences;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
-    private ImageView imageView2;
+    private GifImageView imageView2;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -106,12 +110,8 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
             Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
                     .into(imageView2);
         } else {
-            if (Reference.sIllustsBeans.get(index).getType().equals("ugoira")) {
-                Common.showLog("这是个动图");
-            } else {
-                Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
-                        .into(imageView2);
-            }
+            Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+                    .into(imageView2);
         }
         mProgressBar = view.findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -234,9 +234,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mContext.startActivity(intent);
                 break;
             case R.id.fab_like:
-
-                loadGif();
-                /*if (Reference.sIllustsBeans.get(index).isIs_bookmarked()) {
+                if (Reference.sIllustsBeans.get(index).isIs_bookmarked()) {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
@@ -254,7 +252,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                         (int) mFloatingActionButton.getY(),
                         0, (float) Math.hypot(getView().getWidth(), getView().getHeight()));
                 anim.setDuration(600);
-                anim.start();*/
+                anim.start();
                 break;
             default:
                 break;
@@ -272,8 +270,16 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
             File gifRealFile = new File(gifParentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
                     Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(0) + ".zip");
             if (gifRealFile.exists()) {
-                TastyToast.makeText(mContext, "该文件已存在~",
-                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
+                File file = new File("/storage/emulated/0/PixivPictures/gifUnzipFile/" +
+                        Reference.sIllustsBeans.get(index).getId(), Reference.sIllustsBeans.get(index).getTitle()+".gif");
+                //Glide.with(mContext).load(file).asGif().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().into(imageView2);
+
+                try {
+                    GifDrawable gifFromFile = new GifDrawable(file);
+                    imageView2.setImageDrawable(gifFromFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 mProgressBar.setVisibility(View.VISIBLE);
                 Call<UgoiraMetadataResponse> call = new RestClient()

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
@@ -50,6 +49,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'com.github.codekidX:storage-chooser:2.0.3'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.12'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

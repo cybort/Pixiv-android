@@ -8,20 +8,27 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
+import com.bumptech.glide.gifencoder.AnimatedGifEncoder;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustsBean;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -278,5 +285,40 @@ public class Common {
         ActivityOptions transitionActivity =
                 ActivityOptions.makeSceneTransitionAnimation(mActivity);
         mActivity.startActivity(intent, transitionActivity.toBundle());
+    }
+
+    public static int getMax(int x, int y)
+    {
+        return x >= y ? x : y;
+    }
+
+    public static String createGif(String filename, List<String> paths, int fps, int width, int height) throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        AnimatedGifEncoder localAnimatedGifEncoder = new AnimatedGifEncoder();
+        localAnimatedGifEncoder.start(baos);//start
+        localAnimatedGifEncoder.setRepeat(0);//设置生成gif的开始播放时间。0为立即开始播放
+        localAnimatedGifEncoder.setDelay(fps);
+        if (paths.size() > 0) {
+            for (int i = 0; i < paths.size(); i++) {
+                Bitmap bitmap = BitmapFactory.decodeFile(paths.get(i));
+                bitmap.setWidth(width);
+                bitmap.setHeight(height);
+                localAnimatedGifEncoder.addFrame(bitmap);
+            }
+        }
+        localAnimatedGifEncoder.finish();//finish
+
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/LiliNote");
+        if (!file.exists()) file.mkdir();
+        String path = Environment.getExternalStorageDirectory().getPath() + "/LiliNote/" + filename + ".gif";
+        FileOutputStream fos = new FileOutputStream(path);
+        baos.writeTo(fos);
+        baos.flush();
+        fos.flush();
+        baos.close();
+        fos.close();
+
+        return path;
     }
 }

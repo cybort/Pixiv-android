@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:background="#F4F4F4">
 
-                    <ImageView
+                    <pl.droidsonroids.gif.GifImageView
                         android:id="@+id/detail_img"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

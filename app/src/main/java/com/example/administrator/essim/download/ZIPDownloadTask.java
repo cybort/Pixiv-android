@@ -3,17 +3,17 @@ package com.example.administrator.essim.download;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.DirTraversal;
 import com.example.administrator.essim.activities.ZipUtils;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.utils.Common;
 import com.lchad.gifflen.Gifflen;
 
@@ -23,9 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
 
@@ -33,12 +36,12 @@ public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     private File realGifFile;
     private Context mContext;
     private int picDelay;
-    private ImageView mImageView;
+    private GifImageView mImageView;
     private ProgressBar mProgressBar;
     private IllustsBean mIllustsBeans;
 
     public ZIPDownloadTask(File file, Context context, IllustsBean illustsBean,
-                           int delay, ProgressBar progressBar, ImageView imageView) {
+                           int delay, ProgressBar progressBar, GifImageView imageView) {
         realFile = file;
         mContext = context;
         picDelay = delay;
@@ -89,24 +92,36 @@ public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
                 File sencondParent = new File("/storage/emulated/0/PixivPictures/gifUnzipFile/" + mIllustsBeans.getId());
                 if (!sencondParent.exists()) {
                     sencondParent.mkdir();
-                    List<File> allPicOfGif = ZipUtils.upZipFile(file, sencondParent.getPath());
-                    Gifflen gifflen = new Gifflen.Builder()
-                            .width(mIllustsBeans.getWidth())
-                            .height(mIllustsBeans.getHeight())
-                            .delay(picDelay)
-                            .listener(new Gifflen.OnEncodeFinishListener() {
-                                @Override
-                                public void onEncodeFinish(String path) {
-                                    Toast.makeText(mContext, "已保存gif到" + path, Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .build();
-                    realGifFile = new File(sencondParent.getPath(), mIllustsBeans.getTitle() + ".gif");
-                    gifflen.encode(realGifFile.getPath(), allPicOfGif);
-                } else {
-                    Common.showLog("什么也不做");
                 }
-                // 解压到输出文件夹
+                int width = 0;
+                int height = 0;
+                if (Common.getMax(mIllustsBeans.getWidth(), mIllustsBeans.getHeight()) <= 600) {
+                    width = mIllustsBeans.getWidth();
+                    height = mIllustsBeans.getHeight();
+                } else if (mIllustsBeans.getWidth() >= mIllustsBeans.getHeight()) {
+                    width = 600;
+                    height = 600 * mIllustsBeans.getHeight() / mIllustsBeans.getWidth();
+                } else if (mIllustsBeans.getWidth() <= mIllustsBeans.getHeight()) {
+                    width = 600 * mIllustsBeans.getWidth() / mIllustsBeans.getHeight();
+                    height = 600;
+                }
+                List<File> allPicOfGif = ZipUtils.upZipFile(file, sencondParent.getPath());
+                Gifflen gifflen = new Gifflen.Builder()
+                        .width(width)
+                        .color(128)
+                        .quality(5)
+                        .height(height)
+                        .delay(picDelay)
+                        .listener(new Gifflen.OnEncodeFinishListener() {
+                            @Override
+                            public void onEncodeFinish(String path) {
+                                Toast.makeText(mContext, "已保存gif到" + path, Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .build();
+                realGifFile = new File(sencondParent.getPath(), mIllustsBeans.getTitle() + ".gif");
+                gifflen.encode(realGifFile.getPath(), allPicOfGif);
+                Common.showLog("时间间隔" + String.valueOf(picDelay));
             } catch (ZipException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -133,7 +148,14 @@ public class ZIPDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         mProgressBar.setVisibility(View.INVISIBLE);
-        Glide.with(mContext).load(realGifFile).into(mImageView);
+        Common.showLog("开始加载动图了哈哈哈哈哈");
+        /*try {
+            GifDrawable gifFromFile = new GifDrawable(realFile);
+            mImageView.setImageDrawable(gifFromFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        Glide.with(mContext).load(realGifFile).asGif().diskCacheStrategy(DiskCacheStrategy.NONE).into(mImageView);
         mContext = null;
         mProgressBar = null;
     }

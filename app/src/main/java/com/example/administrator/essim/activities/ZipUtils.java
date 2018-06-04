@@ -1,5 +1,7 @@
 package com.example.administrator.essim.activities;
 
+import com.example.administrator.essim.utils.Common;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -101,6 +103,7 @@ public class ZipUtils {
             in.close();
             out.close();
 			allPicOfGif.add(desFile);
+			Common.showLog(desFile.getName());
         }
         return allPicOfGif;
     }

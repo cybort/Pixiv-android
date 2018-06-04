@@ -1,11 +1,13 @@
 package com.example.administrator.essim.adapters;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,9 +70,25 @@ public class AuthorWorksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             if (mOnItemClickListener != null) {
                 ((PhotoHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
-                ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1));
+                ((PhotoHolder) holder).mImageView2.setOnClickListener(v -> {
+                    mOnItemClickListener.onItemClick(((PhotoHolder) holder).mImageView2, position, 1);
+                    Animator anim = ViewAnimationUtils.createCircularReveal(((PhotoHolder) holder).itemView,
+                            (int) v.getX(),
+                            (int) v.getY(),
+                            0, (float) Math.hypot(((PhotoHolder) holder).itemView.getWidth(),
+                                    ((PhotoHolder) holder).itemView.getHeight()));
+                    anim.setDuration(400);
+                    anim.start();
+                });
                 ((PhotoHolder) holder).mImageView2.setOnLongClickListener(v -> {
                     mOnItemClickListener.onItemLongClick(((PhotoHolder) holder).mImageView2, position);
+                    Animator anim = ViewAnimationUtils.createCircularReveal(((PhotoHolder) holder).itemView,
+                            (int) v.getX(),
+                            (int) v.getY(),
+                            0, (float) Math.hypot(((PhotoHolder) holder).itemView.getWidth(),
+                                    ((PhotoHolder) holder).itemView.getHeight()));
+                    anim.setDuration(400);
+                    anim.start();
                     return true;
                 });
             }
