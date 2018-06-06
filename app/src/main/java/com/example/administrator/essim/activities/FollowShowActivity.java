@@ -2,9 +2,7 @@ package com.example.administrator.essim.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,12 +17,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.UserFollowAdapter;
-import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchUserResponse;
+import com.example.administrator.essim.utils.Common;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +39,6 @@ public class FollowShowActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private UserFollowAdapter mUserFollowAdapter;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +47,6 @@ public class FollowShowActivity extends AppCompatActivity {
         mContext = this;
         Intent intent = getIntent();
         userID = intent.getIntExtra("user id", 0);
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         initView();
         if (userID == 0) {  //这是不传入用户id的启动方式，userID被默认置0，是从搜索页面（SearchActivity）跳转过来的
             searchKey = intent.getStringExtra("search_key");    //获取搜索页的关键词开始搜索
@@ -81,7 +77,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserFollowing(mSharedPreferences.getString("Authorization", ""), userID, followerType);
+                .getUserFollowing(Common.getLocalDataSet(mContext).getString("Authorization", ""), userID, followerType);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -108,7 +104,7 @@ public class FollowShowActivity extends AppCompatActivity {
                                 }
                             } else {
                                 try {
-                                    Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                    Intent intent = new Intent(mContext, UserDetailActivity.class);
                                     intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
                                             .getUser().getId());
                                     startActivity(intent);
@@ -144,7 +140,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getSearchUser(mSharedPreferences.getString("Authorization", ""), searchKey);
+                .getSearchUser(Common.getLocalDataSet(mContext).getString("Authorization", ""), searchKey);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -163,7 +159,7 @@ public class FollowShowActivity extends AppCompatActivity {
                             }
                         } else {
                             try {
-                                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                Intent intent = new Intent(mContext, UserDetailActivity.class);
                                 intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
                                         .getUser().getId());
                                 startActivity(intent);
@@ -194,7 +190,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getNextUser(mSharedPreferences.getString("Authorization", ""), next_url);
+                .getNextUser(Common.getLocalDataSet(mContext).getString("Authorization", ""), next_url);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -212,7 +208,7 @@ public class FollowShowActivity extends AppCompatActivity {
                             }
                         } else {
                             try {
-                                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                                Intent intent = new Intent(mContext, UserDetailActivity.class);
                                 intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
                                         .getUser().getId());
                                 startActivity(intent);
@@ -247,9 +243,8 @@ public class FollowShowActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
-        if (mSharedPreferences.getInt("userid", 0) == userID) {
+        if (Common.getLocalDataSet(mContext).getInt("userid", 0) == userID) {
             getMenuInflater().inflate(R.menu.user_star, menu);
         }
         return true;
@@ -257,9 +252,6 @@ public class FollowShowActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_get_public:
                 if (dataType != 0) {

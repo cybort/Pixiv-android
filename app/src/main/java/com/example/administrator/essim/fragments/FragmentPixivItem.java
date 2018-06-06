@@ -4,10 +4,9 @@ import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -22,15 +21,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
-import com.example.administrator.essim.anotherproj.CloudMainActivity;
+import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.download.DownloadTask;
 import com.example.administrator.essim.download.SDDownloadTask;
 import com.example.administrator.essim.response.Reference;
@@ -54,12 +55,9 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class FragmentPixivItem extends BaseFragment implements View.OnClickListener {
 
-    private String zipUrl;
     private int index;
-    private SharedPreferences mSharedPreferences;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
-    private ImageView imageView2;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -82,14 +80,13 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
             ActivityCompat.requestPermissions((Activity) mContext, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         reFreshLayout(view);
         return view;
     }
 
     private void reFreshLayout(View view) {
         ImageView imageView = view.findViewById(R.id.item_background_img);
-        imageView2 = view.findViewById(R.id.detail_img);
+        ImageView imageView2 = view.findViewById(R.id.detail_img);
         ViewGroup.LayoutParams params = imageView2.getLayoutParams();
         params.height = (((getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) *
                 Reference.sIllustsBeans.get(index).getHeight()) / Reference.sIllustsBeans.get(index).getWidth());
@@ -100,11 +97,10 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(imageView);
         mProgressBar = view.findViewById(R.id.try_login);
-        Wave wave = new Wave();
-        wave.setColor(getResources().getColor(R.color.colorPrimary));
-        mProgressBar.setIndeterminateDrawable(wave);
-        if (mSharedPreferences.getBoolean("is_origin_pic", true)) {
+        mProgressBar.setIndeterminateDrawable(Common.getLoaderAnimation(mContext));
+        if (Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", true)) {
             Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new GlideDrawableImageViewTarget(imageView2) {
                         @Override
                         public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
@@ -112,8 +108,10 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                             super.onResourceReady(drawable, anim);
                         }
                     });
+
         } else {
             Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new GlideDrawableImageViewTarget(imageView2) {
                         @Override
                         public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
@@ -141,14 +139,17 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.tag_textview,
                         mTagGroup, false);
                 tv.setText(s);
+                tv.setOnClickListener(v -> {
+                    Intent intent = new Intent(mContext, SearchTagActivity.class);
+                    intent.putExtra("what is the keyword", allTag[position]);
+                    mContext.startActivity(intent);
+                });
+                tv.setOnLongClickListener(v -> {
+                    Common.copyMessage(mContext, s);
+                    return true;
+                });
                 return tv;
             }
-        });
-        mTagGroup.setOnTagClickListener((view15, position, parent) -> {
-            Intent intent = new Intent(mContext, SearchTagActivity.class);
-            intent.putExtra("what is the keyword", allTag[position]);
-            mContext.startActivity(intent);
-            return true;
         });
         mFloatingActionButton = view.findViewById(R.id.fab_like);
         textView.setText(getString(R.string.string_author,
@@ -180,7 +181,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mFloatingActionButton.startAnimation(Common.getAnimation());
                 Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
                 Common.postStarIllust(index, Reference.sIllustsBeans,
-                        mSharedPreferences.getString("Authorization", ""), mContext, "private");
+                        Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "private");
 
                 Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
                         (int) mFloatingActionButton.getY(),
@@ -207,12 +208,12 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mContext.startActivity(intent);
                 break;
             case R.id.detail_author:
-                intent = new Intent(mContext, CloudMainActivity.class);
+                intent = new Intent(mContext, UserDetailActivity.class);
                 intent.putExtra("user id", Reference.sIllustsBeans.get(index).getUser().getId());
                 mContext.startActivity(intent);
                 break;
             case R.id.card_left:
-                File parentFile = new File(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures"));
+                File parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
                 if (!parentFile.exists()) {
                     parentFile.mkdir();
                     TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -224,12 +225,12 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                    if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                         //下载至内置SD存储介质，使用传统文件模式;
                         new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
                                 .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
                     } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                        new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), mSharedPreferences)
+                        new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
                                 .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
                     }
                 }
@@ -246,13 +247,13 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
                     Common.postUnstarIllust(index, Reference.sIllustsBeans,
-                            mSharedPreferences.getString("Authorization", ""), mContext);
+                            Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext);
                 } else {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
                     Common.postStarIllust(index, Reference.sIllustsBeans,
-                            mSharedPreferences.getString("Authorization", ""), mContext, "public");
+                            Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "public");
                 }
                 Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
                         (int) mFloatingActionButton.getY(),

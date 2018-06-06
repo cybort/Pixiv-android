@@ -18,6 +18,7 @@ import com.example.administrator.essim.fragments.FragmentImageDetail;
 import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.download.DownloadTask;
 import com.example.administrator.essim.download.SDDownloadTask;
+import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
@@ -30,7 +31,6 @@ public class ImageDetailActivity extends AppCompatActivity {
     private File parentFile, realFile;
     private DownloadTask mDownloadTask;
     private TextView mTextView, mTextView2;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,12 @@ public class ImageDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_detail);
 
         mContext = this;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Intent intent = getIntent();
         mIllustsBean = (IllustsBean) intent.getSerializableExtra("illust");
         mTextView = findViewById(R.id.image_order);
         mTextView2 = findViewById(R.id.download_origin);
         mTextView2.setOnClickListener(view -> {
-            parentFile = new File(mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures"));
+            parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
             if (!parentFile.exists()) {
                 parentFile.mkdir();
                 runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
@@ -61,19 +60,19 @@ public class ImageDetailActivity extends AppCompatActivity {
             } else {
                 mDownloadTask = new DownloadTask(realFile, mContext, mIllustsBean);
                 if (mIllustsBean.getPage_count() == 1) {
-                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                    if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                         //下载至内置SD存储介质，使用传统文件模式;
                         mDownloadTask.execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
                     } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                        new SDDownloadTask(realFile, mContext, mIllustsBean, mSharedPreferences)
+                        new SDDownloadTask(realFile, mContext, mIllustsBean, Common.getLocalDataSet(mContext))
                                 .execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
                     }
                 } else {
-                    if (mSharedPreferences.getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                    if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                         //下载至内置SD存储介质，使用传统文件模式;
                         mDownloadTask.execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
                     } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                        new SDDownloadTask(realFile, mContext, mIllustsBean, mSharedPreferences)
+                        new SDDownloadTask(realFile, mContext, mIllustsBean, Common.getLocalDataSet(mContext))
                                 .execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
                     }
                 }

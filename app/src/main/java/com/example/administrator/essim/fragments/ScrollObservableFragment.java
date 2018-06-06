@@ -1,4 +1,4 @@
-package com.example.administrator.essim.anotherproj;
+package com.example.administrator.essim.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

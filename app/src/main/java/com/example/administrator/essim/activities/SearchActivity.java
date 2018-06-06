@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.AutoFieldAdapter;
-import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
@@ -166,7 +165,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
             mContext.startActivity(intent);
         } else if (searchType == 3) {
             if (Common.isNumeric(searchBar.getText().trim())) {
-                Intent intent = new Intent(mContext, CloudMainActivity.class);
+                Intent intent = new Intent(mContext, UserDetailActivity.class);
                 intent.putExtra("user id", Integer.valueOf(searchBar.getText().trim()));
                 startActivity(intent);
                 searchBar.setText("");

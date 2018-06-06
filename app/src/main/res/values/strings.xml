@@ -178,5 +178,14 @@
     <string name="public_item">显示公开项目</string>
     <string name="private_item">显示非公开项目</string>
     <string name="app_detail">KujouKaren Ver. %s/%d</string>
+    <string name="sd_permission">如果你需要将图片下载至可插拔SD卡，请配置此选项，以便于对可插拔SD卡进行读写操作。点击上方蓝色文字开始配置，然后请选择可插拔SD卡的根目录，点击确认，使用过ES管理器的朋友一定记得这个步骤（注：图片默认下载至可插拔SD卡的某个文件夹之后，部分机型的相册可能不会更新下载的图片，只可以在文件管理器中查看，所以还是推荐朋友们把图片默认下载至不可移动的机身存储介质中）</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="zero_size">0.0B</string>
+    <string name="has_sd_permission">已获取SD卡读写权限</string>
+    <string name="no_sd_permission">无SD卡读写权限或无SD卡</string>
+    <string name="followers">粉丝: %d</string>
+    <string name="followers_k">粉丝: %dK</string>
+    <string name="follow">关注: %d</string>
+    <string name="follow_k">关注: %dK</string>
 
 </resources>

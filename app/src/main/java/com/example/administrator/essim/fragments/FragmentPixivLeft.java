@@ -44,7 +44,6 @@ public class FragmentPixivLeft extends BaseFragment {
     private PixivAdapterGrid mPixivAdapter;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshView mPullToRefreshView;
-    private int lastPosition;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class FragmentPixivLeft extends BaseFragment {
         mRecyclerView.setHasFixedSize(true);
         mPullToRefreshView = v.findViewById(R.id.pull_wo_refresh);
         mPullToRefreshView.setOnRefreshListener(this::getNextData);
-        mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
+        mSharedPreferences = Common.getLocalDataSet(mContext);
     }
 
     private void getData() {

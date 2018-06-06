@@ -15,9 +15,13 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.response.IllustsBean;
+import com.example.administrator.essim.response.Reference;
+import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
 import com.github.ybq.android.spinkit.style.Wave;
+import com.sdsmdg.tastytoast.TastyToast;
 
+import java.io.File;
 import java.util.Objects;
 
 public class FragmentImageDetail extends BaseFragment {
@@ -40,14 +44,31 @@ public class FragmentImageDetail extends BaseFragment {
         Wave wave = new Wave();
         progressBar.setIndeterminateDrawable(wave);
         Glide.get(mContext).clearMemory();
-        Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(illustsBean, index))
-                .into(new GlideDrawableImageViewTarget(imageView) {
-                    @Override
-                    public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        super.onResourceReady(drawable, anim);
-                    }
-                });
+        File parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path",
+                "/storage/emulated/0/PixivPictures"));
+        File realFile = new File(parentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
+                Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(index) + ".jpeg");
+        if (realFile.exists()) {
+            Glide.with(mContext).load(realFile)
+                    .into(new GlideDrawableImageViewTarget(imageView) {
+                        @Override
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            super.onResourceReady(drawable, anim);
+                        }
+                    });
+            Common.showLog("加载本地文件中的");
+        } else {
+            Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(illustsBean, index))
+                    .into(new GlideDrawableImageViewTarget(imageView) {
+                        @Override
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            super.onResourceReady(drawable, anim);
+                        }
+                    });
+            Common.showLog("加载网络中的");
+        }
         return view;
     }
 }

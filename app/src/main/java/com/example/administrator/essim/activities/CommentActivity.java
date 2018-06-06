@@ -3,9 +3,7 @@ package com.example.administrator.essim.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +18,11 @@ import android.widget.ProgressBar;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.IllustCommentAdapter;
-import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustCommentsResponse;
+import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.DividerItemDecoration;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -45,7 +43,6 @@ public class CommentActivity extends AppCompatActivity {
     private boolean isLoadingMore;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
     private IllustCommentAdapter illustCommentAdapter;
     private IllustCommentsResponse mIllustCommentsResponse;
     private List<IllustCommentsResponse.CommentsBean> mCommentsBeanList = new ArrayList<>();
@@ -56,7 +53,6 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_commetn);
 
         mContext = this;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
         illustID = intent.getIntExtra("id", 0);
@@ -82,8 +78,6 @@ public class CommentActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 int totalItemCount = illustCommentAdapter.getItemCount();
-                //lastVisibleItem >= totalItemCount - 1 表示剩下1个item自动加载，各位自由选择
-                // dy>0 表示向下滑动
                 if (lastVisibleItem >= totalItemCount - 1 && dy > 0) {
                     if (!isLoadingMore) {
                         getMoreComment();
@@ -114,7 +108,8 @@ public class CommentActivity extends AppCompatActivity {
             Call<IllustCommentsResponse> call = new RestClient()
                     .getRetrofit_AppAPI()
                     .create(AppApiPixivService.class)
-                    .getNextComment(mSharedPreferences.getString("Authorization", ""), mIllustCommentsResponse.getNext_url());
+                    .getNextComment(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                            mIllustCommentsResponse.getNext_url());
             call.enqueue(new Callback<IllustCommentsResponse>() {
                 @Override
                 public void onResponse(Call<IllustCommentsResponse> call, retrofit2.Response<IllustCommentsResponse> response) {
@@ -141,7 +136,7 @@ public class CommentActivity extends AppCompatActivity {
                 Call<ResponseBody> call = new RestClient()
                         .getRetrofit_AppAPI()
                         .create(AppApiPixivService.class)
-                        .postIllustComment(mSharedPreferences.getString("Authorization", ""), illustID,
+                        .postIllustComment(Common.getLocalDataSet(mContext).getString("Authorization", ""), illustID,
                                 mEditText.getText().toString().trim(), null);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -159,7 +154,7 @@ public class CommentActivity extends AppCompatActivity {
                 Call<ResponseBody> call = new RestClient()
                         .getRetrofit_AppAPI()
                         .create(AppApiPixivService.class)
-                        .postIllustComment(mSharedPreferences.getString("Authorization", ""), illustID,
+                        .postIllustComment(Common.getLocalDataSet(mContext).getString("Authorization", ""), illustID,
                                 mEditText.getText().toString().trim(), parentCommentID);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -190,7 +185,7 @@ public class CommentActivity extends AppCompatActivity {
         Call<IllustCommentsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getIllustComments(mSharedPreferences.getString("Authorization", ""), illustID);
+                .getIllustComments(Common.getLocalDataSet(mContext).getString("Authorization", ""), illustID);
         call.enqueue(new Callback<IllustCommentsResponse>() {
             @Override
             public void onResponse(Call<IllustCommentsResponse> call, retrofit2.Response<IllustCommentsResponse> response) {
@@ -207,7 +202,7 @@ public class CommentActivity extends AppCompatActivity {
                                 mEditText.setHint(String.format("回复@%s", mCommentsBeanList.get(position).getUser().getName()));
                             }
                         } else if (viewType == 1) {
-                            Intent intent = new Intent(mContext, CloudMainActivity.class);
+                            Intent intent = new Intent(mContext, UserDetailActivity.class);
                             intent.putExtra("user id", mCommentsBeanList.get(position).getUser().getId());
                             startActivity(intent);
                         }

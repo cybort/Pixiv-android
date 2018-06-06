@@ -1,4 +1,4 @@
-package com.example.administrator.essim.anotherproj;
+package com.example.administrator.essim.fragments;
 
 
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.adapters.AuthorWorksAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
@@ -29,24 +30,24 @@ import com.example.administrator.essim.utils.Common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 
 
-public class HomeProfileFragment extends ScrollObservableFragment {
+public class FragmentUserWorks extends ScrollObservableFragment {
 
     private String next_url;
     private Context mContext;
     private TextView mTextView;
     private RecyclerView rcvGoodsList;
-    private ProgressBar mProgressBar;
     private AuthorWorksAdapter mPixivAdapterGrid;
     private SharedPreferences mSharedPreferences;
     private int scrolledX = 0, scrolledY = 0;
     private List<IllustsBean> mIllustsBeanList = new ArrayList<>();
 
-    public static HomeProfileFragment newInstance() {
-        HomeProfileFragment fragment = new HomeProfileFragment();
+    public static FragmentUserWorks newInstance() {
+        FragmentUserWorks fragment = new FragmentUserWorks();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -55,7 +56,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getContext();
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mSharedPreferences = Common.getLocalDataSet(mContext);
         View v = inflater.inflate(R.layout.fragment_home_list, container, false);
         initView(v);
         getLikeIllust();
@@ -63,8 +64,6 @@ public class HomeProfileFragment extends ScrollObservableFragment {
     }
 
     private void initView(View v) {
-        mProgressBar = v.findViewById(R.id.try_login);
-        mProgressBar.setVisibility(View.INVISIBLE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -86,7 +85,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                 super.onScrolled(recyclerView, dx, dy);
                 scrolledX += dx;
                 scrolledY += dy;
-                if (HomeProfileFragment.this.isResumed()) {
+                if (FragmentUserWorks.this.isResumed()) {
                     doOnScrollChanged(scrolledX, scrolledY, dx, dy);
                 }
             }
@@ -95,17 +94,17 @@ public class HomeProfileFragment extends ScrollObservableFragment {
     }
 
     private void getLikeIllust() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        FragmentUserDetail.mShowProgress.showProgress(true);
         Call<UserIllustsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
                 .getUserIllusts(mSharedPreferences.getString("Authorization", ""),
-                        ((CloudMainActivity) getActivity()).userId, "illust");
+                        ((UserDetailActivity) getActivity()).userId, "illust");
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
                 if (response.body().getIllusts().size() == 0) {
-                    mProgressBar.setVisibility(View.INVISIBLE);
+                    FragmentUserDetail.mShowProgress.showProgress(false);
                     mTextView.setText("这里空空的，什么也没有~");
                 } else {
                     UserIllustsResponse userWorksResponse = response.body();
@@ -150,7 +149,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                             }
                         }
                     });
-                    mProgressBar.setVisibility(View.INVISIBLE);
+                    FragmentUserDetail.mShowProgress.showProgress(false);
                     rcvGoodsList.setAdapter(mPixivAdapterGrid);
                 }
             }
@@ -163,7 +162,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
     }
 
     private void getNextUserIllust() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        FragmentUserDetail.mShowProgress.showProgress(true);
         Call<UserIllustsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
@@ -174,7 +173,7 @@ public class HomeProfileFragment extends ScrollObservableFragment {
                 UserIllustsResponse userWorksResponse = response.body();
                 next_url = userWorksResponse.getNext_url();
                 mIllustsBeanList.addAll(userWorksResponse.getIllusts());
-                mProgressBar.setVisibility(View.INVISIBLE);
+                FragmentUserDetail.mShowProgress.showProgress(false);
                 mPixivAdapterGrid.notifyDataSetChanged();
             }
 

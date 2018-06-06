@@ -23,28 +23,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.anotherproj.CloudMainActivity;
 import com.example.administrator.essim.fragments.FragmentHitikoto;
 import com.example.administrator.essim.fragments.FragmentMine;
 import com.example.administrator.essim.fragments.FragmentPixiv;
 import com.example.administrator.essim.fragments.FragmentRank;
+import com.example.administrator.essim.utils.Common;
+import com.example.administrator.essim.utils.GlideUtil;
 import com.roughike.bottombar.BottomBar;
 import com.sdsmdg.tastytoast.TastyToast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public SharedPreferences mSharedPreferences;
     private long mExitTime;
-    private boolean isLogin;
     private Context mContext;
-    private BottomBar bottomBar;
     private DrawerLayout drawer;
-    private ImageView mImageView;
     private int lastShowFragment;
     private Fragment[] mFragments;
-    private Activity mActivity;
-    private TextView mTextView, mTextView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,39 +50,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_main);
         mContext = this;
-        mActivity = this;
-        initFragments();
-
         drawer = findViewById(R.id.drawer_layout);
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        isLogin = mSharedPreferences.getBoolean("islogin", false);
-        if (isLogin) {
-            mTextView = navigationView.getHeaderView(0).findViewById(R.id.username);
-            mTextView.setText(mSharedPreferences.getString("username", "")
-                    .equals(mSharedPreferences.getString("useraccount", "")) ?
-                    mSharedPreferences.getString("username", "") : String.format("%s (%s)",
-                    mSharedPreferences.getString("username", ""),
-                    mSharedPreferences.getString("useraccount", "")));
+        if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
+            TextView textView = navigationView.getHeaderView(0).findViewById(R.id.username);
+            textView.setText(Common.getLocalDataSet(mContext).getString("username", "")
+                    .equals(Common.getLocalDataSet(mContext).getString("useraccount", "")) ?
+                    Common.getLocalDataSet(mContext).getString("username", "") : String.format("%s (%s)",
+                    Common.getLocalDataSet(mContext).getString("username", ""),
+                    Common.getLocalDataSet(mContext).getString("useraccount", "")));
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
-
-        mImageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
-        mImageView.setOnClickListener(view -> {
-            if (mSharedPreferences.getBoolean("islogin", false)) {
-                Intent intent = new Intent(MainActivity.this, CloudMainActivity.class);
-                intent.putExtra("user id", mSharedPreferences.getInt("userid", 0));
+        ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+        Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet(mContext).getInt("userid", 0),
+                Common.getLocalDataSet(mContext).getString("hearurl", ""))).into(imageView);
+        imageView.setOnClickListener(view -> {
+            if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
+                Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
+                intent.putExtra("user id", Common.getLocalDataSet(mContext).getInt("userid", 0));
                 startActivity(intent);
             }
         });
-
-        bottomBar = findViewById(R.id.bottomBar);
+        BottomBar bottomBar = findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabId -> {
             switch (tabId) {
                 case R.id.tab_pixiv:
@@ -117,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
             }
         });
+        initFragments();
     }
 
     public void switchFrament(int lastIndex, int index) {

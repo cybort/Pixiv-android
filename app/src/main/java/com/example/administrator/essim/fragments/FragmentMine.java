@@ -36,7 +36,6 @@ import java.util.Objects;
 
 public class FragmentMine extends BaseFragment {
 
-    private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private List<HitoModel> mHitoModels;
     private ListHitokotoAdapter mAdapter;
@@ -48,9 +47,9 @@ public class FragmentMine extends BaseFragment {
     }
 
     private void initView(View view) {
-        mToolbar = view.findViewById(R.id.toolbar_mine);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(v -> ((MainActivity) Objects.requireNonNull(getActivity()))
+        Toolbar toolbar = view.findViewById(R.id.toolbar_mine);
+        ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> ((MainActivity) Objects.requireNonNull(getActivity()))
                 .getDrawer().openDrawer(Gravity.START, true));
         mRecyclerView = view.findViewById(R.id.mine_recy);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);

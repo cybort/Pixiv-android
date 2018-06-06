@@ -1,4 +1,4 @@
-package com.example.administrator.essim.anotherproj;
+package com.example.administrator.essim.fragments;
 
 
 import android.content.Context;
@@ -21,14 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.activities.FollowShowActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.interf.ShowProgress;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserDetailResponse;
@@ -43,13 +46,12 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 
-public class HomeFragment extends Fragment {
+public class FragmentUserDetail extends Fragment {
 
     public static int scrollYset;
     private static float offset = 1f;
     private static float a;
     private static float b = 400.0f;
-    public SharedPreferences mSharedPreferences;
     private ImageView bg;
     private RelativeLayout mRelativeLayout;
     private CircleImageView head;
@@ -61,7 +63,10 @@ public class HomeFragment extends Fragment {
     private Context mContext;
     private int slidingDistance, currScrollY, currentPosition;
     private List<ScrollObservableFragment> displayFragments;
-    private List<String> displayPageTitles = Arrays.asList("投稿", "收藏");
+    private List<String> displayPageTitles;
+    private ProgressBar mProgressBar;
+    public static ShowProgress mShowProgress;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +87,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View v) {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mProgressBar = v.findViewById(R.id.try_login);
+        mShowProgress = this::showProgressNow;
         llHeader = v.findViewById(R.id.llHeader);
         tabStrip = v.findViewById(R.id.tabStrip);
         viewPager = v.findViewById(R.id.viewPager);
@@ -94,13 +100,14 @@ public class HomeFragment extends Fragment {
         head = v.findViewById(R.id.people_head);
         mRelativeLayout = v.findViewById(R.id.follow_and_followers);
         bg = v.findViewById(R.id.people_bg);
-        if (((CloudMainActivity) Objects.requireNonNull(getActivity())).userId == mSharedPreferences.getInt("userid", 0)) {
-            ((CloudMainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(rlNavBar);
+        if (((UserDetailActivity) Objects.requireNonNull(getActivity())).userId ==
+                Common.getLocalDataSet(mContext).getInt("userid", 0)) {
+            ((UserDetailActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(rlNavBar);
         }
         rlNavBar.setNavigationOnClickListener(v1 -> Objects.requireNonNull(getActivity()).finish());
         displayFragments = new ArrayList<>();
-        displayFragments.add(HomeProfileFragment.newInstance());
-        displayFragments.add(HomeListFragment.newInstance());
+        displayFragments.add(FragmentUserWorks.newInstance());
+        displayFragments.add(FragmentUserFollow.newInstance());
 
         ScrollObservableFragment.OnScrollChangedListener onScrollChangedListener =
                 (fragment, scrolledX, scrolledY, dx, dy) -> {
@@ -111,49 +118,13 @@ public class HomeFragment extends Fragment {
         for (ScrollObservableFragment fragment : displayFragments) {
             fragment.setOnScrollChangedListener(onScrollChangedListener);
         }
-
-        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                return displayFragments.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return displayFragments.size();
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return displayPageTitles.get(position);
-            }
-        });
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPosition = position;
-                displayFragments.get(position).setScrolledY(currScrollY);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        tabStrip.setViewPager(viewPager);
-        viewPager.setCurrentItem(currentPosition);
     }
 
     private void getUserDetail() {
         Call<UserDetailResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserDetail(mSharedPreferences.getString("Authorization", ""), ((CloudMainActivity) getActivity()).userId);
+                .getUserDetail(Common.getLocalDataSet(mContext).getString("Authorization", ""), ((UserDetailActivity) getActivity()).userId);
         call.enqueue(new retrofit2.Callback<UserDetailResponse>() {
             @Override
             public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
@@ -174,14 +145,54 @@ public class HomeFragment extends Fragment {
 
     private void setData(UserDetailResponse userDetailResponse) {
         rlNavBar.setTitle(userDetailResponse.getUser().getName() + "的个人主页");
-        mTextView.setText(String.format("粉丝: %d", userDetailResponse.getProfile().getTotal_follower()));
-        mTextView2.setText(String.format("关注: %d", userDetailResponse.getProfile().getTotal_follow_users()));
+        displayPageTitles = Arrays.asList("投稿(" + String.valueOf(userDetailResponse.getProfile().getTotal_illusts() + ")"),
+                "收藏(" + String.valueOf(userDetailResponse.getProfile().getTotal_illust_bookmarks_public()) + ")");
+        mTextView.setText(userDetailResponse.getProfile().getTotal_follower() < 1000 ?
+                String.format(getString(R.string.followers), userDetailResponse.getProfile().getTotal_follower()) :
+                String.format(getString(R.string.followers_k), userDetailResponse.getProfile().getTotal_follower() / 1000));
+        mTextView2.setText(userDetailResponse.getProfile().getTotal_follow_users() < 1000 ?
+                String.format(getString(R.string.follow), userDetailResponse.getProfile().getTotal_follow_users()) :
+                String.format(getString(R.string.follow_k), userDetailResponse.getProfile().getTotal_follow_users() / 1000));
         mTextView2.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, FollowShowActivity.class);
-            intent.putExtra("user id", ((CloudMainActivity) Objects.requireNonNull(getActivity())).userId);
+            intent.putExtra("user id", ((UserDetailActivity) Objects.requireNonNull(getActivity())).userId);
             mContext.startActivity(intent);
         });
-        if (userDetailResponse.getUser().getId() != mSharedPreferences.getInt("userid", 0)) {
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return displayFragments.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return displayFragments.size();
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return displayPageTitles.get(position);
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentPosition = position;
+                displayFragments.get(position).setScrolledY(currScrollY);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        tabStrip.setViewPager(viewPager);
+        viewPager.setCurrentItem(currentPosition);
+        if (userDetailResponse.getUser().getId() != Common.getLocalDataSet(mContext).getInt("userid", 0)) {
             mTextView3.setVisibility(View.VISIBLE);
             if (userDetailResponse.getUser().isIs_followed()) {
                 mTextView3.setText("取消关注");
@@ -190,12 +201,12 @@ public class HomeFragment extends Fragment {
             }
             mTextView3.setOnClickListener(view -> {
                 if (userDetailResponse.getUser().isIs_followed()) {
-                    Common.postUnFollowUser(mSharedPreferences.getString("Authorization", ""),
+                    Common.postUnFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3);
                     mTextView3.setText("+关注");
                     userDetailResponse.getUser().setIs_followed(false);
                 } else {
-                    Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
+                    Common.postFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3, "public");
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
@@ -204,7 +215,7 @@ public class HomeFragment extends Fragment {
             mTextView3.setOnLongClickListener(view -> {
                 if(!userDetailResponse.getUser().isIs_followed())
                 {
-                    Common.postFollowUser(mSharedPreferences.getString("Authorization", ""),
+                    Common.postFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3, "private");
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
@@ -262,13 +273,13 @@ public class HomeFragment extends Fragment {
         if (viewPager.getCurrentItem() == 1) {
             switch (item.getItemId()) {
                 case R.id.action_get_public:
-                    if (HomeListFragment.dataType != 0) {
-                        HomeListFragment.sRefreshLayout.refreData("public");
+                    if (FragmentUserFollow.dataType != 0) {
+                        FragmentUserFollow.sRefreshLayout.refreData("public");
                     }
                     return true;
                 case R.id.action_get_private:
-                    if (HomeListFragment.dataType != 1) {
-                        HomeListFragment.sRefreshLayout.refreData("private");
+                    if (FragmentUserFollow.dataType != 1) {
+                        FragmentUserFollow.sRefreshLayout.refreData("private");
                     }
                     return true;
                 default:
@@ -276,5 +287,10 @@ public class HomeFragment extends Fragment {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showProgressNow(boolean b)
+    {
+        mProgressBar.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
     }
 }

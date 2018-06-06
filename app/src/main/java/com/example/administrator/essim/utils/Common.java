@@ -19,10 +19,12 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 
 import com.bumptech.glide.gifencoder.AnimatedGifEncoder;
+import com.example.administrator.essim.R;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustsBean;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.ByteArrayOutputStream;
@@ -261,14 +263,15 @@ public class Common {
         TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
     }
 
-    public static void startActivityWithOptions(Intent intent, Activity mActivity) {
-        ActivityOptions transitionActivity =
-                ActivityOptions.makeSceneTransitionAnimation(mActivity);
-        mActivity.startActivity(intent, transitionActivity.toBundle());
+    public static SharedPreferences getLocalDataSet(Context context)
+    {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static int getMax(int x, int y)
+    public static Wave getLoaderAnimation(Context context)
     {
-        return x >= y ? x : y;
+        Wave wave = new Wave();
+        wave.setColor(context.getResources().getColor(R.color.colorPrimary));
+        return wave;
     }
 }

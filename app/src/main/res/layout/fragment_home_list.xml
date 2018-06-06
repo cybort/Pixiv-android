@@ -9,12 +9,6 @@
         android:background="@color/white_gray_background"
         android:focusableInTouchMode="true" />
 
-    <ProgressBar
-        android:id="@+id/try_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <TextView
         android:id="@+id/post_like_user"
         android:layout_width="wrap_content"

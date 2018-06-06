@@ -128,7 +128,7 @@ public class FragmentRank extends BaseFragment {
     }
 
     private void initView(View view) {
-        mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
+        mSharedPreferences = Common.getLocalDataSet(mContext);
         mRecyclerView = view.findViewById(R.id.pixiv_recy);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

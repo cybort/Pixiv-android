@@ -20,6 +20,7 @@ import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.TrendingtagResponse;
+import com.example.administrator.essim.utils.Common;
 
 import java.util.Objects;
 
@@ -48,7 +49,7 @@ public class FragmentPixivRight extends BaseFragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mSharedPreferences = ((MainActivity) Objects.requireNonNull(getActivity())).mSharedPreferences;
+        mSharedPreferences = Common.getLocalDataSet(mContext);
     }
 
     public void getData() {

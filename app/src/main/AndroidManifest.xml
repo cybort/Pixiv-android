@@ -29,12 +29,12 @@
         <activity android:name=".activities.NewUserActivity" />
         <activity android:name=".activities.SearchTagActivity" />
         <activity android:name=".activities.ViewPagerActivity" />
-        <activity android:name=".anotherproj.CloudMainActivity" />
+        <activity android:name=".activities.UserDetailActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.CommentActivity" />
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
 
     </application>
 
