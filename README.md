@@ -2,8 +2,6 @@
 
 Pixiv( P站 ) / Hitokoto( 一言 ) client for android
 
-![截图](https://github.com/CeuiLiSA/images/blob/master/code_style.png)
-
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523181515.png)
 
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523458130.png)
@@ -13,6 +11,8 @@ Pixiv( P站 ) / Hitokoto( 一言 ) client for android
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523458163.png)
 
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523458176.png)
+
+![截图](https://github.com/CeuiLiSA/images/blob/master/code_style.png)
 
 2018.03.01 更新：编写基础javabeans 测试网络连接
 
@@ -42,4 +42,4 @@ Pixiv( P站 ) / Hitokoto( 一言 ) client for android
 
 2018.04.17 更新：支持pixiv站内关键字/Tag搜索，搜索结果可以查看作品详情
 
-开发完成
+2018.04.20 以后：陆续添加新功能
