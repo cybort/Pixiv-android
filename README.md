@@ -2,6 +2,8 @@
 
 Pixiv( P站 ) / Hitokoto( 一言 ) client for android
 
+![截图](https://github.com/CeuiLiSA/images/blob/master/code_style.png)
+
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523181515.png)
 
 ![截图](https://github.com/CeuiLiSA/images/blob/master/Screenshot_1523458130.png)
