@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.MainActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.adapters.TrendingtagAdapter;
 import com.example.administrator.essim.api.AppApiPixivService;
@@ -21,8 +20,6 @@ import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.TrendingtagResponse;
 import com.example.administrator.essim.utils.Common;
-
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

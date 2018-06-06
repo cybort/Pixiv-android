@@ -3,10 +3,8 @@ package com.example.administrator.essim.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -28,8 +26,8 @@ import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.bumptech.glide.Glide;
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.activities.FollowShowActivity;
+import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.interf.ShowProgress;
 import com.example.administrator.essim.network.RestClient;
@@ -49,6 +47,7 @@ import retrofit2.Call;
 public class FragmentUserDetail extends Fragment {
 
     public static int scrollYset;
+    public static ShowProgress mShowProgress;
     private static float offset = 1f;
     private static float a;
     private static float b = 400.0f;
@@ -65,8 +64,6 @@ public class FragmentUserDetail extends Fragment {
     private List<ScrollObservableFragment> displayFragments;
     private List<String> displayPageTitles;
     private ProgressBar mProgressBar;
-    public static ShowProgress mShowProgress;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,8 +210,7 @@ public class FragmentUserDetail extends Fragment {
                 }
             });
             mTextView3.setOnLongClickListener(view -> {
-                if(!userDetailResponse.getUser().isIs_followed())
-                {
+                if (!userDetailResponse.getUser().isIs_followed()) {
                     Common.postFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3, "private");
                     mTextView3.setText("取消关注");
@@ -289,8 +285,7 @@ public class FragmentUserDetail extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showProgressNow(boolean b)
-    {
+    public void showProgressNow(boolean b) {
         mProgressBar.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
     }
 }

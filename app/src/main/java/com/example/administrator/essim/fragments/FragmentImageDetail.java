@@ -1,5 +1,6 @@
 package com.example.administrator.essim.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.response.IllustsBean;
@@ -19,7 +21,6 @@ import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
 import com.github.ybq.android.spinkit.style.Wave;
-import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
 import java.util.Objects;
@@ -44,21 +45,23 @@ public class FragmentImageDetail extends BaseFragment {
         Wave wave = new Wave();
         progressBar.setIndeterminateDrawable(wave);
         Glide.get(mContext).clearMemory();
-        File parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path",
-                "/storage/emulated/0/PixivPictures"));
-        File realFile = new File(parentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
-                Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(index) + ".jpeg");
-        if (realFile.exists()) {
-            Glide.with(mContext).load(realFile)
-                    .into(new GlideDrawableImageViewTarget(imageView) {
-                        @Override
-                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            super.onResourceReady(drawable, anim);
-                        }
-                    });
-            Common.showLog("加载本地文件中的");
-        } else {
+        if(index == 0) {    //加载第一张图的时候很有可能可以调用内存中缓存好的bitmap
+            if (FragmentPixivItem.sGlideDrawable != null) { //有bitmap就拿来用
+                progressBar.setVisibility(View.INVISIBLE);
+                imageView.setImageBitmap(FragmentPixivItem.sGlideDrawable);
+            }
+            else {     //没有bitmap就加载网络中的
+                Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(illustsBean, index))
+                        .into(new GlideDrawableImageViewTarget(imageView) {
+                            @Override
+                            public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                super.onResourceReady(drawable, anim);
+                            }
+                        });
+            }
+        }
+        else {  //其他页面直接老老实实加载网络中的
             Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(illustsBean, index))
                     .into(new GlideDrawableImageViewTarget(imageView) {
                         @Override
@@ -67,7 +70,6 @@ public class FragmentImageDetail extends BaseFragment {
                             super.onResourceReady(drawable, anim);
                         }
                     });
-            Common.showLog("加载网络中的");
         }
         return view;
     }

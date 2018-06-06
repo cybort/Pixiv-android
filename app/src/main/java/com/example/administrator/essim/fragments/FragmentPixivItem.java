@@ -30,14 +30,13 @@ import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
-import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.activities.UserDetailActivity;
+import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.download.DownloadTask;
 import com.example.administrator.essim.download.SDDownloadTask;
 import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
-import com.github.ybq.android.spinkit.style.Wave;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -58,6 +57,8 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private int index;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
+    public static Bitmap sGlideDrawable;
+    private Bitmap mBitmap;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -99,18 +100,18 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         mProgressBar = view.findViewById(R.id.try_login);
         mProgressBar.setIndeterminateDrawable(Common.getLoaderAnimation(mContext));
         if (Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", true)) {
-            Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(new GlideDrawableImageViewTarget(imageView2) {
-                        @Override
-                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            super.onResourceReady(drawable, anim);
-                        }
-                    });
-
+            //如果按原图画质加载，保存bitmap备用
+            Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
+                    .asBitmap().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mBitmap = resource;
+                    imageView2.setImageBitmap(resource);
+                }
+            });
         } else {
-            Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+            Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new GlideDrawableImageViewTarget(imageView2) {
                         @Override
@@ -203,6 +204,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         Intent intent;
         switch (view.getId()) {
             case R.id.detail_img:
+                sGlideDrawable = mBitmap;
                 intent = new Intent(mContext, ImageDetailActivity.class);
                 intent.putExtra("illust", Reference.sIllustsBeans.get(index));
                 mContext.startActivity(intent);
@@ -225,13 +227,17 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
-                        //下载至内置SD存储介质，使用传统文件模式;
-                        new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
-                                .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
-                    } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                        new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
-                                .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                    if (mBitmap != null) {
+                        Common.saveBitmap(mContext, realFile, mBitmap, Reference.sIllustsBeans.get(index), 0);
+                    } else {
+                        if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                            //下载至内置SD存储介质，使用传统文件模式;
+                            new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
+                                    .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                        } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
+                                    .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                        }
                     }
                 }
                 break;

@@ -81,14 +81,12 @@ public class FollowShowActivity extends AppCompatActivity {
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
-                if(response.body().getUser_previews().size() == 0)
-                {
+                if (response.body().getUser_previews().size() == 0) {
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mTextView.setText("这里空空的，什么也没有~");
                     mTextView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     Reference.sSearchUserResponse = response.body();
                     next_url = Reference.sSearchUserResponse.getNext_url();
                     mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
@@ -121,7 +119,7 @@ public class FollowShowActivity extends AppCompatActivity {
                     });
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mRecyclerView.setAdapter(mUserFollowAdapter);
-                    if(mRecyclerView.getVisibility() == View.INVISIBLE) {
+                    if (mRecyclerView.getVisibility() == View.INVISIBLE) {
                         mRecyclerView.setVisibility(View.VISIBLE);
                         mTextView.setVisibility(View.INVISIBLE);
                     }
