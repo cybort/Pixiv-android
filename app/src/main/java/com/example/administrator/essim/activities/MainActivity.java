@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mSharedPreferences.getString("username", "") : String.format("%s (%s)",
                     mSharedPreferences.getString("username", ""),
                     mSharedPreferences.getString("useraccount", "")));
-
-            /*{"error":false,"message":"","body":{"user_account":"user_mpds2732","password":"0py0bbAW9b","device_token":"9a5acef19b5d535d75a1f224bda66292"}}*/
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -150,16 +148,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return super.onOptionsItemSelected(item);
     }
 
@@ -168,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setTitle("店长推荐：");
         builder.setMessage("请确认你的账号已开启R-18");
         builder.setCancelable(true);
-        builder.setPositiveButton("别BB，老子早就开好了", (dialogInterface, i) -> {
+        builder.setPositiveButton("我已经开好了", (dialogInterface, i) -> {
             Intent intent = new Intent(mContext, SearchTagActivity.class);
             intent.putExtra("what is the keyword", "R-18");
             mContext.startActivity(intent);

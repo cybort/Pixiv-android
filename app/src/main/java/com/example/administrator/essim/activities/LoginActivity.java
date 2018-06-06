@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("useremail", pixivOAuthResponse.getResponse().getUser().getMail_address());
                     editor.putString("hearurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
                     editor.putBoolean("r18on", true);
-                    editor.putBoolean("is_origin_pic", false);
+                    editor.putBoolean("is_origin_pic", true);
                     editor.putString("download_path", "/storage/emulated/0/PixivPictures");
                     editor.apply();
                     mProgressBar.setVisibility(View.INVISIBLE);
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 } else {
                     mProgressBar.setVisibility(View.INVISIBLE);
-                    Snackbar.make(mProgressBar, "别乱输账户密码", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mProgressBar, "您的账户或密码有误", Snackbar.LENGTH_SHORT).show();
                 }
             }
 

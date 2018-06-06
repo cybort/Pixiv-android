@@ -91,28 +91,8 @@ import retrofit2.Callback;
 
 public class Common {
 
-    public static final String EXTRA_TRANSITION = "EXTRA_TRANSITION";
-    public static final String TRANSITION_SLIDE_BOTTOM = "SLIDE_BOTTOM";
-    public static final String[] arrayOfRankMode = {"日榜", "周榜", "月榜", "新人", "原创", "男性向", "女性向"};
-    public static final String url_rank_daily = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
-            "mode=daily&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_weekly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=illust&" +
-            "mode=weekly&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_monthly = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=monthly&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_rookie = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=rookie&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_original = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=original&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_male = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=male&per_page=30&date=" + Common.getLastDay();
-    public static final String url_rank_female = "https://api.imjad.cn/pixiv/v1/?type=rank&content=all&" +
-            "mode=female&per_page=30&date=" + Common.getLastDay();
-    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags&per_page=81";
-    private static AlphaAnimation alphaAnimationShowIcon;
-
     public static AlphaAnimation getAnimation() {
-        alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
+        AlphaAnimation alphaAnimationShowIcon = new AlphaAnimation(0.2f, 1.0f);
         alphaAnimationShowIcon.setDuration(500);
         return alphaAnimationShowIcon;
     }
@@ -290,35 +270,5 @@ public class Common {
     public static int getMax(int x, int y)
     {
         return x >= y ? x : y;
-    }
-
-    public static String createGif(String filename, List<String> paths, int fps, int width, int height) throws IOException {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        AnimatedGifEncoder localAnimatedGifEncoder = new AnimatedGifEncoder();
-        localAnimatedGifEncoder.start(baos);//start
-        localAnimatedGifEncoder.setRepeat(0);//设置生成gif的开始播放时间。0为立即开始播放
-        localAnimatedGifEncoder.setDelay(fps);
-        if (paths.size() > 0) {
-            for (int i = 0; i < paths.size(); i++) {
-                Bitmap bitmap = BitmapFactory.decodeFile(paths.get(i));
-                bitmap.setWidth(width);
-                bitmap.setHeight(height);
-                localAnimatedGifEncoder.addFrame(bitmap);
-            }
-        }
-        localAnimatedGifEncoder.finish();//finish
-
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/LiliNote");
-        if (!file.exists()) file.mkdir();
-        String path = Environment.getExternalStorageDirectory().getPath() + "/LiliNote/" + filename + ".gif";
-        FileOutputStream fos = new FileOutputStream(path);
-        baos.writeTo(fos);
-        baos.flush();
-        fos.flush();
-        baos.close();
-        fos.close();
-
-        return path;
     }
 }

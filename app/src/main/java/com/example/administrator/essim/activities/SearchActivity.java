@@ -50,10 +50,6 @@ import retrofit2.Callback;
 
 public class SearchActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
-    public static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
-    static final String EXTRA_SAMPLE = "sample";
-    static final String EXTRA_TYPE = "type";
-    static final int TYPE_XML = 1;
     private int searchType;
     private Activity mActivity;
     private Context mContext;
@@ -65,6 +61,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
     private NestedScrollView mNestedScrollView;
     private SharedPreferences mSharedPreferences;
     private AutoFieldAdapter customSuggestionsAdapter;
+    private static final String url = "https://api.imjad.cn/pixiv/v1/?type=tags";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -128,7 +128,7 @@ public class FragmentHitikoto extends BaseFragment {
                 responseData = response.body().string();
                 finalResponseData = responseData.replaceAll("from", "from_where");
                 mHitoModel = gson.fromJson(finalResponseData, HitoModel.class);
-                getActivity().runOnUiThread(() -> {
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                     mTextView1.setText(mHitoModel.getHitokoto());
                     mTextView2.setText(getString(R.string.author_is, mHitoModel.getCreator()));
                     mTextView3.setText(Common.getTime(mHitoModel.getCreated_at()));

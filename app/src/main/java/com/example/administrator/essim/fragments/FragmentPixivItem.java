@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -23,36 +22,30 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
 import com.example.administrator.essim.activities.SearchTagActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.anotherproj.CloudMainActivity;
-import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.download.DownloadTask;
 import com.example.administrator.essim.download.SDDownloadTask;
-import com.example.administrator.essim.download.ZIPDownloadTask;
-import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.Reference;
-import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 
 /**
@@ -66,7 +59,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private SharedPreferences mSharedPreferences;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
-    private GifImageView imageView2;
+    private ImageView imageView2;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -106,15 +99,29 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
                 .bitmapTransform(new BlurTransformation(mContext, 20, 2))
                 .into(imageView);
-        if (mSharedPreferences.getBoolean("is_origin_pic", false)) {
+        mProgressBar = view.findViewById(R.id.try_login);
+        Wave wave = new Wave();
+        wave.setColor(getResources().getColor(R.color.colorPrimary));
+        mProgressBar.setIndeterminateDrawable(wave);
+        if (mSharedPreferences.getBoolean("is_origin_pic", true)) {
             Glide.with(getContext()).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
-                    .into(imageView2);
+                    .into(new GlideDrawableImageViewTarget(imageView2) {
+                        @Override
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            super.onResourceReady(drawable, anim);
+                        }
+                    });
         } else {
             Glide.with(getContext()).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
-                    .into(imageView2);
+                    .into(new GlideDrawableImageViewTarget(imageView2) {
+                        @Override
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            super.onResourceReady(drawable, anim);
+                        }
+                    });
         }
-        mProgressBar = view.findViewById(R.id.try_login);
-        mProgressBar.setVisibility(View.INVISIBLE);
         TextView textView = view.findViewById(R.id.detail_author);
         TextView textView2 = view.findViewById(R.id.detail_img_size);
         TextView textView3 = view.findViewById(R.id.detail_create_time);
@@ -240,7 +247,6 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
                     Common.postUnstarIllust(index, Reference.sIllustsBeans,
                             mSharedPreferences.getString("Authorization", ""), mContext);
-
                 } else {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
@@ -256,56 +262,6 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 break;
             default:
                 break;
-        }
-    }
-
-    private void loadGif() {
-        if (Reference.sIllustsBeans.get(index).getType().equals("ugoira")) {
-            File gifParentFile = new File("/storage/emulated/0/PixivPictures/gifZipFile");
-            if (!gifParentFile.exists()) {
-                gifParentFile.mkdir();
-                TastyToast.makeText(mContext, "文件夹创建成功~",
-                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-            }
-            File gifRealFile = new File(gifParentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
-                    Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(0) + ".zip");
-            if (gifRealFile.exists()) {
-                File file = new File("/storage/emulated/0/PixivPictures/gifUnzipFile/" +
-                        Reference.sIllustsBeans.get(index).getId(), Reference.sIllustsBeans.get(index).getTitle()+".gif");
-                //Glide.with(mContext).load(file).asGif().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.NONE).dontAnimate().into(imageView2);
-
-                try {
-                    GifDrawable gifFromFile = new GifDrawable(file);
-                    imageView2.setImageDrawable(gifFromFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                mProgressBar.setVisibility(View.VISIBLE);
-                Call<UgoiraMetadataResponse> call = new RestClient()
-                        .getRetrofit_AppAPI()
-                        .create(AppApiPixivService.class)
-                        .getUgoiraMetadata(mSharedPreferences.getString("Authorization", ""),
-                                (long) Reference.sIllustsBeans.get(index).getId());
-                call.enqueue(new Callback<UgoiraMetadataResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<UgoiraMetadataResponse> call,
-                                           @NonNull retrofit2.Response<UgoiraMetadataResponse> response) {
-                        UgoiraMetadataResponse illustfollowResponse = response.body();
-                        zipUrl = illustfollowResponse.getUgoira_metadata().getZip_urls().getMedium();
-                        new ZIPDownloadTask(gifRealFile, mContext, Reference.sIllustsBeans.get(index),
-                                illustfollowResponse.getUgoira_metadata().getFrames().get(0).getDelay(),
-                                    mProgressBar, imageView2).execute(zipUrl);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<UgoiraMetadataResponse> call, @NonNull Throwable throwable) {
-
-                    }
-                });
-            }
-        } else {
-            Common.showLog("不是动图");
         }
     }
 

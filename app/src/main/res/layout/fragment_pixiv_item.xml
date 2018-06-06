@@ -38,11 +38,18 @@
                     android:layout_height="wrap_content"
                     android:background="#F4F4F4">
 
-                    <pl.droidsonroids.gif.GifImageView
+                    <ImageView
                         android:id="@+id/detail_img"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop" />
+
+                    <ProgressBar
+                        android:layout_centerInParent="true"
+                        android:id="@+id/try_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
 
                     <TextView
                         android:id="@+id/all_item_size"
@@ -250,11 +257,5 @@
         android:src="@drawable/ic_favorite_border_black_24dp"
         app:backgroundTint="@color/white"
         android:layout_margin="@dimen/sixteen_dip"/>
-
-    <ProgressBar
-        android:id="@+id/try_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

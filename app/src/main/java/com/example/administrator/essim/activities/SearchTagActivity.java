@@ -42,7 +42,6 @@ public class SearchTagActivity extends AppCompatActivity {
     public String ketWords;
     private String temp;
     private String next_url;
-    private Toolbar mToolbar;
     private Context mContext;
     private boolean isBestSort;
     private ProgressBar mProgressBar;
@@ -63,10 +62,10 @@ public class SearchTagActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ketWords = intent.getStringExtra("what is the keyword");
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mToolbar = findViewById(R.id.toolbar_pixiv);
-        mToolbar.setTitle(ketWords);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(view -> finish());
+        Toolbar toolbar = findViewById(R.id.toolbar_pixiv);
+        toolbar.setTitle(ketWords);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> finish());
         mProgressBar = findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
         mRecyclerView = findViewById(R.id.pixiv_recy);
@@ -209,16 +208,12 @@ public class SearchTagActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tag_result, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -231,7 +226,7 @@ public class SearchTagActivity extends AppCompatActivity {
                     getData(sort[0], "");
                 }
             } else {
-                Snackbar.make(mRecyclerView, "不是会员你他妈凑什么热闹", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mRecyclerView, "只有会员才能按热度排序", Snackbar.LENGTH_SHORT).show();
             }
 
         }
