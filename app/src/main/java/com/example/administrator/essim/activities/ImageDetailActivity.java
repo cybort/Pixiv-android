@@ -17,7 +17,6 @@ import com.example.administrator.essim.download.SDDownloadTask;
 import com.example.administrator.essim.fragments.FragmentImageDetail;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
 import com.example.administrator.essim.response.IllustsBean;
-import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.utils.Common;
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -30,7 +29,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     private Context mContext;
     private File parentFile, realFile;
     private DownloadTask mDownloadTask;
-    private TextView mTextView, mTextView2;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mIllustsBean = (IllustsBean) intent.getSerializableExtra("illust");
         mTextView = findViewById(R.id.image_order);
-        mTextView2 = findViewById(R.id.download_origin);
-        mTextView2.setOnClickListener(view -> {
+        findViewById(R.id.download_origin).setOnClickListener(view -> {
             parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
             if (!parentFile.exists()) {
                 parentFile.mkdir();
@@ -58,11 +56,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
             } else {
-                if(mViewPager.getCurrentItem() == 0 && FragmentPixivItem.sGlideDrawable != null)
-                {
+                if (mViewPager.getCurrentItem() == 0 && FragmentPixivItem.sGlideDrawable != null) {
                     Common.saveBitmap(mContext, realFile, FragmentPixivItem.sGlideDrawable, mIllustsBean, 0);
-                }
-                else {
+                } else {
                     mDownloadTask = new DownloadTask(realFile, mContext, mIllustsBean);
                     if (mIllustsBean.getPage_count() == 1) {
                         if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {

@@ -187,5 +187,7 @@
     <string name="followers_k">粉丝: %dK</string>
     <string name="follow">关注: %d</string>
     <string name="follow_k">关注: %dK</string>
+    <string name="sinple_illust">查看普通投稿</string>
+    <string name="simple_manga">查看画集投稿</string>
 
 </resources>

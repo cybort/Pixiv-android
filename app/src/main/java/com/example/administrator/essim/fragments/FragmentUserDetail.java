@@ -44,6 +44,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 
+
 public class FragmentUserDetail extends Fragment {
 
     public static int scrollYset;
@@ -97,10 +98,7 @@ public class FragmentUserDetail extends Fragment {
         head = v.findViewById(R.id.people_head);
         mRelativeLayout = v.findViewById(R.id.follow_and_followers);
         bg = v.findViewById(R.id.people_bg);
-        if (((UserDetailActivity) Objects.requireNonNull(getActivity())).userId ==
-                Common.getLocalDataSet(mContext).getInt("userid", 0)) {
-            ((UserDetailActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(rlNavBar);
-        }
+        ((UserDetailActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(rlNavBar);
         rlNavBar.setNavigationOnClickListener(v1 -> Objects.requireNonNull(getActivity()).finish());
         displayFragments = new ArrayList<>();
         displayFragments.add(FragmentUserWorks.newInstance());
@@ -230,7 +228,6 @@ public class FragmentUserDetail extends Fragment {
         int navBarHeight = getResources().getDimensionPixelOffset(R.dimen.tabstrip_height2);
         int tabStripHeight = getResources().getDimensionPixelOffset(R.dimen.tabstrip_height);
         slidingDistance = headerSize - navBarHeight - tabStripHeight;
-        scrollYset = slidingDistance;
     }
 
     /**
@@ -250,6 +247,7 @@ public class FragmentUserDetail extends Fragment {
             currScrollY = scrolledY;
             Common.showLog(scrolledY);
             scrollYset = scrolledY;
+            Common.showLog(scrollYset);
         } else {
             rlNavBar.setBackgroundColor(Color.argb(192, 0x00, 0x00, 0x00));
             llHeader.setPadding(0, -slidingDistance, 0, 0);
@@ -261,7 +259,10 @@ public class FragmentUserDetail extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.user_star, menu);
+        if (((UserDetailActivity) Objects.requireNonNull(getActivity())).userId ==
+                Common.getLocalDataSet(mContext).getInt("userid", 0)) {
+            inflater.inflate(R.menu.user_star, menu);
+        }
     }
 
     @Override
@@ -272,14 +273,15 @@ public class FragmentUserDetail extends Fragment {
                     if (FragmentUserFollow.dataType != 0) {
                         FragmentUserFollow.sRefreshLayout.refreData("public");
                     }
-                    return true;
+                    break;
                 case R.id.action_get_private:
                     if (FragmentUserFollow.dataType != 1) {
                         FragmentUserFollow.sRefreshLayout.refreData("private");
                     }
-                    return true;
+                    break;
                 default:
-                    return super.onOptionsItemSelected(item);
+                    break;
+
             }
         }
         return super.onOptionsItemSelected(item);
@@ -287,5 +289,11 @@ public class FragmentUserDetail extends Fragment {
 
     public void showProgressNow(boolean b) {
         mProgressBar.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        scrollYset = 0;
     }
 }

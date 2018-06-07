@@ -100,8 +100,7 @@ public class UserFollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return true;
             });
             ((ContentViewHolder) holder).itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position, 0));
-        }
-        else {
+        } else {
             ((BottomViewHolder) holder).mCardView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, -1, 0));
         }
     }

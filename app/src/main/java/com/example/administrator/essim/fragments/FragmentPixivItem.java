@@ -54,10 +54,10 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class FragmentPixivItem extends BaseFragment implements View.OnClickListener {
 
+    public static Bitmap sGlideDrawable;
     private int index;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
-    public static Bitmap sGlideDrawable;
     private Bitmap mBitmap;
 
     public static FragmentPixivItem newInstance(int index) {
@@ -100,7 +100,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         mProgressBar = view.findViewById(R.id.try_login);
         mProgressBar.setIndeterminateDrawable(Common.getLoaderAnimation(mContext));
         if (Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", true)) {
-            //如果按原图画质加载，保存bitmap备用
+            //如果按原图画质加载，则保存bitmap备用
             Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
                     .asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
@@ -227,7 +227,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    if (mBitmap != null) {
+                    if (mBitmap != null) {  //如果bitmap不为空，说明加载了原图，直接保存bitmap到本地
                         Common.saveBitmap(mContext, realFile, mBitmap, Reference.sIllustsBeans.get(index), 0);
                     } else {
                         if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {

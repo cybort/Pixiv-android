@@ -32,10 +32,12 @@ import java.util.List;
 
 import retrofit2.Call;
 
+import static android.view.View.VISIBLE;
+
 public class FragmentUserFollow extends ScrollObservableFragment {
 
-    public static RefreshLayout sRefreshLayout;
     public static int dataType;
+    public static RefreshLayout sRefreshLayout;
     private String next_url;
     private Context mContext;
     private TextView mTextView;
@@ -93,6 +95,7 @@ public class FragmentUserFollow extends ScrollObservableFragment {
 
     private void getLikeIllust(String starType) {
         FragmentUserDetail.mShowProgress.showProgress(true);
+        dataType = starType.equals("public") ? 0 : 1;
         Call<UserIllustsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
@@ -101,10 +104,16 @@ public class FragmentUserFollow extends ScrollObservableFragment {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
                 if (response.body().getIllusts().size() == 0) {
+                    // 没有数据，recyclerview不显示，显示textview提示
                     FragmentUserDetail.mShowProgress.showProgress(false);
-                    mTextView.setText("这里空空的，什么也没有~");
+                    if (rcvGoodsList.getVisibility() == VISIBLE) {
+                        rcvGoodsList.setVisibility(View.INVISIBLE);
+                    }
+                    if (mTextView.getVisibility() == View.INVISIBLE) {
+                        mTextView.setText("这里空空的，什么也没有~");
+                        mTextView.setVisibility(VISIBLE);
+                    }
                 } else {
-                    dataType = starType.equals("public") ? 0 : 1;
                     UserIllustsResponse userIllustsResponse = response.body();
                     mIllustsBeanList.clear();
                     mIllustsBeanList.addAll(userIllustsResponse.getIllusts());
@@ -141,7 +150,6 @@ public class FragmentUserFollow extends ScrollObservableFragment {
 
                         @Override
                         public void onItemLongClick(View view, int position) {
-                            Common.showLog("开始点击了");
                             if (!mIllustsBeanList.get(position).isIs_bookmarked()) {
                                 ((ImageView) view).setImageResource(R.drawable.ic_favorite_white_24dp);
                                 Common.postStarIllust(position, mIllustsBeanList,
@@ -149,6 +157,13 @@ public class FragmentUserFollow extends ScrollObservableFragment {
                             }
                         }
                     });
+                    // 有数据，textview不显示，显示recyclerview
+                    if (rcvGoodsList.getVisibility() == View.INVISIBLE) {
+                        rcvGoodsList.setVisibility(VISIBLE);
+                    }
+                    if (mTextView.getVisibility() == VISIBLE) {
+                        mTextView.setVisibility(View.INVISIBLE);
+                    }
                     FragmentUserDetail.mShowProgress.showProgress(false);
                     rcvGoodsList.setAdapter(mPixivAdapterGrid);
                     scrolledY = 0;

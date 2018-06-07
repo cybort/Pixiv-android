@@ -28,8 +28,11 @@ import com.example.administrator.essim.utils.Common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
+
+import static android.view.View.VISIBLE;
 
 
 public class FragmentUserWorks extends ScrollObservableFragment {
@@ -40,7 +43,7 @@ public class FragmentUserWorks extends ScrollObservableFragment {
     private RecyclerView rcvGoodsList;
     private AuthorWorksAdapter mPixivAdapterGrid;
     private SharedPreferences mSharedPreferences;
-    private int scrolledX = 0, scrolledY = 0;
+    private int scrolledY = 0;
     private List<IllustsBean> mIllustsBeanList = new ArrayList<>();
 
     public static FragmentUserWorks newInstance() {
@@ -56,7 +59,7 @@ public class FragmentUserWorks extends ScrollObservableFragment {
         mSharedPreferences = Common.getLocalDataSet(mContext);
         View v = inflater.inflate(R.layout.fragment_home_list, container, false);
         initView(v);
-        getLikeIllust();
+        getUserIllust();
         return v;
     }
 
@@ -80,31 +83,35 @@ public class FragmentUserWorks extends ScrollObservableFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, final int dx, final int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                scrolledX += dx;
                 scrolledY += dy;
                 if (FragmentUserWorks.this.isResumed()) {
-                    doOnScrollChanged(scrolledX, scrolledY, dx, dy);
+                    doOnScrollChanged(0, scrolledY, dx, dy);
                 }
             }
         });
         mTextView = v.findViewById(R.id.post_like_user);
     }
 
-    private void getLikeIllust() {
+    private void getUserIllust() {
         FragmentUserDetail.mShowProgress.showProgress(true);
         Call<UserIllustsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
                 .getUserIllusts(mSharedPreferences.getString("Authorization", ""),
-                        ((UserDetailActivity) getActivity()).userId, "illust");
+                        ((UserDetailActivity) Objects.requireNonNull(getActivity())).userId, null);
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {
                 if (response.body().getIllusts().size() == 0) {
                     FragmentUserDetail.mShowProgress.showProgress(false);
+                    if (rcvGoodsList.getVisibility() == VISIBLE) {
+                        rcvGoodsList.setVisibility(View.INVISIBLE);
+                    }
                     mTextView.setText("这里空空的，什么也没有~");
+                    mTextView.setVisibility(VISIBLE);
                 } else {
                     UserIllustsResponse userWorksResponse = response.body();
+                    mIllustsBeanList.clear();
                     mIllustsBeanList.addAll(userWorksResponse.getIllusts());
                     mPixivAdapterGrid = new AuthorWorksAdapter(mIllustsBeanList, mContext);
                     next_url = userWorksResponse.getNext_url();
@@ -146,8 +153,17 @@ public class FragmentUserWorks extends ScrollObservableFragment {
                             }
                         }
                     });
+                    // 有数据，textview不显示，显示recyclerview
+                    if (rcvGoodsList.getVisibility() == View.INVISIBLE) {
+                        rcvGoodsList.setVisibility(VISIBLE);
+                    }
+                    if (mTextView.getVisibility() == VISIBLE) {
+                        mTextView.setVisibility(View.INVISIBLE);
+                    }
                     FragmentUserDetail.mShowProgress.showProgress(false);
                     rcvGoodsList.setAdapter(mPixivAdapterGrid);
+                    scrolledY = 0;
+                    rcvGoodsList.scrollBy(0, FragmentUserDetail.scrollYset);
                 }
             }
 

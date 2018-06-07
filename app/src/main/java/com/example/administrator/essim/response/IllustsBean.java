@@ -29,6 +29,7 @@ public class IllustsBean
     private UserBean user;
     private boolean visible;
     private int width;
+    private String total_comments;
 
     public String getTotal_comments() {
         return total_comments;
@@ -37,8 +38,6 @@ public class IllustsBean
     public void setTotal_comments(String total_comments) {
         this.total_comments = total_comments;
     }
-
-    private String total_comments;
 
     public String getCaption() {
         return this.caption;

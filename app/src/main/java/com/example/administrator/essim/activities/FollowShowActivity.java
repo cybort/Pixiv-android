@@ -243,6 +243,7 @@ public class FollowShowActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         if (Common.getLocalDataSet(mContext).getInt("userid", 0) == userID) {
+            //加载关于自己的菜单，可以查看自己的公开或者非公开收藏
             getMenuInflater().inflate(R.menu.user_star, menu);
         }
         return true;

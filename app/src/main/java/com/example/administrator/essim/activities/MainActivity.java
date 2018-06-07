@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //判断是否有登录记录，没登录就去LoginActivity，登录了就加载视图
         if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
             TextView textView = navigationView.getHeaderView(0).findViewById(R.id.username);
             textView.setText(Common.getLocalDataSet(mContext).getString("username", "")
@@ -57,53 +58,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Common.getLocalDataSet(mContext).getString("username", "") : String.format("%s (%s)",
                     Common.getLocalDataSet(mContext).getString("username", ""),
                     Common.getLocalDataSet(mContext).getString("useraccount", "")));
+            ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+            Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet(mContext).getInt("userid", 0),
+                    Common.getLocalDataSet(mContext).getString("headurl", ""))).into(imageView);
+            imageView.setOnClickListener(view -> {
+                if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
+                    Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
+                    intent.putExtra("user id", Common.getLocalDataSet(mContext).getInt("userid", 0));
+                    startActivity(intent);
+                }
+            });
+            BottomBar bottomBar = findViewById(R.id.bottomBar);
+            bottomBar.setOnTabSelectListener(tabId -> {
+                switch (tabId) {
+                    case R.id.tab_pixiv:
+                        if (lastShowFragment != 0) {
+                            switchFrament(lastShowFragment, 0);
+                            lastShowFragment = 0;
+                        }
+                        break;
+                    case R.id.tab_rank:
+                        if (lastShowFragment != 1) {
+                            switchFrament(lastShowFragment, 1);
+                            lastShowFragment = 1;
+                        }
+                        break;
+                    case R.id.tab_hitokoto:
+                        if (lastShowFragment != 2) {
+                            switchFrament(lastShowFragment, 2);
+                            lastShowFragment = 2;
+                        }
+                        break;
+                    case R.id.tab_mine:
+                        if (lastShowFragment != 3) {
+                            switchFrament(lastShowFragment, 3);
+                            lastShowFragment = 3;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+            initFragments();
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
-        ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
-        Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet(mContext).getInt("userid", 0),
-                Common.getLocalDataSet(mContext).getString("hearurl", ""))).into(imageView);
-        imageView.setOnClickListener(view -> {
-            if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
-                Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
-                intent.putExtra("user id", Common.getLocalDataSet(mContext).getInt("userid", 0));
-                startActivity(intent);
-            }
-        });
-        BottomBar bottomBar = findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(tabId -> {
-            switch (tabId) {
-                case R.id.tab_pixiv:
-                    if (lastShowFragment != 0) {
-                        switchFrament(lastShowFragment, 0);
-                        lastShowFragment = 0;
-                    }
-                    break;
-                case R.id.tab_rank:
-                    if (lastShowFragment != 1) {
-                        switchFrament(lastShowFragment, 1);
-                        lastShowFragment = 1;
-                    }
-                    break;
-                case R.id.tab_hitokoto:
-                    if (lastShowFragment != 2) {
-                        switchFrament(lastShowFragment, 2);
-                        lastShowFragment = 2;
-                    }
-                    break;
-                case R.id.tab_mine:
-                    if (lastShowFragment != 3) {
-                        switchFrament(lastShowFragment, 3);
-                        lastShowFragment = 3;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        });
-        initFragments();
     }
 
     public void switchFrament(int lastIndex, int index) {
