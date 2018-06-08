@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.api.AppApiPixivService;
+import com.example.administrator.essim.network.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.BookmarkAddResponse;
 import com.example.administrator.essim.response.IllustsBean;
@@ -207,6 +207,17 @@ public class Common {
         return "没有日期数据哦";
     }
 
+    public static String getTime(String time, int timeType) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+        if (time.length() == 13) {
+            return sdf.format(Long.parseLong(time));
+        }
+        if (time.length() == 10) {
+            return sdf.format(new Date(Integer.parseInt(time) * 1000L));
+        }
+        return "没有数据";
+    }
+
     //得到当前时间回退两天的日期
     public static String getLastDay() {
         Calendar now = Calendar.getInstance();
@@ -278,5 +289,16 @@ public class Common {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static File generatePictureFile(Context context, IllustsBean illustsBean, int positionInIllust) {
+        File parentFile = new File(Common.getLocalDataSet(context).getString("download_path",
+                "/storage/emulated/0/PixivPictures"));
+        if (!parentFile.exists()) {
+            parentFile.mkdir();
+            TastyToast.makeText(context, "文件夹创建成功~",
+                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+        }
+        return new File(parentFile.getPath(), illustsBean.getId() + "_" + String.valueOf(positionInIllust) + ".jpeg");
     }
 }

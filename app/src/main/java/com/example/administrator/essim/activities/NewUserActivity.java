@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.api.AccountPixivService;
-import com.example.administrator.essim.api.OAuthSecureService;
+import com.example.administrator.essim.network.AccountPixivService;
+import com.example.administrator.essim.network.OAuthSecureService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.PixivAccountsResponse;
 import com.example.administrator.essim.response.PixivOAuthResponse;
@@ -115,7 +115,7 @@ public class NewUserActivity extends AppCompatActivity {
                 editor.putString("username", pixivOAuthResponse.getResponse().getUser().getName());
                 editor.putString("useraccount", pixivOAuthResponse.getResponse().getUser().getAccount());
                 editor.putString("password", localHashMap.get("password").toString());
-                editor.putString("headurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
+                editor.putString("hearurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
                 editor.putString("useremail", pixivOAuthResponse.getResponse().getUser().getMail_address());
                 editor.putBoolean("r18on", false);
                 editor.putBoolean("is_origin_pic", true);

@@ -1,4 +1,4 @@
-package com.example.administrator.essim.api;
+package com.example.administrator.essim.network;
 
 import com.example.administrator.essim.response.PixivOAuthResponse;
 

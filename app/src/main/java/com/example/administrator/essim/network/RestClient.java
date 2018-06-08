@@ -63,4 +63,24 @@ public class RestClient {
                 .build();
         return this.retrofit_AppAPI;
     }
+
+    public Retrofit getRetrofit_SpecialCollection() {
+        Gson localGson = new GsonBuilder().create();
+        HttpLoggingInterceptor localHttpLoggingInterceptor = new HttpLoggingInterceptor(paramString -> {
+            StringBuilder localStringBuilder = new StringBuilder();
+            localStringBuilder.append("message====");
+            localStringBuilder.append(paramString);
+            Log.i("aaa", localStringBuilder.toString());
+        });
+        localHttpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.addInterceptor(localHttpLoggingInterceptor);
+        okHttpClient = builder.build();
+
+        retrofit_AppAPI = new Retrofit.Builder().baseUrl("https://api.imjad.cn/")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(localGson))
+                .build();
+        return this.retrofit_AppAPI;
+    }
 }

@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.adapters.AutoFieldAdapter;
-import com.example.administrator.essim.api.AppApiPixivService;
 import com.example.administrator.essim.interf.OnItemClickListener;
+import com.example.administrator.essim.network.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.IllustDetailResponse;
 import com.example.administrator.essim.response.IllustsBean;

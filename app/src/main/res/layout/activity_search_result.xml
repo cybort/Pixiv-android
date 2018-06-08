@@ -65,7 +65,6 @@
                     android:layout_margin="@dimen/eight_dip"
                     android:background="@drawable/btn_bg_red"
                     android:gravity="center"
-                    android:text="@string/download_origin"
                     android:textColor="@color/white" />
             </RelativeLayout>
 

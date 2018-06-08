@@ -5,8 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="6dp"
-    android:layout_marginLeft="@dimen/eight_dip"
-    android:layout_marginRight="@dimen/eight_dip"
+    android:layout_marginStart="@dimen/tweenty_four_dip"
+    android:layout_marginEnd="@dimen/tweenty_four_dip"
     android:layout_marginTop="10dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -28,41 +28,30 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/pixiv_image">
 
-            <RelativeLayout
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/pixiv_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="@dimen/eight_dip"
-                android:layout_marginRight="@dimen/eight_dip"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/round"
-                android:backgroundTint="@color/colorPrimary"
+                android:layout_marginBottom="@dimen/eight_dip"
+                android:layout_marginStart="@dimen/eight_dip"
+                android:layout_marginEnd="@dimen/eight_dip"
+                android:layout_marginTop="@dimen/eight_dip"
                 android:transitionName="shareView">
-
-                <TextView
-                    android:id="@+id/pixiv_item_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/tweenty_sp" />
-            </RelativeLayout>
+            </de.hdodenhof.circleimageview.CircleImageView>
 
             <TextView
                 android:id="@+id/pixiv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/eight_dip"
+                android:layout_marginTop="6dp"
                 android:layout_toEndOf="@+id/pixiv_head"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:maxEms="9"
                 android:singleLine="true"
-                android:text="@string/title_activity_fullscreen"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/tweenty_sp" />
+                android:textSize="@dimen/eighteen_sp" />
 
             <TextView
                 android:id="@+id/pixiv_author"
@@ -70,57 +59,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pixiv_title"
                 android:layout_marginBottom="@dimen/eight_dip"
+                android:layout_marginTop="5dp"
                 android:layout_toEndOf="@+id/pixiv_head"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:maxEms="9"
                 android:singleLine="true"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/viewed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="9dp"
-                android:layout_toStartOf="@+id/img_viewd"
-                android:text="16k"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <ImageView
-                android:id="@+id/img_viewd"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/viewed"
-                android:layout_marginEnd="@dimen/twelve_dip"
-                android:src="@drawable/ic_remove_red_eye_black_24dp" />
-
-            <TextView
-                android:id="@+id/liked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewed"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="2dp"
-                android:layout_toStartOf="@+id/img_liked"
-                android:text="6K"
-                android:textSize="@dimen/eighteen_sp" />
-
-            <ImageView
-                android:id="@+id/img_liked"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/liked"
-                android:layout_marginEnd="@dimen/twelve_dip"
-                android:layout_marginTop="1dp"
-                android:padding="1dp"
-                android:src="@drawable/ic_favorite_white_24dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
-
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>
 

@@ -56,9 +56,9 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
 
     public static Bitmap sGlideDrawable;
     private int index;
+    private Bitmap mBitmap;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
-    private Bitmap mBitmap;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -215,28 +215,34 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mContext.startActivity(intent);
                 break;
             case R.id.card_left:
-                File parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
-                if (!parentFile.exists()) {
-                    parentFile.mkdir();
-                    TastyToast.makeText(mContext, "文件夹创建成功~",
-                            TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
-                }
-                File realFile = new File(parentFile.getPath(), Reference.sIllustsBeans.get(index).getTitle() + "_" +
-                        Reference.sIllustsBeans.get(index).getId() + "_" + String.valueOf(0) + ".jpeg");
-                if (realFile.exists()) {
+                File realFile = Common.generatePictureFile(mContext, Reference.sIllustsBeans.get(index), 0);
+                if (realFile.length() != 0) {
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
                     if (mBitmap != null) {  //如果bitmap不为空，说明加载了原图，直接保存bitmap到本地
                         Common.saveBitmap(mContext, realFile, mBitmap, Reference.sIllustsBeans.get(index), 0);
                     } else {
-                        if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
-                            //下载至内置SD存储介质，使用传统文件模式;
-                            new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index))
-                                    .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
-                        } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
-                                    .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                        //只有一张图的情况下，从meta_single_page获取原图链接
+                        if (Reference.sIllustsBeans.get(index).getPage_count() == 1) {
+                            if (Common.getLocalDataSet(mContext).getString("download_path",
+                                    "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                                //下载至内置SD存储介质，使用传统文件模式;
+                                new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index)).execute(Reference.sIllustsBeans
+                                        .get(index).getMeta_single_page().getOriginal_image_url());
+                            } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                                new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
+                                        .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
+                            }
+                        } else { //有多图的情况下，从meta_pages获取原图链接
+                            if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                                //下载至内置SD存储介质，使用传统文件模式;
+                                new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index)).execute(Reference.sIllustsBeans
+                                        .get(index).getMeta_pages().get(0).getImage_urlsX().getOriginal());
+                            } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
+                                new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
+                                        .execute(Reference.sIllustsBeans.get(index).getMeta_pages().get(0).getImage_urlsX().getOriginal());
+                            }
                         }
                     }
                 }

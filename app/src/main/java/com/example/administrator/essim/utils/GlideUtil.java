@@ -53,6 +53,16 @@ public class GlideUtil {
         }
     }
 
+    public GlideUrl getMediumImageUrl(String id, String url) {
+        Headers headers = () -> {
+            Map<String, String> header = new HashMap<>();
+            header.put("Referer", "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" +
+                    id);
+            return header;
+        };
+        return new GlideUrl(url, headers);
+    }
+
     public GlideUrl getLargeImageUrl(IllustsBean illustsBean, int index) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
@@ -70,7 +80,7 @@ public class GlideUtil {
     public GlideUrl getHead(SearchUserResponse.UserPreviewsBean userPreviewsBean) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
-            header.put("Referer", " https://www.pixiv.net/member.php?id=" +
+            header.put("Referer", "https://www.pixiv.net/member.php?id=" +
                     userPreviewsBean.getUser().getId());
             return header;
         };
@@ -81,7 +91,7 @@ public class GlideUtil {
     public GlideUrl getHead(UserDetailResponse.UserBean userPreviewsBean) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
-            header.put("Referer", " https://www.pixiv.net/member.php?id=" +
+            header.put("Referer", "https://www.pixiv.net/member.php?id=" +
                     userPreviewsBean.getId());
             return header;
         };
@@ -92,8 +102,18 @@ public class GlideUtil {
     public GlideUrl getHead(long userID, String url) {
         Headers headers = () -> {
             Map<String, String> header = new HashMap<>();
-            header.put("Referer", " https://www.pixiv.net/member.php?id=" +
+            header.put("Referer", "https://www.pixiv.net/member.php?id=" +
                     String.valueOf(userID));
+            return header;
+        };
+
+        return new GlideUrl(url, headers);
+    }
+
+    public GlideUrl getHead(String url) {
+        Headers headers = () -> {
+            Map<String, String> header = new HashMap<>();
+            header.put("Referer", "https://www.pixiv.net/showcase/");
             return header;
         };
 

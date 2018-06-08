@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.administrator.essim.R;
-import com.example.administrator.essim.api.OAuthSecureService;
+import com.example.administrator.essim.network.OAuthSecureService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.PixivOAuthResponse;
 import com.example.administrator.essim.utils.Common;
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("username", pixivOAuthResponse.getResponse().getUser().getName());
                     editor.putString("password", mEditText2.getText().toString().trim());
                     editor.putString("useremail", pixivOAuthResponse.getResponse().getUser().getMail_address());
-                    editor.putString("headurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
+                    editor.putString("hearurl", pixivOAuthResponse.getResponse().getUser().getProfile_image_urls().getPx_170x170());
                     editor.putBoolean("r18on", true);
                     editor.putBoolean("is_origin_pic", true);
                     editor.putString("download_path", "/storage/emulated/0/PixivPictures");

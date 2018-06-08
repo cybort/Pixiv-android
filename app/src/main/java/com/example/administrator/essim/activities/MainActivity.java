@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Common.getLocalDataSet(mContext).getString("useraccount", "")));
             ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
             Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet(mContext).getInt("userid", 0),
-                    Common.getLocalDataSet(mContext).getString("headurl", ""))).into(imageView);
+                    Common.getLocalDataSet(mContext).getString("hearurl", ""))).into(imageView);
             imageView.setOnClickListener(view -> {
                 if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
                     Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
@@ -171,7 +171,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            //特辑走一波
+            Intent intent = new Intent(mContext, SpecialCollectionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

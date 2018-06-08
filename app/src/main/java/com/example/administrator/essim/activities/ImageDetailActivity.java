@@ -26,9 +26,8 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     public ViewPager mViewPager;
     public IllustsBean mIllustsBean;
+    private File realFile;
     private Context mContext;
-    private File parentFile, realFile;
-    private DownloadTask mDownloadTask;
     private TextView mTextView;
 
     @Override
@@ -44,26 +43,18 @@ public class ImageDetailActivity extends AppCompatActivity {
         mIllustsBean = (IllustsBean) intent.getSerializableExtra("illust");
         mTextView = findViewById(R.id.image_order);
         findViewById(R.id.download_origin).setOnClickListener(view -> {
-            parentFile = new File(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
-            if (!parentFile.exists()) {
-                parentFile.mkdir();
-                runOnUiThread(() -> TastyToast.makeText(mContext, "文件夹创建成功~",
-                        TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show());
-            }
-            realFile = new File(parentFile.getPath(), mIllustsBean.getTitle() + "_" +
-                    mIllustsBean.getId() + "_" + String.valueOf(mViewPager.getCurrentItem()) + ".jpeg");
-            if (realFile.exists()) {
-                runOnUiThread(() -> TastyToast.makeText(mContext, "该文件已存在~",
-                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show());
+            realFile = Common.generatePictureFile(mContext, mIllustsBean, mViewPager.getCurrentItem());
+            if (realFile.length() != 0) {
+                TastyToast.makeText(mContext, "该文件已存在~",
+                        TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
             } else {
                 if (mViewPager.getCurrentItem() == 0 && FragmentPixivItem.sGlideDrawable != null) {
                     Common.saveBitmap(mContext, realFile, FragmentPixivItem.sGlideDrawable, mIllustsBean, 0);
                 } else {
-                    mDownloadTask = new DownloadTask(realFile, mContext, mIllustsBean);
                     if (mIllustsBean.getPage_count() == 1) {
                         if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                             //下载至内置SD存储介质，使用传统文件模式;
-                            mDownloadTask.execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
+                            new DownloadTask(realFile, mContext, mIllustsBean).execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
                         } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
                             new SDDownloadTask(realFile, mContext, mIllustsBean, Common.getLocalDataSet(mContext))
                                     .execute(mIllustsBean.getMeta_single_page().getOriginal_image_url());
@@ -71,13 +62,12 @@ public class ImageDetailActivity extends AppCompatActivity {
                     } else {
                         if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                             //下载至内置SD存储介质，使用传统文件模式;
-                            mDownloadTask.execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
+                            new DownloadTask(realFile, mContext, mIllustsBean).execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
                         } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
                             new SDDownloadTask(realFile, mContext, mIllustsBean, Common.getLocalDataSet(mContext))
                                     .execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
                         }
                     }
-                    mDownloadTask = null;
                 }
             }
         });

@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -35,7 +35,7 @@
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.CommentActivity" />
         <activity android:name=".activities.SettingsActivity" />
-
+        <activity android:name=".activities.SpecialCollectionActivity"></activity>
     </application>
 
 </manifest>

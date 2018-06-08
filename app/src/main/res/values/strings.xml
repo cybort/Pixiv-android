@@ -189,5 +189,6 @@
     <string name="follow_k">关注: %dK</string>
     <string name="sinple_illust">查看普通投稿</string>
     <string name="simple_manga">查看画集投稿</string>
+    <string name="special_collection">特辑(不稳定)</string>
 
 </resources>

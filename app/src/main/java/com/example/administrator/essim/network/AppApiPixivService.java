@@ -1,7 +1,8 @@
-package com.example.administrator.essim.api;
+package com.example.administrator.essim.network;
 
 
 import com.example.administrator.essim.response.BookmarkAddResponse;
+import com.example.administrator.essim.response.CollectionResponse;
 import com.example.administrator.essim.response.IllustCommentsResponse;
 import com.example.administrator.essim.response.IllustDetailResponse;
 import com.example.administrator.essim.response.IllustRankingResponse;
@@ -10,6 +11,7 @@ import com.example.administrator.essim.response.PixivResponse;
 import com.example.administrator.essim.response.RecommendResponse;
 import com.example.administrator.essim.response.SearchIllustResponse;
 import com.example.administrator.essim.response.SearchUserResponse;
+import com.example.administrator.essim.response.SpecialCollectionResponse;
 import com.example.administrator.essim.response.TrendingtagResponse;
 import com.example.administrator.essim.response.UgoiraMetadataResponse;
 import com.example.administrator.essim.response.UserDetailResponse;
@@ -136,4 +138,10 @@ public interface AppApiPixivService {
     Call<UserIllustsResponse> getNextUserIllusts(@Header("Authorization") String paramString1,
                                                  @Url String paramString2);
 
+    @GET("/pixiv/v1/")
+    Call<SpecialCollectionResponse> getSpecialCollection(@Query("type") String cate,
+                                                         @Query("page") int page);
+
+    @GET("/pixiv/v1/?type=showcase")
+    Call<CollectionResponse> getCollecDetail(@Query("id") String cate);
 }
