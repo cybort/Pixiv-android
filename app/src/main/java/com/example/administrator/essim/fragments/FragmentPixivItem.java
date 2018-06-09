@@ -220,7 +220,9 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     TastyToast.makeText(mContext, "该文件已存在~",
                             TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
                 } else {
-                    if (mBitmap != null) {  //如果bitmap不为空，说明加载了原图，直接保存bitmap到本地
+                    if (mBitmap != null && Common.getLocalDataSet(mContext).getString("download_path",
+                            "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                        //如果bitmap不为空，说明加载了原图，直接保存bitmap到本地
                         Common.saveBitmap(mContext, realFile, mBitmap, Reference.sIllustsBeans.get(index), 0);
                     } else {
                         //只有一张图的情况下，从meta_single_page获取原图链接
