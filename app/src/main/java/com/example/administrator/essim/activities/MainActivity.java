@@ -31,6 +31,8 @@ import com.example.administrator.essim.utils.GlideUtil;
 import com.roughike.bottombar.BottomBar;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private long mExitTime;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private int lastShowFragment;
     private Fragment[] mFragments;
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 }
             });
+            mImageView = navigationView.getHeaderView(0).findViewById(R.id.header_img);
             BottomBar bottomBar = findViewById(R.id.bottomBar);
             bottomBar.setOnTabSelectListener(tabId -> {
                 switch (tabId) {
@@ -188,6 +192,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Common.getLocalDataSet(mContext).getString("header_img_path", "").length() != 0) {
+            Glide.with(mContext)
+                    .load(Common.getLocalDataSet(mContext).getString("header_img_path", ""))
+                    .into(mImageView);
+        }
     }
 
     @Override

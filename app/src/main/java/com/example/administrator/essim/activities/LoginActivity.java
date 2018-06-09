@@ -29,11 +29,9 @@ import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private CardView mCardView;
-    private TextView mTextView;
+    private Context mContext;
     private ProgressBar mProgressBar;
     private EditText mEditText, mEditText2;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         setContentView(R.layout.activity_try_to_login);
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+
+        mContext = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -50,14 +49,14 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.INVISIBLE);
         mEditText = findViewById(R.id.login_username);
         mEditText2 = findViewById(R.id.login_password);
-        mTextView = findViewById(R.id.new_user);
-        mTextView.setOnClickListener(view -> {
+        TextView textView = findViewById(R.id.new_user);
+        textView.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, NewUserActivity.class);
             startActivity(intent);
             finish();
         });
-        mCardView = findViewById(R.id.card_login);
-        mCardView.setOnClickListener(view -> {
+        CardView cardView = findViewById(R.id.card_login);
+        cardView.setOnClickListener(view -> {
             if (mEditText.getText().toString().trim().isEmpty()) {
                 Snackbar.make(view, "用户名不能为空", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -78,9 +77,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        if (mSharedPreferences.getString("username", "").length() != 0) {
-            mEditText.setText(mSharedPreferences.getString("useraccount", ""));
-            mEditText2.setText(mSharedPreferences.getString("password", ""));
+        if (Common.getLocalDataSet(mContext).getString("username", "").length() != 0) {
+            mEditText.setText(Common.getLocalDataSet(mContext).getString("useraccount", ""));
+            mEditText2.setText(Common.getLocalDataSet(mContext).getString("password", ""));
         }
     }
 
@@ -98,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<PixivOAuthResponse> call, retrofit2.Response<PixivOAuthResponse> response) {
                 PixivOAuthResponse pixivOAuthResponse = response.body();
                 if (pixivOAuthResponse != null) {
-                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    SharedPreferences.Editor editor = Common.getLocalDataSet(mContext).edit();
                     String localStringBuilder = "Bearer " +
                             pixivOAuthResponse.getResponse().getAccess_token();
                     editor.putString("Authorization", localStringBuilder);

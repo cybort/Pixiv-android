@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,15 +27,25 @@ import android.widget.Toast;
 import com.codekidlabs.storagechooser.Content;
 import com.codekidlabs.storagechooser.StorageChooser;
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.interf.MyImagePicker;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideCacheUtil;
+import com.qingmei2.rximagepicker.core.RxImagePicker;
+import com.qingmei2.rximagepicker.entity.Result;
 import com.sdsmdg.tastytoast.TastyToast;
+
+import java.io.File;
+import java.net.URI;
+
+import io.reactivex.functions.Consumer;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private File mFile;
     private Context mContext;
     private Activity mActivity;
-    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7, mTextView8, mTextView9, mTextView10;
+    private TextView mTextView, mTextView2, mTextView3, mTextView4, mTextView5, mTextView6, mTextView7,
+            mTextView8, mTextView9, mTextView10, mTextView11, mTextView12;
     private StorageChooser.Builder builder = new StorageChooser.Builder();
     private StorageChooser chooser;
 
@@ -63,6 +74,8 @@ public class SettingsActivity extends AppCompatActivity {
         mTextView8 = findViewById(R.id.app_detail);
         mTextView9 = findViewById(R.id.clear_cache);
         mTextView10 = findViewById(R.id.cache_size);
+        mTextView11 = findViewById(R.id.set_header);
+        mTextView12 = findViewById(R.id.set_color);
         aSwitch.setChecked(Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", false));
         aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             editor.putBoolean("is_origin_pic", b);
@@ -112,6 +125,19 @@ public class SettingsActivity extends AppCompatActivity {
             mTextView10.setText(R.string.zero_size);
         });
         mTextView10.setText(GlideCacheUtil.getInstance().getCacheSize(mContext));
+        mTextView11.setOnClickListener(v -> {
+            new RxImagePicker.Builder()
+                    .with(this)
+                    .build()
+                    .create(MyImagePicker.class)
+                    .openGallery()
+                    .subscribe(result -> {
+                        //获取到被选中图片的uri，保存到本地
+                        editor.putString("header_img_path", result.getUri().toString());
+                        editor.apply();
+                    });
+        });
+        mTextView12.setOnClickListener(v -> Common.showLog("TODO, set theme color"));
 
         //初始化路径选择对话框
         Content c = new Content();

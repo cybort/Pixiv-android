@@ -292,6 +292,7 @@ public class Common {
     }
 
     public static File generatePictureFile(Context context, IllustsBean illustsBean, int positionInIllust) {
+        //检验父文件夹是否存在在，若不存在则创建
         File parentFile = new File(Common.getLocalDataSet(context).getString("download_path",
                 "/storage/emulated/0/PixivPictures"));
         if (!parentFile.exists()) {
@@ -299,6 +300,8 @@ public class Common {
             TastyToast.makeText(context, "文件夹创建成功~",
                     TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
         }
+        //File file = new File(路径， 文件名); 此格式生成具体的文件，File其他构造方法会生成文件夹无法写入
+        //文件命名方式： illust id + "_" + 第几p + ".jpeg"
         return new File(parentFile.getPath(), illustsBean.getId() + "_" + String.valueOf(positionInIllust) + ".jpeg");
     }
 }

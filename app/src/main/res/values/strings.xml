@@ -190,5 +190,9 @@
     <string name="sinple_illust">查看普通投稿</string>
     <string name="simple_manga">查看画集投稿</string>
     <string name="special_collection">特辑(不稳定)</string>
+    <string name="header_main">侧滑栏Header图片</string>
+    <string name="set_header">点击设置</string>
+    <string name="set_header_two">点击设置(未完成)</string>
+    <string name="main_theme">主题颜色</string>
 
 </resources>

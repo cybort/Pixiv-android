@@ -43,16 +43,17 @@ public class ImageDetailActivity extends AppCompatActivity {
         mIllustsBean = (IllustsBean) intent.getSerializableExtra("illust");
         mTextView = findViewById(R.id.image_order);
         findViewById(R.id.download_origin).setOnClickListener(view -> {
+            //生成图片文件，准备开始下载
             realFile = Common.generatePictureFile(mContext, mIllustsBean, mViewPager.getCurrentItem());
             if (realFile.length() != 0) {
                 TastyToast.makeText(mContext, "该文件已存在~",
                         TastyToast.LENGTH_SHORT, TastyToast.CONFUSING).show();
             } else {
-                if (mViewPager.getCurrentItem() == 0 && FragmentPixivItem.sGlideDrawable != null
+                /*if (mViewPager.getCurrentItem() == 0 && FragmentPixivItem.sGlideDrawable != null
                         && Common.getLocalDataSet(mContext).getString("download_path",
                         "/storage/emulated/0/PixivPictures").contains("emulated")) {
                     Common.saveBitmap(mContext, realFile, FragmentPixivItem.sGlideDrawable, mIllustsBean, 0);
-                } else {
+                } else {*/
                     if (mIllustsBean.getPage_count() == 1) {
                         if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                             //下载至内置SD存储介质，使用传统文件模式;
@@ -70,7 +71,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                                     .execute(mIllustsBean.getMeta_pages().get(mViewPager.getCurrentItem()).getImage_urlsX().getOriginal());
                         }
                     }
-                }
+                //}
             }
         });
         mViewPager = findViewById(R.id.view_pager);
