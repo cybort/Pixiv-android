@@ -120,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.show(mFragments[index]).commitAllowingStateLoss();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
+
     private void initFragments() {
         FragmentPixiv fragmentPixiv = new FragmentPixiv();
         FragmentRank fragmentHitikoto = new FragmentRank();
@@ -155,9 +160,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setMessage("请确认你的账号已开启R-18");
         builder.setCancelable(true);
         builder.setPositiveButton("我已经开好了", (dialogInterface, i) -> {
-            Intent intent = new Intent(mContext, SearchTagActivity.class);
+            TastyToast.makeText(MainActivity.this, "别想了，老污龟~",
+                    TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
+            /*Intent intent = new Intent(mContext, SearchTagActivity.class);
             intent.putExtra("what is the keyword", "R-18");
-            mContext.startActivity(intent);
+            mContext.startActivity(intent);*/
         });
         builder.setNegativeButton("没开", (dialogInterface, i) -> runOnUiThread(() ->
                 TastyToast.makeText(MainActivity.this, "你是个好人",
