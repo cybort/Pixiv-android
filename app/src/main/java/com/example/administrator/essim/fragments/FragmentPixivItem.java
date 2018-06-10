@@ -196,7 +196,6 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         cardView.setOnClickListener(this);
         CardView cardView2 = view.findViewById(R.id.card_right);
         cardView2.setOnClickListener(this);
-        Common.showLog(Reference.sIllustsBeans.get(index).getMeta_pages().size());
     }
 
     @Override
