@@ -213,16 +213,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Common.showLog("点击了一次");
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            return true;
         } else {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
                 exit();
                 return true;
             }
+            return false;
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     public void exit() {

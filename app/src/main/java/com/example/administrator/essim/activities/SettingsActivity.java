@@ -125,18 +125,16 @@ public class SettingsActivity extends AppCompatActivity {
             mTextView10.setText(R.string.zero_size);
         });
         mTextView10.setText(GlideCacheUtil.getInstance().getCacheSize(mContext));
-        mTextView11.setOnClickListener(v -> {
-            new RxImagePicker.Builder()
-                    .with(this)
-                    .build()
-                    .create(MyImagePicker.class)
-                    .openGallery()
-                    .subscribe(result -> {
-                        //获取到被选中图片的uri，保存到本地
-                        editor.putString("header_img_path", result.getUri().toString());
-                        editor.apply();
-                    });
-        });
+        mTextView11.setOnClickListener(v -> new RxImagePicker.Builder()
+                .with(this)
+                .build()
+                .create(MyImagePicker.class)
+                .openGallery()
+                .subscribe(result -> {
+                    //获取到被选中图片的uri，保存到本地
+                    editor.putString("header_img_path", result.getUri().toString());
+                    editor.apply();
+                }));
         mTextView12.setOnClickListener(v -> Common.showLog("TODO, set theme color"));
 
         //初始化路径选择对话框
@@ -200,5 +198,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        chooser.setOnSelectListener(null);
+        chooser.setOnCancelListener(null);
     }
 }

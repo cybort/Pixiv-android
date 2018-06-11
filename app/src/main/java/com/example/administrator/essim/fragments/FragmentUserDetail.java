@@ -86,7 +86,6 @@ public class FragmentUserDetail extends Fragment {
 
     private void initView(View v) {
         mProgressBar = v.findViewById(R.id.try_login);
-        mShowProgress = this::showProgressNow;
         llHeader = v.findViewById(R.id.llHeader);
         tabStrip = v.findViewById(R.id.tabStrip);
         viewPager = v.findViewById(R.id.viewPager);
@@ -295,5 +294,12 @@ public class FragmentUserDetail extends Fragment {
     public void onResume() {
         super.onResume();
         scrollYset = 0;
+        mShowProgress = this::showProgressNow;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mShowProgress = null;
     }
 }

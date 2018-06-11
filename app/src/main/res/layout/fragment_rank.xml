@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_pixiv"
+        android:id="@+id/mToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
@@ -17,22 +17,20 @@
         app:titleTextColor="#fff" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/pixiv_recy"
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_pixiv">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/mToolbar"/>
 
     <ProgressBar
-        android:id="@+id/try_login"
+        android:id="@+id/mProgressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="100dp" />
 
     <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb"
+        android:id="@+id/mFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

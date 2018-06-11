@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.administrator.essim.activities.PixivApplication;
 import com.example.administrator.essim.utils.Common;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by Administrator on 2018/3/26 0026.

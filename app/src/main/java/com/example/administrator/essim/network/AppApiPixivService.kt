@@ -73,7 +73,7 @@ interface AppApiPixivService {
     @GET("/v1/illust/ranking?filter=for_ios")
     fun getIllustRanking(@Header("Authorization") paramString1: String,
                          @Query("mode") paramString2: String,
-                         @Query("date") paramString3: String): Call<IllustRankingResponse>
+                         @Query("date") paramString3: String?): Call<IllustRankingResponse>
 
     @FormUrlEncoded
     @POST("/v1/user/follow/add")

@@ -10,7 +10,7 @@ public class Reference {
     public static SearchUserResponse sSearchUserResponse;
     public static TrendingtagResponse sTrendingtagResponse;
     public static IllustRankingResponse sIllustRankingResponse;
-    public static RecommendResponse sRecommendResponse, sRankList;
+    public static RecommendResponse sRankList;
     public static List<IllustsBean> sIllustsBeans;
 
     public static FragmentPixivRight sFragmentPixivRight;

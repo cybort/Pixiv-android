@@ -5,12 +5,12 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/pixiv_recy"
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ProgressBar
-        android:id="@+id/try_login"
+        android:id="@+id/mProgressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

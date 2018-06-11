@@ -221,4 +221,10 @@ public class FragmentUserFollow extends ScrollObservableFragment {
         }
         sRefreshLayout = this::getLikeIllust;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sRefreshLayout = null;
+    }
 }

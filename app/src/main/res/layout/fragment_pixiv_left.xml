@@ -4,21 +4,13 @@
     android:layout_height="match_parent"
     android:background="#f4f4f4">
 
-    <com.yalantis.phoenix.PullToRefreshView
-        android:id="@+id/pull_wo_refresh"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/pixiv_recy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
-    </com.yalantis.phoenix.PullToRefreshView>
+        android:layout_height="match_parent" />
 
     <ProgressBar
-        android:id="@+id/try_login"
+        android:id="@+id/mProgressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

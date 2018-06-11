@@ -87,9 +87,8 @@ public class FollowShowActivity extends AppCompatActivity {
                     mTextView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.INVISIBLE);
                 } else {
-                    Reference.sSearchUserResponse = response.body();
-                    next_url = Reference.sSearchUserResponse.getNext_url();
-                    mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
+                    next_url = response.body().getNext_url();
+                    mUserFollowAdapter = new UserFollowAdapter(response.body().getUser_previews(), mContext);
                     mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
                     mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
                         @Override
@@ -103,7 +102,7 @@ public class FollowShowActivity extends AppCompatActivity {
                             } else {
                                 try {
                                     Intent intent = new Intent(mContext, UserDetailActivity.class);
-                                    intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                    intent.putExtra("user id", response.body().getUser_previews().get(position)
                                             .getUser().getId());
                                     startActivity(intent);
                                 } catch (Exception e) {
@@ -142,9 +141,8 @@ public class FollowShowActivity extends AppCompatActivity {
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
-                Reference.sSearchUserResponse = response.body();
-                next_url = Reference.sSearchUserResponse.getNext_url();
-                mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
+                next_url = response.body().getNext_url();
+                mUserFollowAdapter = new UserFollowAdapter(response.body().getUser_previews(), mContext);
                 mToolbar.setTitle("搜索结果");
                 mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
@@ -158,7 +156,7 @@ public class FollowShowActivity extends AppCompatActivity {
                         } else {
                             try {
                                 Intent intent = new Intent(mContext, UserDetailActivity.class);
-                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                intent.putExtra("user id", response.body().getUser_previews().get(position)
                                         .getUser().getId());
                                 startActivity(intent);
                             } catch (Exception e) {
@@ -192,9 +190,8 @@ public class FollowShowActivity extends AppCompatActivity {
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
-                Reference.sSearchUserResponse = response.body();
-                mUserFollowAdapter = new UserFollowAdapter(Reference.sSearchUserResponse.getUser_previews(), mContext);
-                next_url = Reference.sSearchUserResponse.getNext_url();
+                mUserFollowAdapter = new UserFollowAdapter(response.body().getUser_previews(), mContext);
+                next_url = response.body().getNext_url();
                 mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, int viewType) {
@@ -207,7 +204,7 @@ public class FollowShowActivity extends AppCompatActivity {
                         } else {
                             try {
                                 Intent intent = new Intent(mContext, UserDetailActivity.class);
-                                intent.putExtra("user id", Reference.sSearchUserResponse.getUser_previews().get(position)
+                                intent.putExtra("user id", response.body().getUser_previews().get(position)
                                         .getUser().getId());
                                 startActivity(intent);
                             } catch (Exception e) {
@@ -230,13 +227,6 @@ public class FollowShowActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Reference.sSearchUserResponse = null;
-        mUserFollowAdapter = null;
     }
 
     @Override
