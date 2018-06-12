@@ -1,13 +1,8 @@
 package com.example.administrator.essim.activities;
 
-import android.content.Context;
-
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
 import org.litepal.LitePalApplication;
 
-public class PixivApplication extends LitePalApplication{
+public class PixivApplication extends LitePalApplication {
 
     @Override
     public void onCreate() {

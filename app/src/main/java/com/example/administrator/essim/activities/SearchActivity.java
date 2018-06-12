@@ -243,8 +243,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
         call.enqueue(new Callback<PixivResponse>() {
             @Override
             public void onResponse(@NonNull Call<PixivResponse> call, @NonNull retrofit2.Response<PixivResponse> response) {
-                Reference.sPixivResponse = response.body();
-                customSuggestionsAdapter = new AutoFieldAdapter(Reference.sPixivResponse, mContext);
+                customSuggestionsAdapter = new AutoFieldAdapter(response.body(), mContext);
                 customSuggestionsAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, int viewType) {
@@ -297,15 +296,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
 
             @Override
             public void onFailure(@NonNull Call<IllustDetailResponse> call, @NonNull Throwable throwable) {
-                mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Reference.sPixivResponse = null;
-        customSuggestionsAdapter = null;
     }
 }

@@ -67,16 +67,14 @@ class FragmentPixivLeft : BaseFragment() {
                     nextDataUrl = response.body()!!.next_url
                     initAdapter(response.body()!!.illusts)
                     mProgressbar.visibility = View.INVISIBLE
-                    Reference.sFragmentPixivRight.getData()
+                    //通知FragmentPixivRight 加载热门标签
+                    ((parentFragment as FragmentPixiv).mFragments[1] as FragmentPixivRight).getHotTags()
                 } catch (e: Exception) {
                     reLogin()
                 }
-
             }
 
-            override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {
-
-            }
+            override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {}
         })
     }
 
@@ -93,9 +91,7 @@ class FragmentPixivLeft : BaseFragment() {
                 mProgressbar.visibility = View.INVISIBLE
             }
 
-            override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {
-
-            }
+            override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {}
         })
     }
 

@@ -79,7 +79,8 @@ class AuthorWorksAdapter(private val mPixivRankItem: List<IllustsBean>,
             holder.itemView.get_more_data.text = "加载更多"
             holder.itemView.card_footer.setOnClickListener { mOnItemClickListener!!.onItemClick(holder.itemView, -1, 0) }
         }
-        else -> {}
+        else -> {
+        }
     }
 
     override fun getItemViewType(position: Int): Int = when (position) {

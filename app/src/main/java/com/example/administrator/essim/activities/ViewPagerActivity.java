@@ -10,12 +10,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.fragments.FragmentPixivItem;
 import com.example.administrator.essim.response.Reference;
-import com.squareup.leakcanary.RefWatcher;
 
 public class ViewPagerActivity extends AppCompatActivity {
 

@@ -20,7 +20,6 @@ import com.example.administrator.essim.adapters.UserFollowAdapter;
 import com.example.administrator.essim.interf.OnItemClickListener;
 import com.example.administrator.essim.network.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
-import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.SearchUserResponse;
 import com.example.administrator.essim.utils.Common;
 
@@ -31,6 +30,7 @@ public class FollowShowActivity extends AppCompatActivity {
 
     private int dataType;
     private int userID;
+    private String title;
     private String next_url;
     private String searchKey;
     private Toolbar mToolbar;
@@ -52,6 +52,7 @@ public class FollowShowActivity extends AppCompatActivity {
             searchKey = intent.getStringExtra("search_key");    //获取搜索页的关键词开始搜索
             getUserByName();
         } else {
+            title = intent.getStringExtra("user name");
             getUserFollowing("public");
         }
     }
@@ -89,7 +90,7 @@ public class FollowShowActivity extends AppCompatActivity {
                 } else {
                     next_url = response.body().getNext_url();
                     mUserFollowAdapter = new UserFollowAdapter(response.body().getUser_previews(), mContext);
-                    mToolbar.setTitle(Reference.sUserDetailResponse.getUser().getName() + "的关注");
+                    mToolbar.setTitle(title + "的关注");
                     mUserFollowAdapter.setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position, int viewType) {

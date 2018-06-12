@@ -71,7 +71,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return FragmentImageDetail.newInstance(position);
+                return FragmentImageDetail.Companion.newInstance(position);
             }
 
             @Override

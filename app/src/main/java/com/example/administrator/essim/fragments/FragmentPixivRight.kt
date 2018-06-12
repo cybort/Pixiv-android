@@ -6,18 +6,15 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.example.administrator.essim.R
 import com.example.administrator.essim.activities.SearchTagActivity
 import com.example.administrator.essim.adapters.TrendingtagAdapter
 import com.example.administrator.essim.interf.OnItemClickListener
 import com.example.administrator.essim.network.AppApiPixivService
 import com.example.administrator.essim.network.RestClient
-import com.example.administrator.essim.response.Reference
 import com.example.administrator.essim.response.TrendingtagResponse
 import com.example.administrator.essim.utils.Common
 import kotlinx.android.synthetic.main.fragment_pixiv_right.*
-
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -35,14 +32,13 @@ class FragmentPixivRight : BaseFragment() {
     }
 
     private fun initView() {
-        Reference.sFragmentPixivRight = this
         mProgressbar.visibility = View.INVISIBLE
         val gridLayoutManager = GridLayoutManager(mContext, 3)
         mRecyclerView.layoutManager = gridLayoutManager
         mRecyclerView.setHasFixedSize(true)
     }
 
-    fun getData() {
+    fun getHotTags() {
         mProgressbar.visibility = View.VISIBLE
         val call = RestClient()
                 .retrofit_AppAPI
@@ -68,7 +64,6 @@ class FragmentPixivRight : BaseFragment() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
 
             override fun onFailure(call: Call<TrendingtagResponse>, throwable: Throwable) {}

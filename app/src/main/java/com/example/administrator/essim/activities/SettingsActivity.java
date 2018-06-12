@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,13 +30,9 @@ import com.example.administrator.essim.interf.MyImagePicker;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideCacheUtil;
 import com.qingmei2.rximagepicker.core.RxImagePicker;
-import com.qingmei2.rximagepicker.entity.Result;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
-import java.net.URI;
-
-import io.reactivex.functions.Consumer;
 
 public class SettingsActivity extends AppCompatActivity {
 

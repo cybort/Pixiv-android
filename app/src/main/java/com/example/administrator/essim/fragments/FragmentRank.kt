@@ -6,15 +6,8 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
-
 import com.example.administrator.essim.R
 import com.example.administrator.essim.activities.MainActivity
 import com.example.administrator.essim.activities.SearchActivity
@@ -24,16 +17,11 @@ import com.example.administrator.essim.adapters.PixivAdapterGrid
 import com.example.administrator.essim.interf.OnItemClickListener
 import com.example.administrator.essim.network.AppApiPixivService
 import com.example.administrator.essim.network.RestClient
-import com.example.administrator.essim.response.IllustRankingResponse
-import com.example.administrator.essim.response.IllustfollowResponse
-import com.example.administrator.essim.response.IllustsBean
-import com.example.administrator.essim.response.RecommendResponse
-import com.example.administrator.essim.response.Reference
+import com.example.administrator.essim.response.*
 import com.example.administrator.essim.utils.Common
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.Util
 import kotlinx.android.synthetic.main.fragment_rank.*
-
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -160,24 +148,18 @@ class FragmentRank : BaseFragment() {
         call.enqueue(object : Callback<IllustRankingResponse> {
             override fun onResponse(call: Call<IllustRankingResponse>,
                                     response: retrofit2.Response<IllustRankingResponse>) {
-                Reference.sIllustRankingResponse = response.body()
-                nextDataUrl = Reference.sIllustRankingResponse.next_url
-                initAdapter(Reference.sIllustRankingResponse.illusts)
+                nextDataUrl = response.body()!!.next_url
+                initAdapter(response.body()!!.illusts)
                 mToolbar.title = arrayOfRankMode[currentDataType + 1]
                 mProgressbar.visibility = View.INVISIBLE
             }
 
-            override fun onFailure(call: Call<IllustRankingResponse>, throwable: Throwable) {
-
-            }
+            override fun onFailure(call: Call<IllustRankingResponse>, throwable: Throwable) {}
         })
     }
 
     private fun getNextData() {
         if (nextDataUrl != null) {
-            if (Reference.sIllustRankingResponse != null) {
-                Reference.sIllustRankingResponse = null
-            }
             mProgressbar.visibility = View.VISIBLE
             val call = RestClient()
                     .retrofit_AppAPI
@@ -186,15 +168,12 @@ class FragmentRank : BaseFragment() {
             call.enqueue(object : Callback<RecommendResponse> {
                 override fun onResponse(call: Call<RecommendResponse>,
                                         response: retrofit2.Response<RecommendResponse>) {
-                    Reference.sRankList = response.body()
-                    nextDataUrl = Reference.sRankList.next_url
-                    initAdapter(Reference.sRankList.illusts)
+                    nextDataUrl = response.body()!!.next_url
+                    initAdapter(response.body()!!.illusts)
                     mProgressbar.visibility = View.INVISIBLE
                 }
 
-                override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {
-
-                }
+                override fun onFailure(call: Call<RecommendResponse>, throwable: Throwable) {}
             })
         } else {
             Snackbar.make(mProgressbar, "再怎么找也找不到了~", Snackbar.LENGTH_SHORT).show()

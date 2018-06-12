@@ -31,8 +31,6 @@ import com.example.administrator.essim.utils.GlideUtil;
 import com.roughike.bottombar.BottomBar;
 import com.sdsmdg.tastytoast.TastyToast;
 
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private long mExitTime;

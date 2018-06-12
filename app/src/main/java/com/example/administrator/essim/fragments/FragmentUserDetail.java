@@ -31,7 +31,6 @@ import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.interf.ShowProgress;
 import com.example.administrator.essim.network.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
-import com.example.administrator.essim.response.Reference;
 import com.example.administrator.essim.response.UserDetailResponse;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
@@ -118,13 +117,12 @@ public class FragmentUserDetail extends Fragment {
         Call<UserDetailResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserDetail(Common.getLocalDataSet(mContext).getString("Authorization", ""), ((UserDetailActivity) getActivity()).userId);
+                .getUserDetail(Common.getLocalDataSet(mContext).getString("Authorization", ""), ((UserDetailActivity) getActivity()).getUserId());
         call.enqueue(new retrofit2.Callback<UserDetailResponse>() {
             @Override
             public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
                 try {
-                    Reference.sUserDetailResponse = response.body();
-                    setData(Reference.sUserDetailResponse);
+                    setData(response.body());
                 } catch (Exception e) {
                     Snackbar.make(mTextView, "不存在这个用户", Snackbar.LENGTH_SHORT).show();
                 }
@@ -132,7 +130,6 @@ public class FragmentUserDetail extends Fragment {
 
             @Override
             public void onFailure(Call<UserDetailResponse> call, Throwable throwable) {
-
             }
         });
     }
@@ -149,7 +146,8 @@ public class FragmentUserDetail extends Fragment {
                 String.format(getString(R.string.follow_k), userDetailResponse.getProfile().getTotal_follow_users() / 1000));
         mTextView2.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, FollowShowActivity.class);
-            intent.putExtra("user id", ((UserDetailActivity) Objects.requireNonNull(getActivity())).userId);
+            intent.putExtra("user id", userDetailResponse.getUser().getId());
+            intent.putExtra("user name", userDetailResponse.getUser().getName());
             mContext.startActivity(intent);
         });
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
@@ -258,7 +256,7 @@ public class FragmentUserDetail extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (((UserDetailActivity) Objects.requireNonNull(getActivity())).userId ==
+        if (((UserDetailActivity) Objects.requireNonNull(getActivity())).getUserId() ==
                 Common.getLocalDataSet(mContext).getInt("userid", 0)) {
             inflater.inflate(R.menu.user_star, menu);
         }

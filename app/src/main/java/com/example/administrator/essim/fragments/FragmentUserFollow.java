@@ -99,7 +99,7 @@ public class FragmentUserFollow extends ScrollObservableFragment {
         Call<UserIllustsResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getLikeIllust(mSharedPreferences.getString("Authorization", ""), ((UserDetailActivity) getActivity()).userId, starType, null);
+                .getLikeIllust(mSharedPreferences.getString("Authorization", ""), ((UserDetailActivity) getActivity()).getUserId(), starType, null);
         call.enqueue(new retrofit2.Callback<UserIllustsResponse>() {
             @Override
             public void onResponse(Call<UserIllustsResponse> call, retrofit2.Response<UserIllustsResponse> response) {

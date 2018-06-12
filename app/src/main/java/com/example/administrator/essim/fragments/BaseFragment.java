@@ -3,16 +3,7 @@ package com.example.administrator.essim.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.administrator.essim.activities.PixivApplication;
-import com.example.administrator.essim.utils.Common;
-import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by Administrator on 2018/3/26 0026.

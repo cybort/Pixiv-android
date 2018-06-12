@@ -19,7 +19,8 @@ import java.util.*
 
 class FragmentPixiv : BaseFragment() {
 
-    private val mFragments = ArrayList<Fragment>()
+    val message: Int = 100
+    val mFragments = ArrayList<Fragment>()
     private val mTitles = arrayOf("为你推荐", "热门标签")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,7 +37,7 @@ class FragmentPixiv : BaseFragment() {
         mToolbar.setNavigationOnClickListener { (activity as MainActivity).drawer.openDrawer(Gravity.START, true) }
         mFragments.add(FragmentPixivLeft())
         mFragments.add(FragmentPixivRight())
-        val adapter = FragmentPixivAdapter(fragmentManager!!, mFragments, mTitles)
+        val adapter = FragmentPixivAdapter(childFragmentManager, mFragments, mTitles)
         mViewPager.adapter = adapter
         mTabLayout.setupWithViewPager(mViewPager)
     }
