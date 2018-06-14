@@ -191,6 +191,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:id="@+id/card_fifth"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card_second"
                 android:orientation="horizontal">
@@ -199,7 +200,7 @@
                     android:id="@+id/card_left"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_marginBottom="@dimen/sixteen_dip"
+                    android:layout_marginBottom="@dimen/eight_dip"
                     android:layout_marginEnd="@dimen/eight_dip"
                     android:layout_marginStart="@dimen/sixteen_dip"
                     android:layout_marginTop="@dimen/eight_dip"
@@ -224,7 +225,7 @@
                     android:id="@+id/card_right"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_marginBottom="@dimen/sixteen_dip"
+                    android:layout_marginBottom="@dimen/eight_dip"
                     android:layout_marginEnd="@dimen/sixteen_dip"
                     android:layout_marginStart="@dimen/eight_dip"
                     android:layout_marginTop="@dimen/eight_dip"
@@ -246,13 +247,77 @@
 
                 </android.support.v7.widget.CardView>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/card_fifth"
+                android:textColor="@color/white"
+                android:text="@string/ralated_illust"
+                android:textSize="@dimen/sixteen_sp"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:id="@+id/text_related"
+                android:layout_marginBottom="@dimen/eight_dip"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textSize="@dimen/sixteen_sp"
+                android:layout_width="wrap_content"
+                android:id="@+id/text_get_related"
+                android:layout_below="@+id/card_fifth"
+                android:textColor="@color/colorPrimary"
+                android:layout_alignParentEnd="true"
+                android:text="@string/get_ralated_illust"
+                android:layout_marginEnd="@dimen/twelve_dip"
+                android:layout_marginBottom="@dimen/eight_dip"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/get_related_illust"
+                android:layout_below="@+id/text_related"
+                android:layout_marginBottom="@dimen/sixteen_dip"
+                android:layout_marginEnd="@dimen/sixteen_dip"
+                android:layout_marginStart="@dimen/sixteen_dip"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@animator/touch_raise"
+                app:cardCornerRadius="@dimen/card_recycler_elevation">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/related_one"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/related_two"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/related_three"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:id="@+id/fab_like"
         android:src="@drawable/ic_favorite_border_black_24dp"
         app:backgroundTint="@color/white"

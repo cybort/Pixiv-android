@@ -1,21 +1,7 @@
 package com.example.administrator.essim.network
 
 
-import com.example.administrator.essim.response.BookmarkAddResponse
-import com.example.administrator.essim.response.CollectionResponse
-import com.example.administrator.essim.response.IllustCommentsResponse
-import com.example.administrator.essim.response.IllustDetailResponse
-import com.example.administrator.essim.response.IllustRankingResponse
-import com.example.administrator.essim.response.IllustfollowResponse
-import com.example.administrator.essim.response.PixivResponse
-import com.example.administrator.essim.response.RecommendResponse
-import com.example.administrator.essim.response.SearchIllustResponse
-import com.example.administrator.essim.response.SearchUserResponse
-import com.example.administrator.essim.response.SpecialCollectionResponse
-import com.example.administrator.essim.response.TrendingtagResponse
-import com.example.administrator.essim.response.UgoiraMetadataResponse
-import com.example.administrator.essim.response.UserDetailResponse
-import com.example.administrator.essim.response.UserIllustsResponse
+import com.example.administrator.essim.response.*
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -29,7 +15,8 @@ import retrofit2.http.Url
 
 interface AppApiPixivService {
 
-    @GET("/v1/search/illust?filter=for_ios")
+    //GET /v1/search/illust?filter=for_android&word=VOCALOID&sort=date_desc&search_target=partial_match_for_tags HTTP/1.1
+    @GET("/v1/search/illust?filter=for_android")
     fun getSearchIllust(@Query("word") paramString1: String,
                         @Query("sort") paramString2: String,
                         @Query("search_target") paramString3: String,
@@ -44,11 +31,12 @@ interface AppApiPixivService {
                        @Field("restrict") paramString2: String,
                        @Field("tags[]") paramList: List<String>): Call<BookmarkAddResponse>
 
+
+    // https://app-api.pixiv.net/v1/user/bookmarks/illust?user_id=31655571&restrict=public
     @GET("/v1/user/bookmarks/illust")
     fun getLikeIllust(@Header("Authorization") paramString1: String,
                       @Query("user_id") paramLong: Long,
-                      @Query("restrict") paramString2: String,
-                      @Query("tag") paramString3: String): Call<UserIllustsResponse>
+                      @Query("restrict") paramString2: String ): Call<UserIllustsResponse>
 
     @FormUrlEncoded
     @POST("v1/illust/comment/add")
@@ -57,10 +45,15 @@ interface AppApiPixivService {
                           @Field("comment") paramString2: String,
                           @Field("parent_comment_id") paramInteger: Int?): Call<ResponseBody>
 
-    @GET("/v1/user/following?filter=for_ios")
+    @GET("/v1/user/following?filter=for_android")
     fun getUserFollowing(@Header("Authorization") paramString1: String,
                          @Query("user_id") paramLong: Long,
                          @Query("restrict") paramString2: String): Call<SearchUserResponse>
+
+    //&illust_id=62443212
+    @GET("/v2/illust/related?filter=for_android")
+    fun getRelatedIllust(@Header("Authorization") paramString1: String,
+                         @Query("illust_id") paramLong: Long): Call<RelatedIllust>
 
     @GET("v1/ugoira/metadata")
     fun getUgoiraMetadata(@Header("Authorization") paramString: String, @Query("illust_id") paramLong: Long): Call<UgoiraMetadataResponse>
@@ -88,6 +81,17 @@ interface AppApiPixivService {
     @POST("/v1/user/follow/delete")
     fun postUnfollowUser(@Header("Authorization") paramString: String,
                          @Field("user_id") paramLong: Long): Call<ResponseBody>
+
+    //POST /v1/user/profile/edit HTTP/1.1
+    @FormUrlEncoded
+    @POST("/v1/user/profile/edit")
+    fun changeHeadImg(@Header("Authorization") paramString: String,
+                         @Field("user_id") paramLong: Long): Call<ResponseBody>
+
+    // v1/user/related?filter=for_android&seed_user_id=1589657
+    @GET("/v1/user/related?filter=for_android")
+    fun getRelatedAuthor(@Header("Authorization") paramString: String,
+                         @Field("seed_user_id") paramLong: Long): Call<SearchUserResponse>
 
     @GET
     fun getNextComment(@Header("Authorization") paramString1: String,
@@ -118,7 +122,8 @@ interface AppApiPixivService {
     fun getIllustComments(@Header("Authorization") paramString: String,
                           @Query("illust_id") paramLong: Long): Call<IllustCommentsResponse>
 
-    @GET("/v1/user/detail?filter=for_ios")
+    //https://app-api.pixiv.net/v1/user/detail?filter=for_android&user_id=31655571
+    @GET("/v1/user/detail?filter=for_android")
     fun getUserDetail(@Header("Authorization") paramString: String,
                       @Query("user_id") paramLong: Long): Call<UserDetailResponse>
 
@@ -129,7 +134,8 @@ interface AppApiPixivService {
     fun getNext(@Header("Authorization") paramString1: String,
                 @Url paramString2: String): Call<RecommendResponse>
 
-    @GET("/v1/trending-tags/illust?filter=for_ios")
+    //GET /v1/trending-tags/illust?filter=for_android HTTP/1.1
+    @GET("/v1/trending-tags/illust?filter=for_android")
     fun getIllustTrendTags(@Header("Authorization") paramString: String): Call<TrendingtagResponse>
 
     @GET

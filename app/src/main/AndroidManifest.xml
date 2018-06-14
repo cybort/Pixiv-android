@@ -34,7 +34,8 @@
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.CommentActivity" />
         <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.SpecialCollectionActivity"></activity>
+        <activity android:name=".activities.SpecialCollectionActivity" />
+        <activity android:name=".activities.RelatedActivity"></activity>
     </application>
 
 </manifest>

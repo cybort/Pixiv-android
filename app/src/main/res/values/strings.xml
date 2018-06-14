@@ -194,5 +194,7 @@
     <string name="set_header">点击设置</string>
     <string name="set_header_two">点击设置(未完成)</string>
     <string name="main_theme">主题颜色</string>
+    <string name="ralated_illust">相关作品</string>
+    <string name="get_ralated_illust">查看更多 〉</string>
 
 </resources>

@@ -30,12 +30,17 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
+import com.example.administrator.essim.activities.RelatedActivity;
 import com.example.administrator.essim.activities.SearchResultActivity;
 import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.download.DownloadTask;
 import com.example.administrator.essim.download.SDDownloadTask;
+import com.example.administrator.essim.network.AppApiPixivService;
+import com.example.administrator.essim.network.RestClient;
+import com.example.administrator.essim.response.IllustsBean;
 import com.example.administrator.essim.response.Reference;
+import com.example.administrator.essim.response.RelatedIllust;
 import com.example.administrator.essim.utils.Common;
 import com.example.administrator.essim.utils.GlideUtil;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -47,6 +52,7 @@ import java.io.File;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import retrofit2.Call;
 
 
 /**
@@ -61,6 +67,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private Bitmap mBitmap;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
+    private ImageView mImageView, mImageView2, mImageView3;
 
     public static FragmentPixivItem newInstance(int index) {
         Bundle args = new Bundle();
@@ -205,6 +212,57 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         cardView.setOnClickListener(this);
         CardView cardView2 = view.findViewById(R.id.card_right);
         cardView2.setOnClickListener(this);
+        CardView cardView3 = view.findViewById(R.id.get_related_illust);
+        cardView3.setOnClickListener(this);
+        mImageView = view.findViewById(R.id.related_one);
+        ViewGroup.LayoutParams params2 = mImageView.getLayoutParams();
+        params2.width = (getResources().getDisplayMetrics().widthPixels - getResources().getDimensionPixelSize(R.dimen.thirty_two_dp)) / 3;
+        params2.height = params2.width * 6 / 5;
+        Common.showLog(params2.width);
+        mImageView.setLayoutParams(params2);
+        mImageView2 = view.findViewById(R.id.related_two);
+        mImageView2.setLayoutParams(params2);
+        mImageView3 = view.findViewById(R.id.related_three);
+        mImageView3.setLayoutParams(params2);
+
+        TextView textView9 = view.findViewById(R.id.text_get_related);
+        TextView textView10 = view.findViewById(R.id.text_related);
+        textView9.setOnClickListener(this);
+        getRelatedIllust(textView9, textView10, cardView3);
+    }
+
+    private void getRelatedIllust(TextView t1, TextView t2, CardView cardView) {
+        Call<RelatedIllust> call = new RestClient()
+                .getRetrofit_AppAPI()
+                .create(AppApiPixivService.class)
+                .getRelatedIllust(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                        Reference.sIllustsBeans.get(index).getId());
+        call.enqueue(new retrofit2.Callback<RelatedIllust>() {
+            @Override
+            public void onResponse(Call<RelatedIllust> call, retrofit2.Response<RelatedIllust> response) {
+                RelatedIllust relatedIllust = response.body();
+                assert relatedIllust != null;
+                if (relatedIllust.illusts.size() >= 3 && getView()!=null) {
+                    loadImage(relatedIllust.illusts.get(0), mImageView);
+                    loadImage(relatedIllust.illusts.get(1), mImageView2);
+                    loadImage(relatedIllust.illusts.get(2), mImageView3);
+                } else {
+                    cardView.setVisibility(View.GONE);
+                    t1.setVisibility(View.INVISIBLE);
+                    t2.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RelatedIllust> call, Throwable throwable) {
+            }
+        });
+    }
+
+    private void loadImage(IllustsBean illustsBean, ImageView imageView) {
+        Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(illustsBean))
+                .priority(Priority.LOW)
+                .into(imageView);
     }
 
     @Override
@@ -276,6 +334,16 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                         0, (float) Math.hypot(getView().getWidth(), getView().getHeight()));
                 anim.setDuration(600);
                 anim.start();
+                break;
+            case R.id.get_related_illust:
+                intent = new Intent(mContext, RelatedActivity.class);
+                intent.putExtra("illust id", Reference.sIllustsBeans.get(index).getId());
+                mContext.startActivity(intent);
+                break;
+            case R.id.text_get_related:
+                intent = new Intent(mContext, RelatedActivity.class);
+                intent.putExtra("illust id", Reference.sIllustsBeans.get(index).getId());
+                mContext.startActivity(intent);
                 break;
             default:
                 break;

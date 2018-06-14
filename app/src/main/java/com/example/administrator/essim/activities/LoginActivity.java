@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void tryToLogin() {
         HashMap localHashMap = new HashMap();
-        localHashMap.put("client_id", "KzEZED7aC0vird8jWyHM38mXjNTY");
-        localHashMap.put("client_secret", "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP");
+        localHashMap.put("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT");
+        localHashMap.put("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj");
         localHashMap.put("grant_type", "password");
         localHashMap.put("username", mEditText.getText().toString().trim());
         localHashMap.put("password", mEditText2.getText().toString().trim());
