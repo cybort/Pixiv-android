@@ -150,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
     @Override
     public void onSearchConfirmed(CharSequence text) {
         if (searchType == 0) {
-            Intent intent = new Intent(mContext, SearchTagActivity.class);
+            Intent intent = new Intent(mContext, SearchResultActivity.class);
             intent.putExtra("what is the keyword", searchBar.getText().trim());
             startActivity(intent);
         } else if (searchType == 1) {
@@ -211,7 +211,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
                         allTag[i] = booksInfo.get(i).getName();
                     }
                     mTagFlowLayout.setOnTagClickListener((view, position, parent) -> {
-                        Intent intent = new Intent(mContext, SearchTagActivity.class);
+                        Intent intent = new Intent(mContext, SearchResultActivity.class);
                         intent.putExtra("what is the keyword", allTag[position]);
                         startActivity(intent);
                         return true;
@@ -247,7 +247,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchB
                 customSuggestionsAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, int viewType) {
-                        Intent intent = new Intent(mContext, SearchTagActivity.class);
+                        Intent intent = new Intent(mContext, SearchResultActivity.class);
                         intent.putExtra("what is the keyword", ((TextView) view).getText());
                         startActivity(intent);
                     }

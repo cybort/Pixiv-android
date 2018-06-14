@@ -26,7 +26,7 @@
         <activity android:name=".activities.FollowShowActivity" />
         <activity android:name=".activities.ImageDetailActivity" />
         <activity android:name=".activities.NewUserActivity" />
-        <activity android:name=".activities.SearchTagActivity" />
+        <activity android:name=".activities.SearchResultActivity" />
         <activity android:name=".activities.ViewPagerActivity" />
         <activity android:name=".activities.UserDetailActivity" />
         <activity android:name=".activities.LoginActivity" />

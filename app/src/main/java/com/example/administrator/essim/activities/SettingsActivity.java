@@ -120,10 +120,11 @@ public class SettingsActivity extends AppCompatActivity {
             mTextView10.setText(R.string.zero_size);
         });
         mTextView10.setText(GlideCacheUtil.getInstance().getCacheSize(mContext));
-        mTextView11.setOnClickListener(v -> new RxImagePicker.Builder()
+        MyImagePicker imagePicker = new RxImagePicker.Builder()
                 .with(this)
                 .build()
-                .create(MyImagePicker.class)
+                .create(MyImagePicker.class);
+        mTextView11.setOnClickListener(v -> imagePicker
                 .openGallery()
                 .subscribe(result -> {
                     //获取到被选中图片的uri，保存到本地

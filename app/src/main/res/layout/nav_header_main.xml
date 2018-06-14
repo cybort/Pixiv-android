@@ -15,10 +15,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="55dp"
+        android:layout_width="62dp"
         android:scaleType="centerCrop"
         android:layout_marginStart="@dimen/sixteen_dip"
-        android:layout_height="55dp"
+        android:layout_height="62dp"
         android:layout_above="@+id/username"
         app:srcCompat="@mipmap/logo" />
 

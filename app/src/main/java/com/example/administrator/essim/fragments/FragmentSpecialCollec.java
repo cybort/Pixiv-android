@@ -74,7 +74,7 @@ public class FragmentSpecialCollec extends BaseFragment {
                                 assert getFragmentManager() != null;
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.special_collec_container, fragmentCollecDetail)
-                                        .hide(((SpecialCollectionActivity) Objects.requireNonNull(getActivity())).mFragmentSpecialCollec)
+                                        .hide(((SpecialCollectionActivity) Objects.requireNonNull(getActivity())).getMFragmentSpecialCollec())
                                         .show(fragmentCollecDetail)
                                         .addToBackStack(null)
                                         .commit();

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.administrator.essim.R
-import com.example.administrator.essim.activities.SearchTagActivity
+import com.example.administrator.essim.activities.SearchResultActivity
 import com.example.administrator.essim.adapters.TrendingtagAdapter
 import com.example.administrator.essim.interf.OnItemClickListener
 import com.example.administrator.essim.network.AppApiPixivService
@@ -50,14 +50,12 @@ class FragmentPixivRight : BaseFragment() {
                     mPixivAdapter = TrendingtagAdapter(response.body()!!.trend_tags, mContext)
                     mPixivAdapter!!.setOnItemClickListener(object : OnItemClickListener {
                         override fun onItemClick(view: View, position: Int, viewType: Int) {
-                            val intent = Intent(mContext, SearchTagActivity::class.java)
+                            val intent = Intent(mContext, SearchResultActivity::class.java)
                             intent.putExtra("what is the keyword", response.body()!!.trend_tags[position].tag)
                             mContext.startActivity(intent)
                         }
 
-                        override fun onItemLongClick(view: View, position: Int) {
-
-                        }
+                        override fun onItemLongClick(view: View, position: Int) {}
                     })
                     mRecyclerView.adapter = mPixivAdapter
                     mProgressbar.visibility = View.INVISIBLE

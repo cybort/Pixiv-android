@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -29,7 +30,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.administrator.essim.R;
 import com.example.administrator.essim.activities.CommentActivity;
 import com.example.administrator.essim.activities.ImageDetailActivity;
-import com.example.administrator.essim.activities.SearchTagActivity;
+import com.example.administrator.essim.activities.SearchResultActivity;
 import com.example.administrator.essim.activities.UserDetailActivity;
 import com.example.administrator.essim.activities.ViewPagerActivity;
 import com.example.administrator.essim.download.DownloadTask;
@@ -56,6 +57,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
 
     public static Bitmap sGlideDrawable;
     private int index;
+    private String priority;
     private Bitmap mBitmap;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
@@ -75,6 +77,9 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         index = (int) getArguments().getSerializable("index");
         if (index == ((ViewPagerActivity) Objects.requireNonNull(getActivity())).mViewPager.getCurrentItem()) {
             setUserVisibleHint(true);
+            priority = "high";
+        } else {
+            priority = "low";
         }
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -102,16 +107,20 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         if (Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", true)) {
             //如果按原图画质加载，则保存bitmap备用
             Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
-                    .asBitmap().into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    mBitmap = resource;
-                    imageView2.setImageBitmap(resource);
-                }
-            });
+                    .asBitmap()
+                    .priority(priority.equals("high") ? Priority.IMMEDIATE : Priority.NORMAL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            mBitmap = resource;
+                            imageView2.setImageBitmap(resource);
+                        }
+                    });
         } else {
             Glide.with(mContext).load(new GlideUtil().getMediumImageUrl(Reference.sIllustsBeans.get(index)))
+                    .priority(priority.equals("high") ? Priority.IMMEDIATE : Priority.NORMAL)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new GlideDrawableImageViewTarget(imageView2) {
                         @Override
@@ -141,7 +150,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                         mTagGroup, false);
                 tv.setText(s);
                 tv.setOnClickListener(v -> {
-                    Intent intent = new Intent(mContext, SearchTagActivity.class);
+                    Intent intent = new Intent(mContext, SearchResultActivity.class);
                     intent.putExtra("what is the keyword", allTag[position]);
                     mContext.startActivity(intent);
                 });

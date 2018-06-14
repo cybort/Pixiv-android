@@ -7,38 +7,37 @@
     tools:context=".activities.MainActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_pixiv"
+        android:id="@+id/mToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
+        android:elevation="@dimen/eight_dip"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_scrollFlags="scroll|enterAlways"
-        android:elevation="@dimen/eight_dip"
         app:navigationIcon="@drawable/ic_arrow_back_black_two_24dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="评论详情"
         app:titleTextColor="#fff" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recy_comment"
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
-        android:layout_above="@+id/card_fourth"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_pixiv">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_above="@+id/card_fourth"
+        android:layout_below="@+id/mToolbar"/>
 
     <RelativeLayout
         android:id="@+id/card_fourth"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/white"
+        android:focusable="true"
         android:focusableInTouchMode="true"
         android:padding="6dp">
 
         <ImageView
-            android:id="@+id/img_comment"
+            android:id="@+id/sendComment"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
@@ -47,28 +46,28 @@
             android:src="@drawable/ic_insert_comment_black_24dp" />
 
         <EditText
+            android:id="@+id/mEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:id="@+id/comment_edit"
             android:layout_marginStart="4dp"
-            android:singleLine="true"
-            android:layout_toStartOf="@+id/img_comment"
+            android:layout_toStartOf="@+id/sendComment"
             android:hint="留下你的评论吧~"
+            android:singleLine="true"
             android:textSize="@dimen/sixteen_sp" />
 
         <ImageView
+            android:id="@+id/clearHint"
             android:layout_width="wrap_content"
-            android:id="@+id/clear_hint"
-            android:layout_alignEnd="@+id/comment_edit"
-            android:src="@drawable/ic_clear_black_24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/mEditText"
             android:layout_centerVertical="true"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/ic_clear_black_24dp" />
 
     </RelativeLayout>
 
     <ProgressBar
-        android:id="@+id/try_login"
+        android:id="@+id/mProgressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
