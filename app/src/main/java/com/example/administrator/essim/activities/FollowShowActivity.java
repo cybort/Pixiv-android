@@ -58,7 +58,6 @@ public class FollowShowActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        Glide.get(mContext).clearMemory();
         mProgressBar = findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
         mRecyclerView = findViewById(R.id.pixiv_recy);
@@ -78,7 +77,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserFollowing(Common.getLocalDataSet(mContext).getString("Authorization", ""), userID, followerType);
+                .getUserFollowing(Common.getLocalDataSet().getString("Authorization", ""), userID, followerType);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -138,7 +137,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getSearchUser(Common.getLocalDataSet(mContext).getString("Authorization", ""), searchKey);
+                .getSearchUser(Common.getLocalDataSet().getString("Authorization", ""), searchKey);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -187,7 +186,7 @@ public class FollowShowActivity extends AppCompatActivity {
         Call<SearchUserResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getNextUser(Common.getLocalDataSet(mContext).getString("Authorization", ""), next_url);
+                .getNextUser(Common.getLocalDataSet().getString("Authorization", ""), next_url);
         call.enqueue(new Callback<SearchUserResponse>() {
             @Override
             public void onResponse(Call<SearchUserResponse> call, retrofit2.Response<SearchUserResponse> response) {
@@ -233,7 +232,7 @@ public class FollowShowActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if (Common.getLocalDataSet(mContext).getInt("userid", 0) == userID) {
+        if (Common.getLocalDataSet().getInt("userid", 0) == userID) {
             //加载关于自己的菜单，可以查看自己的公开或者非公开收藏
             getMenuInflater().inflate(R.menu.user_star, menu);
         }

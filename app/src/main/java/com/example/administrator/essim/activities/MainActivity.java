@@ -52,20 +52,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //判断是否有登录记录，没登录就去LoginActivity，登录了就加载视图
-        if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
+        if (Common.getLocalDataSet().getBoolean("islogin", false)) {
             TextView textView = navigationView.getHeaderView(0).findViewById(R.id.username);
-            textView.setText(Common.getLocalDataSet(mContext).getString("username", "")
-                    .equals(Common.getLocalDataSet(mContext).getString("useraccount", "")) ?
-                    Common.getLocalDataSet(mContext).getString("username", "") : String.format("%s (%s)",
-                    Common.getLocalDataSet(mContext).getString("username", ""),
-                    Common.getLocalDataSet(mContext).getString("useraccount", "")));
+            textView.setText(Common.getLocalDataSet().getString("username", "")
+                    .equals(Common.getLocalDataSet().getString("useraccount", "")) ?
+                    Common.getLocalDataSet().getString("username", "") : String.format("%s (%s)",
+                    Common.getLocalDataSet().getString("username", ""),
+                    Common.getLocalDataSet().getString("useraccount", "")));
             ImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
-            Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet(mContext).getInt("userid", 0),
-                    Common.getLocalDataSet(mContext).getString("hearurl", ""))).into(imageView);
+            Glide.with(mContext).load(new GlideUtil().getHead(Common.getLocalDataSet().getInt("userid", 0),
+                    Common.getLocalDataSet().getString("hearurl", ""))).into(imageView);
             imageView.setOnClickListener(view -> {
-                if (Common.getLocalDataSet(mContext).getBoolean("islogin", false)) {
+                if (Common.getLocalDataSet().getBoolean("islogin", false)) {
                     Intent intent = new Intent(MainActivity.this, UserDetailActivity.class);
-                    intent.putExtra("user id", Common.getLocalDataSet(mContext).getInt("userid", 0));
+                    intent.putExtra("user id", Common.getLocalDataSet().getInt("userid", 0));
                     startActivity(intent);
                 }
             });
@@ -200,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        if (Common.getLocalDataSet(mContext).getString("header_img_path", "").length() != 0) {
+        if (Common.getLocalDataSet().getString("header_img_path", "").length() != 0) {
             Glide.with(mContext)
-                    .load(Common.getLocalDataSet(mContext).getString("header_img_path", ""))
+                    .load(Common.getLocalDataSet().getString("header_img_path", ""))
                     .into(mImageView);
         }
     }

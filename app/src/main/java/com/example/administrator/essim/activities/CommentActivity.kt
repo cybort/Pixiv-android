@@ -99,7 +99,7 @@ class CommentActivity : AppCompatActivity() {
                     val call = RestClient()
                             .retrofit_AppAPI
                             .create(AppApiPixivService::class.java)
-                            .postIllustComment(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, illustID.toLong(),
+                            .postIllustComment(Common.getLocalDataSet().getString("Authorization", "")!!, illustID.toLong(),
                                     mEditText.text.toString().trim { it <= ' ' }, null)
                     call.enqueue(object : Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
@@ -115,7 +115,7 @@ class CommentActivity : AppCompatActivity() {
                     val call = RestClient()
                             .retrofit_AppAPI
                             .create(AppApiPixivService::class.java)
-                            .postIllustComment(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, illustID.toLong(),
+                            .postIllustComment(Common.getLocalDataSet().getString("Authorization", "")!!, illustID.toLong(),
                                     mEditText.text.toString().trim { it <= ' ' }, parentCommentID)
                     call.enqueue(object : Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
@@ -142,7 +142,7 @@ class CommentActivity : AppCompatActivity() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getIllustComments(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, illustID.toLong())
+                .getIllustComments(Common.getLocalDataSet().getString("Authorization", "")!!, illustID.toLong())
         call.enqueue(object : Callback<IllustCommentsResponse> {
             override fun onResponse(call: Call<IllustCommentsResponse>, response: retrofit2.Response<IllustCommentsResponse>) {
                 mIllustCommentsResponse = response.body()
@@ -180,7 +180,7 @@ class CommentActivity : AppCompatActivity() {
             val call = RestClient()
                     .retrofit_AppAPI
                     .create(AppApiPixivService::class.java)
-                    .getNextComment(Common.getLocalDataSet(mContext).getString("Authorization", "")!!,
+                    .getNextComment(Common.getLocalDataSet().getString("Authorization", "")!!,
                             mIllustCommentsResponse!!.next_url)
             call.enqueue(object : Callback<IllustCommentsResponse> {
                 override fun onResponse(call: Call<IllustCommentsResponse>, response: retrofit2.Response<IllustCommentsResponse>) {

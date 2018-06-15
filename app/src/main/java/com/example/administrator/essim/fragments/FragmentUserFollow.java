@@ -57,7 +57,7 @@ public class FragmentUserFollow extends ScrollObservableFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getContext();
-        mSharedPreferences = Common.getLocalDataSet(mContext);
+        mSharedPreferences = Common.getLocalDataSet();
         View v = inflater.inflate(R.layout.fragment_home_list, container, false);
         initView(v);
         getLikeIllust("public");

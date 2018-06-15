@@ -123,7 +123,7 @@ class FragmentRank : BaseFragment() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getFollowIllusts(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, "public")
+                .getFollowIllusts(Common.getLocalDataSet().getString("Authorization", "")!!, "public")
         call.enqueue(object : Callback<IllustfollowResponse> {
             override fun onResponse(call: Call<IllustfollowResponse>,
                                     response: retrofit2.Response<IllustfollowResponse>) {
@@ -143,7 +143,7 @@ class FragmentRank : BaseFragment() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getIllustRanking(Common.getLocalDataSet(mContext).getString("Authorization", "")!!,
+                .getIllustRanking(Common.getLocalDataSet().getString("Authorization", "")!!,
                         modeList[dataType], null)
         call.enqueue(object : Callback<IllustRankingResponse> {
             override fun onResponse(call: Call<IllustRankingResponse>,
@@ -164,7 +164,7 @@ class FragmentRank : BaseFragment() {
             val call = RestClient()
                     .retrofit_AppAPI
                     .create(AppApiPixivService::class.java)
-                    .getNext(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, nextDataUrl!!)
+                    .getNext(Common.getLocalDataSet().getString("Authorization", "")!!, nextDataUrl!!)
             call.enqueue(object : Callback<RecommendResponse> {
                 override fun onResponse(call: Call<RecommendResponse>,
                                         response: retrofit2.Response<RecommendResponse>) {
@@ -196,12 +196,12 @@ class FragmentRank : BaseFragment() {
                         (view as ImageView).setImageResource(R.drawable.ic_favorite_white_24dp)
                         view.startAnimation(Common.getAnimation())
                         Common.postStarIllust(position, illustsBeans,
-                                Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "public")
+                                Common.getLocalDataSet().getString("Authorization", ""), mContext, "public")
                     } else {
                         (view as ImageView).setImageResource(R.drawable.ic_favorite_border_black_24dp)
                         view.startAnimation(Common.getAnimation())
                         Common.postUnstarIllust(position, illustsBeans,
-                                Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext)
+                                Common.getLocalDataSet().getString("Authorization", ""), mContext)
                     }
                 }
             }
@@ -210,7 +210,7 @@ class FragmentRank : BaseFragment() {
                 if (!illustsBeans[position].isIs_bookmarked) {
                     (view as ImageView).setImageResource(R.drawable.ic_favorite_white_24dp)
                     Common.postStarIllust(position, illustsBeans,
-                            Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "private")
+                            Common.getLocalDataSet().getString("Authorization", ""), mContext, "private")
                 }
             }
         })

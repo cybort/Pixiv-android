@@ -43,7 +43,7 @@ class FragmentPixivRight : BaseFragment() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getIllustTrendTags(Common.getLocalDataSet(mContext).getString("Authorization", "")!!)
+                .getIllustTrendTags(Common.getLocalDataSet().getString("Authorization", "")!!)
         call.enqueue(object : Callback<TrendingtagResponse> {
             override fun onResponse(call: Call<TrendingtagResponse>, response: retrofit2.Response<TrendingtagResponse>) {
                 try {

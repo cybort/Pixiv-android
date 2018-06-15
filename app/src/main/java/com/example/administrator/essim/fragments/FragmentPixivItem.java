@@ -66,6 +66,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
     private String priority;
     private Bitmap mBitmap;
     private ProgressBar mProgressBar;
+    private RelatedIllust mRelatedIllust;
     private FloatingActionButton mFloatingActionButton;
     private ImageView mImageView, mImageView2, mImageView3;
 
@@ -111,7 +112,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 .into(imageView);
         mProgressBar = view.findViewById(R.id.try_login);
         mProgressBar.setIndeterminateDrawable(Common.getLoaderAnimation(mContext));
-        if (Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", true)) {
+        if (Common.getLocalDataSet().getBoolean("is_origin_pic", true)) {
             //如果按原图画质加载，则保存bitmap备用
             Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
                     .asBitmap()
@@ -198,7 +199,7 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 mFloatingActionButton.startAnimation(Common.getAnimation());
                 Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
                 Common.postStarIllust(index, Reference.sIllustsBeans,
-                        Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "private");
+                        Common.getLocalDataSet().getString("Authorization", ""), mContext, "private");
 
                 Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
                         (int) mFloatingActionButton.getY(),
@@ -235,17 +236,17 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         Call<RelatedIllust> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getRelatedIllust(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                .getRelatedIllust(Common.getLocalDataSet().getString("Authorization", ""),
                         Reference.sIllustsBeans.get(index).getId());
         call.enqueue(new retrofit2.Callback<RelatedIllust>() {
             @Override
             public void onResponse(Call<RelatedIllust> call, retrofit2.Response<RelatedIllust> response) {
-                RelatedIllust relatedIllust = response.body();
-                assert relatedIllust != null;
-                if (relatedIllust.illusts.size() >= 3 && getView()!=null) {
-                    loadImage(relatedIllust.illusts.get(0), mImageView);
-                    loadImage(relatedIllust.illusts.get(1), mImageView2);
-                    loadImage(relatedIllust.illusts.get(2), mImageView3);
+                mRelatedIllust = response.body();
+                assert mRelatedIllust != null;
+                if (mRelatedIllust.illusts.size() >= 3 && getView()!=null) {
+                    loadImage(mRelatedIllust.illusts.get(0), mImageView);
+                    loadImage(mRelatedIllust.illusts.get(1), mImageView2);
+                    loadImage(mRelatedIllust.illusts.get(2), mImageView3);
                 } else {
                     cardView.setVisibility(View.GONE);
                     t1.setVisibility(View.INVISIBLE);
@@ -288,22 +289,22 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 } else {
                     //只有一张图的情况下，从meta_single_page获取原图链接
                     if (Reference.sIllustsBeans.get(index).getPage_count() == 1) {
-                        if (Common.getLocalDataSet(mContext).getString("download_path",
+                        if (Common.getLocalDataSet().getString("download_path",
                                 "/storage/emulated/0/PixivPictures").contains("emulated")) {
                             //下载至内置SD存储介质，使用传统文件模式;
                             new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index)).execute(Reference.sIllustsBeans
                                     .get(index).getMeta_single_page().getOriginal_image_url());
                         } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
+                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet())
                                     .execute(Reference.sIllustsBeans.get(index).getMeta_single_page().getOriginal_image_url());
                         }
                     } else { //有多图的情况下，从meta_pages获取原图链接
-                        if (Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
+                        if (Common.getLocalDataSet().getString("download_path", "/storage/emulated/0/PixivPictures").contains("emulated")) {
                             //下载至内置SD存储介质，使用传统文件模式;
                             new DownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index)).execute(Reference.sIllustsBeans
                                     .get(index).getMeta_pages().get(0).getImage_urlsX().getOriginal());
                         } else {//下载至可插拔SD存储介质，使用SAF 框架，DocumentFile文件模式;
-                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet(mContext))
+                            new SDDownloadTask(realFile, mContext, Reference.sIllustsBeans.get(index), Common.getLocalDataSet())
                                     .execute(Reference.sIllustsBeans.get(index).getMeta_pages().get(0).getImage_urlsX().getOriginal());
                         }
                     }
@@ -321,13 +322,13 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(false);
                     Common.postUnstarIllust(index, Reference.sIllustsBeans,
-                            Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext);
+                            Common.getLocalDataSet().getString("Authorization", ""), mContext);
                 } else {
                     mFloatingActionButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                     mFloatingActionButton.startAnimation(Common.getAnimation());
                     Reference.sIllustsBeans.get(index).setIs_bookmarked(true);
                     Common.postStarIllust(index, Reference.sIllustsBeans,
-                            Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "public");
+                            Common.getLocalDataSet().getString("Authorization", ""), mContext, "public");
                 }
                 Animator anim = ViewAnimationUtils.createCircularReveal(getView(), (int) mFloatingActionButton.getX(),
                         (int) mFloatingActionButton.getY(),
@@ -337,12 +338,14 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
                 break;
             case R.id.get_related_illust:
                 intent = new Intent(mContext, RelatedActivity.class);
-                intent.putExtra("illust id", Reference.sIllustsBeans.get(index).getId());
+                intent.putExtra("illust set", mRelatedIllust);
+                intent.putExtra("illust title", Reference.sIllustsBeans.get(index).getTitle());
                 mContext.startActivity(intent);
                 break;
             case R.id.text_get_related:
                 intent = new Intent(mContext, RelatedActivity.class);
-                intent.putExtra("illust id", Reference.sIllustsBeans.get(index).getId());
+                intent.putExtra("illust set", mRelatedIllust);
+                intent.putExtra("illust title", Reference.sIllustsBeans.get(index).getTitle());
                 mContext.startActivity(intent);
                 break;
             default:

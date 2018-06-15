@@ -117,7 +117,7 @@ public class FragmentUserDetail extends Fragment {
         Call<UserDetailResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getUserDetail(Common.getLocalDataSet(mContext).getString("Authorization", ""), ((UserDetailActivity) getActivity()).getUserId());
+                .getUserDetail(Common.getLocalDataSet().getString("Authorization", ""), ((UserDetailActivity) getActivity()).getUserId());
         call.enqueue(new retrofit2.Callback<UserDetailResponse>() {
             @Override
             public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
@@ -184,7 +184,7 @@ public class FragmentUserDetail extends Fragment {
         });
         tabStrip.setViewPager(viewPager);
         viewPager.setCurrentItem(currentPosition);
-        if (userDetailResponse.getUser().getId() != Common.getLocalDataSet(mContext).getInt("userid", 0)) {
+        if (userDetailResponse.getUser().getId() != Common.getLocalDataSet().getInt("userid", 0)) {
             mTextView3.setVisibility(View.VISIBLE);
             if (userDetailResponse.getUser().isIs_followed()) {
                 mTextView3.setText("取消关注");
@@ -193,12 +193,12 @@ public class FragmentUserDetail extends Fragment {
             }
             mTextView3.setOnClickListener(view -> {
                 if (userDetailResponse.getUser().isIs_followed()) {
-                    Common.postUnFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                    Common.postUnFollowUser(Common.getLocalDataSet().getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3);
                     mTextView3.setText("+关注");
                     userDetailResponse.getUser().setIs_followed(false);
                 } else {
-                    Common.postFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                    Common.postFollowUser(Common.getLocalDataSet().getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3, "public");
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
@@ -206,7 +206,7 @@ public class FragmentUserDetail extends Fragment {
             });
             mTextView3.setOnLongClickListener(view -> {
                 if (!userDetailResponse.getUser().isIs_followed()) {
-                    Common.postFollowUser(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                    Common.postFollowUser(Common.getLocalDataSet().getString("Authorization", ""),
                             userDetailResponse.getUser().getId(), mTextView3, "private");
                     mTextView3.setText("取消关注");
                     userDetailResponse.getUser().setIs_followed(true);
@@ -257,7 +257,7 @@ public class FragmentUserDetail extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (((UserDetailActivity) Objects.requireNonNull(getActivity())).getUserId() ==
-                Common.getLocalDataSet(mContext).getInt("userid", 0)) {
+                Common.getLocalDataSet().getInt("userid", 0)) {
             inflater.inflate(R.menu.user_star, menu);
         }
     }

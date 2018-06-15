@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 
 import com.example.administrator.essim.R;
+import com.example.administrator.essim.activities.PixivApplication;
 import com.example.administrator.essim.network.AppApiPixivService;
 import com.example.administrator.essim.network.RestClient;
 import com.example.administrator.essim.response.BookmarkAddResponse;
@@ -268,8 +269,8 @@ public class Common {
         TastyToast.makeText(mContext, tag + " 已复制到剪切板~", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
     }
 
-    public static SharedPreferences getLocalDataSet(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+    public static SharedPreferences getLocalDataSet() {
+        return PreferenceManager.getDefaultSharedPreferences(PixivApplication.getContext());
     }
 
     public static Wave getLoaderAnimation(Context context) {
@@ -293,7 +294,7 @@ public class Common {
 
     public static File generatePictureFile(Context context, IllustsBean illustsBean, int positionInIllust) {
         //检验父文件夹是否存在在，若不存在则创建
-        File parentFile = new File(Common.getLocalDataSet(context).getString("download_path",
+        File parentFile = new File(Common.getLocalDataSet().getString("download_path",
                 "/storage/emulated/0/PixivPictures"));
         if (!parentFile.exists()) {
             parentFile.mkdir();

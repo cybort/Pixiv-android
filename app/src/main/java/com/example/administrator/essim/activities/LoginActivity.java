@@ -76,9 +76,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        if (Common.getLocalDataSet(mContext).getString("username", "").length() != 0) {
-            mEditText.setText(Common.getLocalDataSet(mContext).getString("useraccount", ""));
-            mEditText2.setText(Common.getLocalDataSet(mContext).getString("password", ""));
+        if (Common.getLocalDataSet().getString("username", "").length() != 0) {
+            mEditText.setText(Common.getLocalDataSet().getString("useraccount", ""));
+            mEditText2.setText(Common.getLocalDataSet().getString("password", ""));
         }
     }
 
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<PixivOAuthResponse> call, retrofit2.Response<PixivOAuthResponse> response) {
                 PixivOAuthResponse pixivOAuthResponse = response.body();
                 if (pixivOAuthResponse != null) {
-                    SharedPreferences.Editor editor = Common.getLocalDataSet(mContext).edit();
+                    SharedPreferences.Editor editor = Common.getLocalDataSet().edit();
                     String localStringBuilder = "Bearer " +
                             pixivOAuthResponse.getResponse().getAccess_token();
                     editor.putString("Authorization", localStringBuilder);

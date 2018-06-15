@@ -60,7 +60,7 @@ class FragmentPixivLeft : BaseFragment() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getRecommend(Common.getLocalDataSet(mContext).getString("Authorization", "")!!)
+                .getRecommend(Common.getLocalDataSet().getString("Authorization", "")!!)
         call.enqueue(object : Callback<RecommendResponse> {
             override fun onResponse(call: Call<RecommendResponse>, response: retrofit2.Response<RecommendResponse>) {
                 try {
@@ -83,7 +83,7 @@ class FragmentPixivLeft : BaseFragment() {
         val call = RestClient()
                 .retrofit_AppAPI
                 .create(AppApiPixivService::class.java)
-                .getNext(Common.getLocalDataSet(mContext).getString("Authorization", "")!!, nextDataUrl!!)
+                .getNext(Common.getLocalDataSet().getString("Authorization", "")!!, nextDataUrl!!)
         call.enqueue(object : Callback<RecommendResponse> {
             override fun onResponse(call: Call<RecommendResponse>, response: retrofit2.Response<RecommendResponse>) {
                 nextDataUrl = response.body()!!.next_url
@@ -111,12 +111,12 @@ class FragmentPixivLeft : BaseFragment() {
                         (view as ImageView).setImageResource(R.drawable.ic_favorite_white_24dp)
                         view.startAnimation(Common.getAnimation())
                         Common.postStarIllust(position, illustsBeans,
-                                Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "public")
+                                Common.getLocalDataSet().getString("Authorization", ""), mContext, "public")
                     } else {
                         (view as ImageView).setImageResource(R.drawable.ic_favorite_border_black_24dp)
                         view.startAnimation(Common.getAnimation())
                         Common.postUnstarIllust(position, illustsBeans,
-                                Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext)
+                                Common.getLocalDataSet().getString("Authorization", ""), mContext)
                     }
                 }
             }
@@ -126,7 +126,7 @@ class FragmentPixivLeft : BaseFragment() {
                     !illustsBeans[position].isIs_bookmarked -> {
                         (view as ImageView).setImageResource(R.drawable.ic_favorite_white_24dp)
                         Common.postStarIllust(position, illustsBeans,
-                                Common.getLocalDataSet(mContext).getString("Authorization", ""), mContext, "private")
+                                Common.getLocalDataSet().getString("Authorization", ""), mContext, "private")
                     }
                 }
             }
@@ -140,13 +140,13 @@ class FragmentPixivLeft : BaseFragment() {
         localHashMap["client_id"] = "KzEZED7aC0vird8jWyHM38mXjNTY"
         localHashMap["client_secret"] = "W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP"
         localHashMap["grant_type"] = "password"
-        localHashMap["username"] = Common.getLocalDataSet(mContext).getString("useraccount", "")
-        localHashMap["password"] = Common.getLocalDataSet(mContext).getString("password", "")
+        localHashMap["username"] = Common.getLocalDataSet().getString("useraccount", "")
+        localHashMap["password"] = Common.getLocalDataSet().getString("password", "")
         val call = RestClient().getretrofit_OAuthSecure().create(OAuthSecureService::class.java).postAuthToken(localHashMap)
         call.enqueue(object : Callback<PixivOAuthResponse> {
             override fun onResponse(call: Call<PixivOAuthResponse>, response: retrofit2.Response<PixivOAuthResponse>) {
                 val pixivOAuthResponse = response.body()
-                val editor = Common.getLocalDataSet(mContext).edit()
+                val editor = Common.getLocalDataSet().edit()
                 try {
                     val localStringBuilder = "Bearer " + pixivOAuthResponse!!.response.access_token
                     editor.putString("Authorization", localStringBuilder)

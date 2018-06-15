@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         NestedScrollView nestedScrollView = findViewById(R.id.nested_about);
         nestedScrollView.startAnimation(animation);
 
-        SharedPreferences.Editor editor = Common.getLocalDataSet(mContext).edit();
+        SharedPreferences.Editor editor = Common.getLocalDataSet().edit();
         Toolbar toolbar = findViewById(R.id.toolbar_pixiv);
         toolbar.setNavigationOnClickListener(view -> finish());
         Switch aSwitch = findViewById(R.id.setting_switch);
@@ -71,22 +71,22 @@ public class SettingsActivity extends AppCompatActivity {
         mTextView10 = findViewById(R.id.cache_size);
         mTextView11 = findViewById(R.id.set_header);
         mTextView12 = findViewById(R.id.set_color);
-        aSwitch.setChecked(Common.getLocalDataSet(mContext).getBoolean("is_origin_pic", false));
+        aSwitch.setChecked(Common.getLocalDataSet().getBoolean("is_origin_pic", false));
         aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             editor.putBoolean("is_origin_pic", b);
             editor.apply();
         });
-        mTextView.setText(Common.getLocalDataSet(mContext).getString("username", ""));
+        mTextView.setText(Common.getLocalDataSet().getString("username", ""));
         mTextView.setOnLongClickListener(view -> {
             Common.copyMessage(mContext, mTextView.getText().toString());
             return true;
         });
-        mTextView2.setText(Common.getLocalDataSet(mContext).getString("useraccount", ""));
+        mTextView2.setText(Common.getLocalDataSet().getString("useraccount", ""));
         mTextView2.setOnLongClickListener(view -> {
             Common.copyMessage(mContext, mTextView2.getText().toString());
             return true;
         });
-        mTextView3.setText(Common.getLocalDataSet(mContext).getString("password", ""));
+        mTextView3.setText(Common.getLocalDataSet().getString("password", ""));
         mTextView3.setOnLongClickListener(view -> {
             ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData mClipData = ClipData.newPlainText("Label", mTextView3.getText().toString());
@@ -100,13 +100,13 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-        mTextView5.setText(Common.getLocalDataSet(mContext).getString("download_path", "/storage/emulated/0/PixivPictures"));
+        mTextView5.setText(Common.getLocalDataSet().getString("download_path", "/storage/emulated/0/PixivPictures"));
         mTextView6.setOnClickListener(view -> {
             Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
             mActivity.startActivityForResult(i, 1);
             TastyToast.makeText(mContext, "请进入可插拔sd卡根目录，然后点击'确定'", Toast.LENGTH_LONG, TastyToast.DEFAULT).show();
         });
-        mTextView7.setText(Common.getLocalDataSet(mContext).getString("treeUri", "no sd card").equals("no sd card") ?
+        mTextView7.setText(Common.getLocalDataSet().getString("treeUri", "no sd card").equals("no sd card") ?
                 "无SD卡读写权限或无SD卡" : "已获取SD卡读写权限");
         try {
             PackageInfo pi = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
@@ -151,7 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
         chooser = builder.build();
         chooser.setOnSelectListener(path -> {
             //如果选出的路径不是机身自带路径，且未设置SD卡权限，则报错
-            if (!path.contains("emulated") && Common.getLocalDataSet(mContext).getString("treeUri", "no sd card").equals("no sd card")) {
+            if (!path.contains("emulated") && Common.getLocalDataSet().getString("treeUri", "no sd card").equals("no sd card")) {
                 Snackbar.make(mTextView, "请先配置SD卡的读写权限!", Snackbar.LENGTH_SHORT).show();
             } else {
                 editor.putString("download_path", path);
@@ -182,7 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             Uri treeUri = data.getData();
             assert treeUri != null;
-            SharedPreferences.Editor editor = Common.getLocalDataSet(mContext).edit();
+            SharedPreferences.Editor editor = Common.getLocalDataSet().edit();
             if (":".equals(treeUri.getPath().substring(treeUri.getPath().length() - 1)) && !treeUri.getPath().contains("primary")) {
                 editor.putString("treeUri", treeUri.toString());
                 mTextView7.setText(R.string.has_sd_permission);

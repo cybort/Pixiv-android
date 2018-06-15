@@ -8,11 +8,4 @@ public class PixivApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
     }
-
-   /* public static RefWatcher getRefWatcher(Context context) {
-        PixivApplication application = (PixivApplication) context.getApplicationContext();
-        return application.refWatcher;
-    }
-
-    private RefWatcher refWatcher;*/
 }

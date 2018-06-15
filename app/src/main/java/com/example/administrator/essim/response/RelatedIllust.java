@@ -1,8 +1,9 @@
 package com.example.administrator.essim.response;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RelatedIllust {
+public class RelatedIllust implements Serializable {
     public String getNext_url() {
         return next_url;
     }

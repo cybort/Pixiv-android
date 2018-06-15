@@ -46,12 +46,10 @@ public class SearchResultActivity extends AppCompatActivity {
     private boolean isBestSort;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private RecommendResponse moreData;
     private PixivAdapterGrid mPixivAdapter;
     private int nowSearchType = -1, togo = -1;
     private SharedPreferences mSharedPreferences;
     private AlphaAnimation alphaAnimationShowIcon;
-    private SearchIllustResponse mSearchIllustResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +100,8 @@ public class SearchResultActivity extends AppCompatActivity {
         call.enqueue(new Callback<SearchIllustResponse>() {
             @Override
             public void onResponse(Call<SearchIllustResponse> call, retrofit2.Response<SearchIllustResponse> response) {
-                mSearchIllustResponse = response.body();
-                next_url = mSearchIllustResponse.getNext_url();
-                initAdapter(mSearchIllustResponse.getIllusts());
+                next_url = response.body().getNext_url();
+                initAdapter(response.body().getIllusts());
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
 
@@ -117,9 +114,6 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private void getNextData() {
         if (next_url != null) {
-            if (mSearchIllustResponse != null) {
-                mSearchIllustResponse = null;
-            }
             mProgressBar.setVisibility(View.VISIBLE);
             Call<RecommendResponse> call = new RestClient()
                     .getRetrofit_AppAPI()
@@ -128,9 +122,8 @@ public class SearchResultActivity extends AppCompatActivity {
             call.enqueue(new Callback<RecommendResponse>() {
                 @Override
                 public void onResponse(Call<RecommendResponse> call, retrofit2.Response<RecommendResponse> response) {
-                    moreData = response.body();
-                    next_url = moreData.getNext_url();
-                    initAdapter(moreData.getIllusts());
+                    next_url = response.body().getNext_url();
+                    initAdapter(response.body().getIllusts());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 }
 

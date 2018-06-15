@@ -121,7 +121,7 @@ public class FragmentCollecDetail extends BaseFragment {
         Call<IllustDetailResponse> call = new RestClient()
                 .getRetrofit_AppAPI()
                 .create(AppApiPixivService.class)
-                .getIllust(Common.getLocalDataSet(mContext).getString("Authorization", ""),
+                .getIllust(Common.getLocalDataSet().getString("Authorization", ""),
                         illustID);
         call.enqueue(new Callback<IllustDetailResponse>() {
             @Override
