@@ -25,7 +25,7 @@ class TrendingtagAdapter(private val mPixivRankItem: List<TrendingtagResponse.Tr
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mPixivRankItem[position]
+        Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mPixivRankItem[position]
                 .illust))
                 .into((holder as TagHolder).itemView.pixiv_image)
         holder.itemView.pixiv_item_size.text = mPixivRankItem[position].tag

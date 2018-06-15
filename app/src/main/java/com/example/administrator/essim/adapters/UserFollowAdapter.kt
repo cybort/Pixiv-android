@@ -40,16 +40,16 @@ class UserFollowAdapter(private val mBooksInfo: List<SearchUserResponse.UserPrev
         is ContentViewHolder -> {
             //加载用户名和头像
             holder.itemView.user_name.text = mBooksInfo[position].user.name
-            Glide.with(mContext).load<GlideUrl>(GlideUtil().getHead(mBooksInfo[position]))
+            Glide.with(mContext).load(GlideUtil().getHead(mBooksInfo[position]))
                     .into(holder.itemView.user_head)
             //个别画师的展示图不足三个，所以只有足够的展示图的时候才展示作品
             when {
                 mBooksInfo[position].illusts.size == 3 -> {
-                    Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[0]))
+                    Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[0]))
                             .into(holder.itemView.user_show_one)
-                    Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[1]))
+                    Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[1]))
                             .into(holder.itemView.user_show_two)
-                    Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[2]))
+                    Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mBooksInfo[position].illusts[2]))
                             .into(holder.itemView.user_show_three)
                 }
             }

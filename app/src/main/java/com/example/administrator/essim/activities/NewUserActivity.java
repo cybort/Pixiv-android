@@ -29,10 +29,8 @@ import retrofit2.Callback;
 
 public class NewUserActivity extends AppCompatActivity {
 
-    private CardView mCardView;
     private EditText mEditText;
     private ProgressBar mProgressBar;
-    private String Authorization = "Bearer l-f9qZ0ZyqSwRyZs8-MymbtWBbSxmCu1pmbOlyisou8";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +46,8 @@ public class NewUserActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.try_login);
         mProgressBar.setVisibility(View.INVISIBLE);
         mEditText = findViewById(R.id.login_username);
-        mCardView = findViewById(R.id.card_login);
-        mCardView.setOnClickListener(view -> {
+        CardView cardView = findViewById(R.id.card_login);
+        cardView.setOnClickListener(view -> {
             if (mEditText.getText().toString().trim().isEmpty()) {
                 Snackbar.make(view, "用户名不能为空", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -68,11 +66,12 @@ public class NewUserActivity extends AppCompatActivity {
     }
 
     private void getNewAccount() {
+        String authorization = "Bearer l-f9qZ0ZyqSwRyZs8-MymbtWBbSxmCu1pmbOlyisou8";
         Call<PixivAccountsResponse> call = new RestClient()
                 .getRetrofit_Account().create(AccountPixivService.class)
                 .createProvisionalAccount(mEditText.getText().toString().trim(),
                         "pixiv_android_app_provisional_account",
-                        Authorization);
+                        authorization);
         call.enqueue(new Callback<PixivAccountsResponse>() {
             @Override
             public void onResponse(Call<PixivAccountsResponse> call, retrofit2.Response<PixivAccountsResponse> response) {

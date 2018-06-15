@@ -27,29 +27,13 @@ class FragmentImageDetail : BaseFragment() {
         val illustsBean = ((activity) as ImageDetailActivity).mIllustsBean
         val wave = Wave()
         mProgressbar.indeterminateDrawable = wave
-        Glide.get(mContext).clearMemory()
-        if (index == 0) {    //加载第一张图的时候很有可能可以调用内存中缓存好的bitmap
-            if (FragmentPixivItem.sGlideDrawable != null) { //有bitmap就拿来用
-                mProgressbar.visibility = View.INVISIBLE
-                originalImage.setImageBitmap(FragmentPixivItem.sGlideDrawable)
-            } else {     //没有bitmap就加载网络中的
-                Glide.with(mContext).load<GlideUrl>(GlideUtil().getLargeImageUrl(illustsBean, index))
-                        .into<GlideDrawableImageViewTarget>(object : GlideDrawableImageViewTarget(originalImage) {
-                            override fun onResourceReady(drawable: GlideDrawable?, animation: GlideAnimation<in GlideDrawable>?) {
-                                mProgressbar.visibility = View.INVISIBLE
-                                super.onResourceReady(drawable, animation)
-                            }
-                        })
-            }
-        } else {  //其他页面直接老老实实加载网络中的
-            Glide.with(mContext).load<GlideUrl>(GlideUtil().getLargeImageUrl(illustsBean, index))
-                    .into<GlideDrawableImageViewTarget>(object : GlideDrawableImageViewTarget(originalImage) {
-                        override fun onResourceReady(drawable: GlideDrawable?, animation: GlideAnimation<in GlideDrawable>?) {
-                            mProgressbar.visibility = View.INVISIBLE
-                            super.onResourceReady(drawable, animation)
-                        }
-                    })
-        }
+        Glide.with(mContext).load<GlideUrl>(GlideUtil().getLargeImageUrl(illustsBean, index))
+                .into<GlideDrawableImageViewTarget>(object : GlideDrawableImageViewTarget(originalImage) {
+                    override fun onResourceReady(drawable: GlideDrawable?, animation: GlideAnimation<in GlideDrawable>?) {
+                        mProgressbar.visibility = View.INVISIBLE
+                        super.onResourceReady(drawable, animation)
+                    }
+                })
     }
 
     companion object {

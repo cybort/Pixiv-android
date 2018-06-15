@@ -28,9 +28,9 @@ class CollecDetailAdapter(private val mPixivRankItem: CollectionResponse,
         params.height = mContext.resources.displayMetrics.widthPixels - mContext.resources.getDimensionPixelSize(R.dimen.fourty_eight_dip)
         holder.itemView.pixiv_image.layoutParams = params
         //加载用户头像和图片
-        Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mPixivRankItem.body[0].illusts[position].illust_id,
+        Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mPixivRankItem.body[0].illusts[position].illust_id,
                 mPixivRankItem.body[0].illusts[position].url.`_$1200x1200`)).into(holder.itemView.pixiv_image)
-        Glide.with(mContext).load<GlideUrl>(GlideUtil().getHead(java.lang.Long.parseLong(mPixivRankItem.body[0].illusts[position].illust_user_id),
+        Glide.with(mContext).load(GlideUtil().getHead(java.lang.Long.parseLong(mPixivRankItem.body[0].illusts[position].illust_user_id),
                 mPixivRankItem.body[0].illusts[position].user_icon)).into(holder.itemView.pixiv_head)
         //加载标题和作者名
         holder.itemView.pixiv_title.text = mPixivRankItem.body[0].illusts[position].illust_title

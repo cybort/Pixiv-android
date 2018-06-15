@@ -127,6 +127,7 @@ interface AppApiPixivService {
     fun getUserDetail(@Header("Authorization") paramString: String,
                       @Query("user_id") paramLong: Long): Call<UserDetailResponse>
 
+    ///v1/illust/recommended?filter=for_android&include_ranking_illusts=true&include_privacy_policy=true
     @GET("/v1/illust/recommended?content_type=illust&filter=for_ios&include_ranking_label=true")
     fun getRecommend(@Header("Authorization") paramString: String): Call<RecommendResponse>
 

@@ -23,7 +23,7 @@ class IllustCommentAdapter(private val mPixivRankItem: List<IllustCommentsRespon
             TagHolder(mLayoutInflater.inflate(R.layout.comment_item, parent, false))
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Glide.with(mContext).load<GlideUrl>(GlideUtil().getHead(mPixivRankItem[position].user.id.toLong(),
+        Glide.with(mContext).load(GlideUtil().getHead(mPixivRankItem[position].user.id.toLong(),
                 mPixivRankItem[position].user.profile_image_urls.medium))
                 .into((holder as TagHolder).itemView.comment_head)
         holder.itemView.comment_content.text = mPixivRankItem[position].comment

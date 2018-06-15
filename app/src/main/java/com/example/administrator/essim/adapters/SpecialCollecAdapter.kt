@@ -34,7 +34,7 @@ class SpecialCollecAdapter(private val mPixivRankItem: SpecialCollectionResponse
             val params: ViewGroup.LayoutParams = holder.itemView.imageView.layoutParams
             params.height = (mContext.resources.displayMetrics.widthPixels - mContext.resources.getDimensionPixelSize(R.dimen.thirty_two_dp)) / 3 * 2
             holder.itemView.imageView.layoutParams = params
-            Glide.with(mContext).load<GlideUrl>(GlideUtil().getHead(mPixivRankItem.body[position].thumbnailUrl)).asBitmap()
+            Glide.with(mContext).load(GlideUtil().getHead(mPixivRankItem.body[position].thumbnailUrl))
                     .into(holder.itemView.imageView)
             holder.itemView.text_title.text = mPixivRankItem.body[position].title
             holder.itemView.text_date.text = Common.getTime(mPixivRankItem.body[position].publishDate, 0)

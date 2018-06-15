@@ -61,10 +61,8 @@ import retrofit2.Call;
 
 public class FragmentPixivItem extends BaseFragment implements View.OnClickListener {
 
-    public static Bitmap sGlideDrawable;
     private int index;
     private String priority;
-    private Bitmap mBitmap;
     private ProgressBar mProgressBar;
     private RelatedIllust mRelatedIllust;
     private FloatingActionButton mFloatingActionButton;
@@ -113,17 +111,14 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         mProgressBar = view.findViewById(R.id.try_login);
         mProgressBar.setIndeterminateDrawable(Common.getLoaderAnimation(mContext));
         if (Common.getLocalDataSet().getBoolean("is_origin_pic", true)) {
-            //如果按原图画质加载，则保存bitmap备用
             Glide.with(mContext).load(new GlideUtil().getLargeImageUrl(Reference.sIllustsBeans.get(index), 0))
-                    .asBitmap()
                     .priority(priority.equals("high") ? Priority.IMMEDIATE : Priority.NORMAL)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(new SimpleTarget<Bitmap>() {
+                    .into(new GlideDrawableImageViewTarget(imageView2) {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
                             mProgressBar.setVisibility(View.INVISIBLE);
-                            mBitmap = resource;
-                            imageView2.setImageBitmap(resource);
+                            super.onResourceReady(drawable, anim);
                         }
                     });
         } else {
@@ -271,7 +266,6 @@ public class FragmentPixivItem extends BaseFragment implements View.OnClickListe
         Intent intent;
         switch (view.getId()) {
             case R.id.detail_img:
-                sGlideDrawable = mBitmap;
                 intent = new Intent(mContext, ImageDetailActivity.class);
                 intent.putExtra("illust", Reference.sIllustsBeans.get(index));
                 mContext.startActivity(intent);

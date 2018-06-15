@@ -36,7 +36,7 @@ class PixivAdapterGrid(private val mPixivRankItem: List<IllustsBean>,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = when (holder) {
         is PhotoHolder -> {
             //加载图片及其信息
-            Glide.with(mContext).load<GlideUrl>(GlideUtil().getMediumImageUrl(mPixivRankItem[position]))
+            Glide.with(mContext).load(GlideUtil().getMediumImageUrl(mPixivRankItem[position]))
                     .into(holder.itemView.pixiv_image)
             when {
                 mPixivRankItem[position].isIs_bookmarked -> holder.itemView.post_like.setImageResource(R.drawable.ic_favorite_white_24dp)

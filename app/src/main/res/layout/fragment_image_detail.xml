@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <com.example.administrator.essim.utils.PinchImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/originalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
